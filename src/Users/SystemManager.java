@@ -99,8 +99,14 @@ public class SystemManager extends Member {
         }
     }
 
-    public void addReferee() {
-        //todo
+    public boolean addReferee(String id , boolean ifMainRefree) {
+        if(system.existMember(id)==false && system.notHadAJob(id)==true)
+            return false;
+        else
+        {
+            system.makeTheRoleARefree(id ,ifMainRefree );
+            return true;
+        }
     }
 
     public boolean closeTeam(String teamName) {

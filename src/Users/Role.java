@@ -6,4 +6,9 @@ public abstract class Role {
     public Role(String id) {
         this.id = id;
     }
+
+    public String getId()
+    {
+        return id;
+    }
 }

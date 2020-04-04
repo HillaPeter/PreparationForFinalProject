@@ -10,4 +10,13 @@ public abstract class Member extends Role {
         this.password = password;
     }
 
+    public int getUserId()
+    {
+        return userId;
+    }
+    public String getPassword()
+    {
+        return password;
+    }
+
 }

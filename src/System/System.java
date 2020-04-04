@@ -1,12 +1,12 @@
 package System;
 
 import Asset.Coach;
+import Asset.Manager;
+import Asset.Player;
+import Asset.TeamMember;
 import Game.Team;
 import League.*;
-import Users.Member;
-import Users.Referee;
-import Users.Role;
-import Users.SystemManager;
+import Users.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class System {
     private HashSet<League> leagues;
     private HashSet<Season> seasons;
     private HashSet<SystemManager> systemManagers;
-    private HashMap<Integer, Role> roles;
+    private HashMap<String, Role> roles;
     private HashMap<String, Team> teams;
     //  private HashMap<Member,String> passwordValidation;
 
@@ -108,5 +108,29 @@ public class System {
     public void deleteRefree(String id) {
         roles.remove(id);
     }
-}
+
+    public boolean existRole(String id) {
+        return roles.containsKey(id);
+    }
+
+    public boolean notHadAJob(String id) {
+        if (roles.get(id) instanceof TeamMember)
+            return false;
+        else
+            return true;
+    }
+
+    public void makeTheRoleARefree(String id, boolean mainRefree) {
+        Member member = (Member) roles.get(id);
+        Referee referee;
+        if (mainRefree)
+            referee = new MainReferee(member.getId(), member.getUserId(), member.getPassword(), "");
+        else
+            referee = new SecondaryReferee(member.getId(), member.getUserId(), member.getPassword(), "");
+        roles.put(member.getId() , referee);
+    }
+
+    public boolean existMember(String id) {
+        return roles.get(id) instanceof Member;
+    }
 }
