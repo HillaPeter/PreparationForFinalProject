@@ -4,6 +4,7 @@ import Asset.*;
 import Users.Owner;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class Team {
     private String name;
@@ -22,5 +23,22 @@ public class Team {
         players=new HashSet<>();
         managers=new HashSet<>();
         owners=new HashSet<>();
+    }
+    public Team(Account account, LinkedList<Player> players , LinkedList<Coach> coaches , LinkedList<Manager> managers , LinkedList<Owner> owners , String teamName) {
+        this.name = teamName;
+        this.account = account;
+        this.coaches=new HashSet<>();
+        this.players=new HashSet<>();
+        this.managers=new HashSet<>();
+        this.owners=new HashSet<>();
+        this.coaches.addAll(coaches);
+        this.players.addAll(players);
+        this.owners.addAll(owners);
+        this.managers.addAll(managers);
+    }
+
+    public String getName()
+    {
+        return name;
     }
 }

@@ -11,6 +11,11 @@ public class Account {
         this.transactions = transactions;
     }
 
+    public Account() {
+        this.name = "";
+        this.transactions = new ArrayList<Transaction>();
+    }
+
 
 
 }
