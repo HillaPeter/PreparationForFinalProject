@@ -3,9 +3,11 @@ package Users;
 import Asset.TeamMember;
 import Game.Team;
 
+import java.util.HashMap;
+
 public class Owner extends Member {
     private TeamMember teamMember;
-    private Team team;
+    private HashMap<String,Team> team;
 
     public Owner(String name, int userId, String password, TeamMember teamMember) {
         super(name, userId, password);
@@ -13,6 +15,10 @@ public class Owner extends Member {
         //todo addTeam func?
     }
 
+    public void removeTheTeamFromMyList(String name)
+    {
+        team.remove(name);
+    }
     public void addAsset(){
         //todo
     }

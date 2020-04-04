@@ -17,7 +17,7 @@ public class System {
     private HashSet<Season> seasons;
     private HashSet<SystemManager> systemManagers;
     private HashMap<Integer, Role> roles;
-    private HashSet<Team> teams;
+    private HashMap<String , Team> teams;
     //  private HashMap<Member,String> passwordValidation;
 
     public System(String name) {
@@ -38,7 +38,7 @@ public class System {
     }
 
     public void addTeam(Team team) {
-        teams.add(team);
+        teams.put(team.getName() , team);
     }
 
     public boolean notAllTheIdAreMembers(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner) {
@@ -62,9 +62,9 @@ public class System {
     }
 
     public boolean alreadyIncludeThisTeamName(String teamName) {
-        for (Team team : teams
+        for (String name : teams.keySet()
         ) {
-            if (team.getName().equals(teamName))
+            if (name.equals(teamName))
                 return true;
         }
         return true;
@@ -76,5 +76,20 @@ public class System {
             toReturn.add((Member) roles.get(id.get(i)));
         }
         return toReturn;
+    }
+
+    public boolean existTeamName(String teamName) {
+        if(teams.containsKey(teamName))
+            return true;
+        else
+            return false;
+    }
+
+    public Team getTeam(String teamName) {
+        return teams.get(teamName);
+    }
+
+    public void deleteTeam(String teamName) {
+        teams.remove(teamName);
     }
 }

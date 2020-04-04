@@ -19,26 +19,47 @@ public class Team {
         this.name = name;
         this.account = account;
         this.field = field;
-        coaches=new HashSet<>();
-        players=new HashSet<>();
-        managers=new HashSet<>();
-        owners=new HashSet<>();
+        coaches = new HashSet<>();
+        players = new HashSet<>();
+        managers = new HashSet<>();
+        owners = new HashSet<>();
     }
-    public Team(Account account, LinkedList<Player> players , LinkedList<Coach> coaches , LinkedList<Manager> managers , LinkedList<Owner> owners , String teamName) {
+
+    public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) {
         this.name = teamName;
         this.account = account;
-        this.coaches=new HashSet<>();
-        this.players=new HashSet<>();
-        this.managers=new HashSet<>();
-        this.owners=new HashSet<>();
+        this.coaches = new HashSet<>();
+        this.players = new HashSet<>();
+        this.managers = new HashSet<>();
+        this.owners = new HashSet<>();
         this.coaches.addAll(coaches);
         this.players.addAll(players);
         this.owners.addAll(owners);
         this.managers.addAll(managers);
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
+
+    public void deleteTheData() {
+        for (Player player : players
+        ) {
+            player.removeTheTeamFromMyList(this.name);
+        }
+        for (Owner owner : owners
+        ) {
+            owner.removeTheTeamFromMyList(this.name);
+        }
+        for (Coach coach : coaches
+        ) {
+            coach.removeTheTeamFromMyList(this.name);
+        }
+        for (Manager manager : managers
+        ) {
+            manager.removeTheTeamFromMyList(this.name);
+        }
+
+    }
 }
+

@@ -2,6 +2,8 @@ package Asset;
 
 import Game.Team;
 
+import java.util.HashSet;
+
 public class Coach extends TeamMember{
     private String roleInTeam;
     private String training;
