@@ -122,8 +122,16 @@ public class SystemManager extends Member {
         }
     }
 
-    public void removeMember() {
-        //todo
+    public boolean removeMember(String id) {
+        if(system.existRole(id)==false)
+        {
+            return false;
+        }
+        else
+        {
+            system.deleteRole(id);
+            return true;
+        }
     }
 
     public void watchAndResponseComplaint() {

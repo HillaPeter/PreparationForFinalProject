@@ -133,4 +133,8 @@ public class System {
     public boolean existMember(String id) {
         return roles.get(id) instanceof Member;
     }
+
+    public void deleteRole(String id) {
+        roles.remove(id);
+    }
 }
