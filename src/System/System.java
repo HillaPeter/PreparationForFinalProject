@@ -4,6 +4,7 @@ import Asset.Coach;
 import Game.Team;
 import League.*;
 import Users.Member;
+import Users.Referee;
 import Users.Role;
 import Users.SystemManager;
 
@@ -17,7 +18,7 @@ public class System {
     private HashSet<Season> seasons;
     private HashSet<SystemManager> systemManagers;
     private HashMap<Integer, Role> roles;
-    private HashMap<String , Team> teams;
+    private HashMap<String, Team> teams;
     //  private HashMap<Member,String> passwordValidation;
 
     public System(String name) {
@@ -38,7 +39,7 @@ public class System {
     }
 
     public void addTeam(Team team) {
-        teams.put(team.getName() , team);
+        teams.put(team.getName(), team);
     }
 
     public boolean notAllTheIdAreMembers(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner) {
@@ -79,7 +80,7 @@ public class System {
     }
 
     public boolean existTeamName(String teamName) {
-        if(teams.containsKey(teamName))
+        if (teams.containsKey(teamName))
             return true;
         else
             return false;
@@ -92,4 +93,20 @@ public class System {
     public void deleteTeam(String teamName) {
         teams.remove(teamName);
     }
+
+    public Referee getRefree(String id) {
+        return (Referee) roles.get(id);
+    }
+
+    public boolean existRefree(String id) {
+        if (roles.get(id) instanceof Referee)
+            return true;
+        else
+            return false;
+    }
+
+    public void deleteRefree(String id) {
+        roles.remove(id);
+    }
+}
 }

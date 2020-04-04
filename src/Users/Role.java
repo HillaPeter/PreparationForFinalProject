@@ -1,9 +1,9 @@
 package Users;
 
 public abstract class Role {
-    private String name;
+    private String id;
 
-    public Role(String name) {
-        this.name = name;
+    public Role(String id) {
+        this.id = id;
     }
 }

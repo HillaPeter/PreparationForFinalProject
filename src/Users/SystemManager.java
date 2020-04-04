@@ -87,8 +87,16 @@ public class SystemManager extends Member {
 
     }
 
-    public void removeReferee() {
-        //todo
+    public boolean removeReferee(String id) {
+        if (system.existRefree(id) == false)
+            return false;
+        else {
+            Referee referee = system.getRefree(id);
+            referee.deleteTheGames();
+            //6.המערכת משבצת מחדש את השופטים למשחקים ששופטיהם נמחקו
+            system.deleteRefree(id);
+            return true;
+        }
     }
 
     public void addReferee() {
@@ -101,7 +109,7 @@ public class SystemManager extends Member {
             return false;
         else {//i can delete it
             //המערכת מסירה את הקבוצה מכל שיבוצי המשחק שיש לה
-            Team team=system.getTeam(teamName);
+            Team team = system.getTeam(teamName);
             team.deleteTheData();
             system.deleteTeam(teamName);
             return true;
