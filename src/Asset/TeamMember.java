@@ -9,10 +9,9 @@ import java.util.HashSet;
 public class TeamMember extends Member {
     private HashMap<String , Team> team;
 
-    public TeamMember(String name, int userId, String password, Team team) {
+    public TeamMember(String name, int userId, String password) {
         super(name, userId, password);
         this.team = new HashMap<>();
-        this.team.put(team.getName() , team);
     }
 
     public void removeTheTeamFromMyList(String name)

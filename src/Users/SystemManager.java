@@ -5,19 +5,31 @@ import Asset.Manager;
 import Asset.Player;
 import Game.Account;
 import Game.Team;
-import System.System;
+import system.system;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class SystemManager extends Member {
 
-    private System system;
+    private system system;
 
-    public SystemManager(String name, int userId, String password, System system) {
+    public SystemManager(String name, int userId, String password, system system) {
         super(name, userId, password);
         this.system = system;
     }
 
+    public void viewSystemInformation() {
+        //todo
+    }
+
+
+    public void schedulingGames() {
+        //todo
+    }
     //this function return true if the team added and false if there were problem with the data
     public boolean addNewTeam(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner, String teamName) {
 
@@ -79,15 +91,9 @@ public class SystemManager extends Member {
     }
     //until here
 
-    public void schedulingGames() {
-        //todo
-    }
-
-    public void initSystem(String userName, String password) {
-
-    }
-
     public boolean removeReferee(String id) {
+        //shachar
+        //if the system manager want to delete the refree he delete it from the system
         if (system.existRefree(id) == false)
             return false;
         else {
@@ -100,7 +106,7 @@ public class SystemManager extends Member {
     }
 
     public boolean addReferee(String id , boolean ifMainRefree) {
-        if(system.existMember(id)==false && system.notHadAJob(id)==true)
+        if(system.existFan(id)==false)
             return false;
         else
         {
@@ -134,11 +140,49 @@ public class SystemManager extends Member {
         }
     }
 
-    public void watchAndResponseComplaint() {
-        //todo
+    public LinkedList<String> watchComplaint(String path) {
+        LinkedList<String> complaintList=readLineByLine(path);
+        return complaintList;
     }
 
-    public void viewSystemInformation() {
-        //todo
+    public boolean ResponseComplaint(String path ,LinkedList<String> response) {
+        //this function get the linkes list after the manager added his response for the complaint
+        writeToFile(path,response);
+        return true;
     }
-}
+
+    private void writeToFile(String path, LinkedList<String> response) {
+        //to write in the specific line
+        try {
+            FileWriter fw = new FileWriter(path, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for(int i=0; i<response.size(); i++) {
+                bw.write(response.get(i));
+            }
+            bw.close();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public LinkedList<String> readLineByLine(String newPath) {
+        LinkedList<String> list = new LinkedList<>();
+        try {
+            File newText = new File(newPath);
+            String allText = new String();
+            Scanner scanner = new Scanner(newText);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                list.add(line);
+
+            }
+            return list;
+        }
+        catch (Exception e)
+        {
+
+        }
+        return list;
+    }
+
+    }

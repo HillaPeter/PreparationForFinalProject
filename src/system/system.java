@@ -1,8 +1,5 @@
-package System;
+package system;
 
-import Asset.Coach;
-import Asset.Manager;
-import Asset.Player;
 import Asset.TeamMember;
 import Game.Team;
 import League.*;
@@ -12,7 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class System {
+public class system {
     private String name;
     private HashSet<League> leagues;
     private HashSet<Season> seasons;
@@ -21,7 +18,7 @@ public class System {
     private HashMap<String, Team> teams;
     //  private HashMap<Member,String> passwordValidation;
 
-    public System(String name) {
+    public system(String name) {
         this.name = name;
         leagues = new HashSet<>();
         seasons = new HashSet<>();
@@ -36,6 +33,10 @@ public class System {
 //                
 //            }
 //        }
+    }
+
+    public void initSystem(String userName, String password) {
+        //check if the user name and the password are connect
     }
 
     public void addTeam(Team team) {
@@ -121,13 +122,15 @@ public class System {
     }
 
     public void makeTheRoleARefree(String id, boolean mainRefree) {
-        Member member = (Member) roles.get(id);
+        //if the refree is main refree the boolean filed wil be true
+        //change the role from fan to refree
+        Fan fan = (Fan) roles.get(id);
         Referee referee;
         if (mainRefree)
-            referee = new MainReferee(member.getId(), member.getUserId(), member.getPassword(), "");
+            referee = new MainReferee(fan.getId(), fan.getUserId(), fan.getPassword(), "");
         else
-            referee = new SecondaryReferee(member.getId(), member.getUserId(), member.getPassword(), "");
-        roles.put(member.getId() , referee);
+            referee = new SecondaryReferee(fan.getId(), fan.getUserId(), fan.getPassword(), "");
+        roles.put(fan.getId() , referee);
     }
 
     public boolean existMember(String id) {
@@ -136,5 +139,10 @@ public class System {
 
     public void deleteRole(String id) {
         roles.remove(id);
+    }
+
+    public boolean existFan(String id) {
+        return roles.get(id) instanceof Fan;
+
     }
 }

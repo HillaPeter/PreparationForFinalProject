@@ -8,8 +8,8 @@ public class Coach extends TeamMember{
     private String roleInTeam;
     private String training;
 
-    public Coach(String name, int userId, String password, Team team, String roleInTeam, String training) {
-        super(name, userId, password, team);
+    public Coach(String name, int userId, String password, String roleInTeam, String training) {
+        super(name, userId, password);
         this.roleInTeam = roleInTeam;
         this.training = training;
     }
