@@ -1,5 +1,8 @@
 package system;
 
+import Asset.Coach;
+import Asset.Manager;
+import Asset.Player;
 import Asset.TeamMember;
 import Game.Team;
 import League.*;
@@ -13,7 +16,7 @@ public class system {
     private String name;
     private HashSet<League> leagues;
     private HashSet<Season> seasons;
-    private HashSet<SystemManager> systemManagers;
+    private HashMap<String, SystemManager> systemManagers;
     private HashMap<String, Role> roles;
     private HashMap<String, Team> teams;
     //  private HashMap<Member,String> passwordValidation;
@@ -22,7 +25,7 @@ public class system {
         this.name = name;
         leagues = new HashSet<>();
         seasons = new HashSet<>();
-        systemManagers = new HashSet<>();
+        systemManagers = new HashMap<>();
         roles = new HashMap<>();
 
         //todo
@@ -39,8 +42,27 @@ public class system {
         //check if the user name and the password are connect
     }
 
+    public void addPlayer(Player player)
+    {
+        roles.put(String.valueOf(player.getUserId()) , player);
+    }
+    public void addCoach(Coach coach)
+    {
+        roles.put(String.valueOf(coach.getUserId()) , coach);
+    }
+    public void addManager(Manager manager)
+    {
+        roles.put(String.valueOf(manager.getUserId()) , manager);
+    }
+    public void addOwner(Owner owner)
+    {
+        roles.put(String.valueOf(owner.getUserId()) , owner);
+    }
     public void addTeam(Team team) {
         teams.put(team.getName(), team);
+    }
+    public void addSystemManager(SystemManager systemManager) {
+        systemManagers.put(systemManager.getId() , systemManager);
     }
 
     public boolean notAllTheIdAreMembers(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner) {
@@ -64,6 +86,10 @@ public class system {
     }
 
     public boolean alreadyIncludeThisTeamName(String teamName) {
+        if(teams==null)
+        {
+            return false;
+        }
         for (String name : teams.keySet()
         ) {
             if (name.equals(teamName))

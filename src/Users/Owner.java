@@ -9,9 +9,9 @@ public class Owner extends Member {
     private TeamMember teamMember;
     private HashMap<String,Team> team;
 
-    public Owner(String name, int userId, String password, TeamMember teamMember) {
+    public Owner(String name, int userId, String password) {
         super(name, userId, password);
-        this.teamMember = teamMember;
+        this.teamMember = null;
         //todo addTeam func?
     }
 
