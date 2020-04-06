@@ -17,8 +17,8 @@ public class SystemManager extends Member {
 
     private system system;
 
-    public SystemManager(String name, int userId, String password, system system) {
-        super(name, userId, password);
+    public SystemManager(String name, String userMail, String password, system system) {
+        super(name, userMail, password);
         this.system = system;
     }
 

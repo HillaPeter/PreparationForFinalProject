@@ -2,7 +2,7 @@ package Users;
 
 public class Fan extends Member {
 
-    public Fan(String name, int userId, String password) {
+    public Fan(String name, String userId, String password) {
         super(name, userId, password);
     }
 

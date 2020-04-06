@@ -17,7 +17,7 @@ public class system {
     private HashSet<League> leagues;
     private HashSet<Season> seasons;
     private HashMap<String, SystemManager> systemManagers;
-    private HashMap<String, Role> roles;
+    private HashMap<String, Role> roles; // hash map <mail,role>
     private HashMap<String, Team> teams;
     //  private HashMap<Member,String> passwordValidation;
 
@@ -44,25 +44,25 @@ public class system {
 
     public void addPlayer(Player player)
     {
-        roles.put(String.valueOf(player.getUserId()) , player);
+        roles.put(player.getUserMail() , player);
     }
     public void addCoach(Coach coach)
     {
-        roles.put(String.valueOf(coach.getUserId()) , coach);
+        roles.put(coach.getUserMail() , coach);
     }
     public void addManager(Manager manager)
     {
-        roles.put(String.valueOf(manager.getUserId()) , manager);
+        roles.put(manager.getUserMail() , manager);
     }
     public void addOwner(Owner owner)
     {
-        roles.put(String.valueOf(owner.getUserId()) , owner);
+        roles.put(owner.getUserMail() , owner);
     }
     public void addTeam(Team team) {
         teams.put(team.getName(), team);
     }
     public void addSystemManager(SystemManager systemManager) {
-        systemManagers.put(systemManager.getId() , systemManager);
+        systemManagers.put(systemManager.getUserMail() , systemManager);
     }
 
     public boolean notAllTheIdAreMembers(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner) {
@@ -153,10 +153,10 @@ public class system {
         Fan fan = (Fan) roles.get(id);
         Referee referee;
         if (mainRefree)
-            referee = new MainReferee(fan.getId(), fan.getUserId(), fan.getPassword(), "");
+            referee = new MainReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
         else
-            referee = new SecondaryReferee(fan.getId(), fan.getUserId(), fan.getPassword(), "");
-        roles.put(fan.getId() , referee);
+            referee = new SecondaryReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
+        roles.put(fan.getUserMail() , referee);
     }
 
     public boolean existMember(String id) {
@@ -169,6 +169,60 @@ public class system {
 
     public boolean existFan(String id) {
         return roles.get(id) instanceof Fan;
+    }
 
+    /**
+     * this function makes a Guest into a member
+     * if the member's mail doesnt exist -
+     * we will remove the Guest from the roles map and add create a Fan member by default and return true
+     * if the member's mail exist in the system - prints a error message and return false.
+     * @return true = success or false = failed to sign
+     */
+    public boolean signIn(){
+        if(roles.containsKey("0")){
+            Guest guest = (Guest)roles.get("0");
+            String[] details = guest.signIn();
+            if(roles.containsKey(details[0])){
+                System.out.println("This member mail is already exist in the system.\nsign in with different mail");
+                return false;
+            }
+            else{
+                roles.remove("0");
+                Fan newMember = new Fan(details[1],details[0],details[3]);
+                roles.put(newMember.getUserMail(),newMember);
+                return true;
+            }
+        }
+        else{
+            System.out.println("you cant sign in");
+            return false;
+        }
+    }
+
+    /**
+     * this function makes a guest into an existing member.
+     * if the member doesnt exist - return null
+     * if the member exist - return the member
+     * @return
+     */
+    public Role logIn(){
+        if(roles.containsKey("0")){
+            Guest guest = (Guest)roles.get("0");
+            String[] details = guest.logIn();
+            if(roles.containsKey(details[0])){
+                Role existingMember = roles.get(details[0]);
+                roles.remove("0");
+                return existingMember;
+            }
+            else{
+                System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail");
+                return null;
+            }
+        }
+        else{
+            System.out.println("you cant log in");
+            return null;
+        }
+        //todo - exception
     }
 }

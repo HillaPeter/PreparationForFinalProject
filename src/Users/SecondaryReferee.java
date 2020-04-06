@@ -2,7 +2,7 @@ package Users;
 
 public class SecondaryReferee extends Referee {
 
-    public SecondaryReferee(String name, int userId, String password, String training) {
-        super(name, userId, password, training);
+    public SecondaryReferee(String name, String userMail, String password, String training) {
+        super(name, userMail, password, training);
     }
 }

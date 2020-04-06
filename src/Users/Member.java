@@ -1,18 +1,18 @@
 package Users;
 
 public abstract class Member extends Role {
-    private int userId;
+    private String userMail;
     private String password;
 
-    public Member(String name, int userId, String password) {
+    public Member(String name, String userMail, String password) {
         super(name);
-        this.userId = userId;
+        this.userMail = userMail;
         this.password = password;
     }
 
-    public int getUserId()
+    public String getUserMail()
     {
-        return userId;
+        return userMail;
     }
     public String getPassword()
     {

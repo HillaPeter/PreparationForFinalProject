@@ -1,14 +1,14 @@
 package Users;
 
 public abstract class Role {
-    private String id;
+    private String name;
 
-    public Role(String id) {
-        this.id = id;
+    public Role(String name) {
+        this.name = name;
     }
 
-    public String getId()
+    public String getName()
     {
-        return id;
+        return name;
     }
 }

@@ -9,8 +9,8 @@ public abstract class Referee extends Member{
     private String training;
     private HashSet<Game> games;
 
-    public Referee(String name, int userId, String password, String training) {
-        super(name, userId, password);
+    public Referee(String name, String userMail, String password, String training) {
+        super(name, userMail, password);
         this.training = training;
     }
 
