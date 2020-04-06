@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class system {
+public class SystemController {
     private String name;
     private HashSet<League> leagues;
     private HashSet<Season> seasons;
@@ -21,13 +21,13 @@ public class system {
     private HashMap<String, Team> teams;
     //  private HashMap<Member,String> passwordValidation;
 
-    public system(String name) {
+    public SystemController(String name) {
         this.name = name;
         leagues = new HashSet<>();
         seasons = new HashSet<>();
         systemManagers = new HashMap<>();
         roles = new HashMap<>();
-
+        teams = new HashMap<>();
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();

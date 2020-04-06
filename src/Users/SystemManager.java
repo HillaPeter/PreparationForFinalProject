@@ -5,7 +5,7 @@ import Asset.Manager;
 import Asset.Player;
 import Game.Account;
 import Game.Team;
-import system.system;
+import system.SystemController;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,11 +15,11 @@ import java.util.Scanner;
 
 public class SystemManager extends Member {
 
-    private system system;
+    private SystemController SystemController;
 
-    public SystemManager(String name, String userMail, String password, system system) {
+    public SystemManager(String name, String userMail, String password, SystemController SystemController) {
         super(name, userMail, password);
-        this.system = system;
+        this.SystemController = SystemController;
     }
 
     public void viewSystemInformation() {
@@ -36,13 +36,13 @@ public class SystemManager extends Member {
         if (idPlayers.size() < 11 || alreadyIncludeThisTeamName(teamName) == true || notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
             return false;
         } else {
-            LinkedList<Coach> coaches = makeCoachList(system.returnFromSystemTheExactUsers(idCoach));
-            LinkedList<Player> players = makePlayerList(system.returnFromSystemTheExactUsers(idPlayers));
-            LinkedList<Manager> managers = makeManagerList(system.returnFromSystemTheExactUsers(idManager));
-            LinkedList<Owner> owners = makeOwnerList(system.returnFromSystemTheExactUsers(idOwner));
+            LinkedList<Coach> coaches = makeCoachList(SystemController.returnFromSystemTheExactUsers(idCoach));
+            LinkedList<Player> players = makePlayerList(SystemController.returnFromSystemTheExactUsers(idPlayers));
+            LinkedList<Manager> managers = makeManagerList(SystemController.returnFromSystemTheExactUsers(idManager));
+            LinkedList<Owner> owners = makeOwnerList(SystemController.returnFromSystemTheExactUsers(idOwner));
             Account account = new Account();
             Team newTeam = new Team(account, players, coaches, managers, owners, teamName);
-            system.addTeam(newTeam);
+            SystemController.addTeam(newTeam);
             return true;
         }
     }
@@ -81,61 +81,61 @@ public class SystemManager extends Member {
     }
 
     private boolean notAllTheIdAreMembers(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner) {
-        return system.notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner);
+        return SystemController.notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner);
 
     }
 
     private boolean alreadyIncludeThisTeamName(String teamName) {
 
-        return system.alreadyIncludeThisTeamName(teamName);
+        return SystemController.alreadyIncludeThisTeamName(teamName);
     }
     //until here
 
     public boolean removeReferee(String id) {
         //shachar
         //if the system manager want to delete the refree he delete it from the system
-        if (system.existRefree(id) == false)
+        if (SystemController.existRefree(id) == false)
             return false;
         else {
-            Referee referee = system.getRefree(id);
+            Referee referee = SystemController.getRefree(id);
             referee.deleteTheGames();
             //6.המערכת משבצת מחדש את השופטים למשחקים ששופטיהם נמחקו
-            system.deleteRefree(id);
+            SystemController.deleteRefree(id);
             return true;
         }
     }
 
     public boolean addReferee(String id , boolean ifMainRefree) {
-        if(system.existFan(id)==false)
+        if(SystemController.existFan(id)==false)
             return false;
         else
         {
-            system.makeTheRoleARefree(id ,ifMainRefree );
+            SystemController.makeTheRoleARefree(id ,ifMainRefree );
             return true;
         }
     }
 
     public boolean closeTeam(String teamName) {
         //the team not exist
-        if (system.existTeamName(teamName) == false)
+        if (SystemController.existTeamName(teamName) == false)
             return false;
         else {//i can delete it
             //המערכת מסירה את הקבוצה מכל שיבוצי המשחק שיש לה
-            Team team = system.getTeam(teamName);
+            Team team = SystemController.getTeam(teamName);
             team.deleteTheData();
-            system.deleteTeam(teamName);
+            SystemController.deleteTeam(teamName);
             return true;
         }
     }
 
     public boolean removeMember(String id) {
-        if(system.existRole(id)==false)
+        if(SystemController.existRole(id)==false)
         {
             return false;
         }
         else
         {
-            system.deleteRole(id);
+            SystemController.deleteRole(id);
             return true;
         }
     }

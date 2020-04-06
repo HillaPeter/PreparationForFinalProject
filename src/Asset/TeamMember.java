@@ -4,18 +4,29 @@ import Game.Team;
 import Users.Member;
 
 import java.util.HashMap;
-import java.util.HashSet;
+
 
 public class TeamMember extends Member {
     private HashMap<String , Team> team;
 
-    public TeamMember(String name, int userId, String password) {
-        super(name, userId, password);
-        this.team = new HashMap<>();
+    public TeamMember(String name, String userMail, String password) {
+        super(name, userMail, password);
+    }
+
+    public TeamMember(String name, String userMail) {
+        super(name, userMail);
     }
 
     public void removeTheTeamFromMyList(String name)
     {
         team.remove(name);
+    }
+
+    public HashMap<String, Team> getTeam() {
+        return team;
+    }
+
+    public void setTeam(HashMap<String, Team> team) {
+        this.team = team;
     }
 }

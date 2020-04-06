@@ -13,10 +13,17 @@ public class Player extends TeamMember{
     private Team team;//maybe just one team
 
 
-    public Player(String name, int userId, String password, HashSet<Event> events, Date birthDate, String role) {
-        super(name, userId, password);
-        this.events = events;
+    public Player(String name, String userMail, String password, Date birthDate, String role) {
+        super(name, userMail, password);
         this.birthDate = birthDate;
         this.role = role;
+        events=new HashSet<>();
+    }
+
+    public Player(String name, String userMail, Date birthDate, String role) {
+        super(name, userMail);
+        this.birthDate = birthDate;
+        this.role = role;
+        setPassword(null);
     }
 }

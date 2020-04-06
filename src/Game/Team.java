@@ -61,5 +61,37 @@ public class Team {
         }
 
     }
+
+    public HashSet<Coach> getCoaches() {
+        return coaches;
+    }
+
+    public void setManagers(HashSet<Manager> managers) {
+        this.managers = managers;
+    }
+
+    public HashSet<Manager> getManagers() {
+        return managers;
+    }
+
+    public HashSet<Owner> getOwners() {
+        return owners;
+    }
+
+    public HashSet<Player> getPlayers() {
+        return players;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
 }
 
