@@ -28,6 +28,8 @@ public class Main {
 
     }
 
+
+    /***********************************************private function**************************************************/
     private static void startMenu() {
         String input = "";
         while (!input.equals("Exit")) {
@@ -75,8 +77,6 @@ public class Main {
             }
         }
     }
-
-    /***********************************************private function**************************************************/
 
     private static void showMenu(Role member) {
         //just for testing
