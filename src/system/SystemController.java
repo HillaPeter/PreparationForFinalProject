@@ -7,7 +7,7 @@ import Asset.TeamMember;
 import Game.Team;
 import League.*;
 import Users.*;
-
+import Exception.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -178,24 +178,14 @@ public class SystemController {
      * if the member's mail exist in the system - prints a error message and return false.
      * @return true = success or false = failed to sign
      */
-    public boolean signIn(){
-        if(roles.containsKey("0")){
-            Guest guest = (Guest)roles.get("0");
-            String[] details = guest.signIn();
-            if(roles.containsKey(details[0])){
-                System.out.println("This member mail is already exist in the system.\nsign in with different mail");
-                return false;
-            }
-            else{
-                roles.remove("0");
-                Fan newMember = new Fan(details[1],details[0],details[3]);
-                roles.put(newMember.getUserMail(),newMember);
-                return true;
-            }
+    public Member signIn(String userName , String userMail , String password) throws MemberAlreadyExistException {
+        if(roles.containsKey(userMail)){
+            throw new MemberAlreadyExistException();
         }
         else{
-            System.out.println("you cant sign in");
-            return false;
+            Fan newMember = new Fan(userName,userMail,password);
+            roles.put(newMember.getUserMail(),newMember);
+            return newMember;
         }
     }
 
@@ -205,24 +195,14 @@ public class SystemController {
      * if the member exist - return the member
      * @return
      */
-    public Role logIn(){
-        if(roles.containsKey("0")){
-            Guest guest = (Guest)roles.get("0");
-            String[] details = guest.logIn();
-            if(roles.containsKey(details[0])){
-                Role existingMember = roles.get(details[0]);
-                roles.remove("0");
-                return existingMember;
-            }
-            else{
-                System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail");
-                return null;
-            }
+    public Role logIn(String userMail , String userPassword)throws MemberDontExist{
+        if(roles.containsKey(userMail)){
+            Role existingMember = roles.get(userMail);
+            roles.remove("0");
+            return existingMember;
         }
         else{
-            System.out.println("you cant log in");
-            return null;
+            throw new MemberDontExist();
         }
-        //todo - exception
     }
 }

@@ -1,19 +1,73 @@
 
 import Asset.*;
+import Exception.*;
 import Game.Account;
 import Game.Team;
 import Game.Transaction;
-import Users.Owner;
-import Users.SystemManager;
+import Users.*;
 import system.SecurityMachine;
 import system.SystemController;
 
 import java.util.*;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
-        SecurityMachine securityMachine = new SecurityMachine();
+/****************************************************menu******************************************************/
+        Role member = new Guest();
+        String input ="";
+        Scanner scanInput = new Scanner(System.in);
+        SystemController controller = new SystemController("System Controller");
+        /*
+        Guest menu
+         */
+        while (!input.equals("Exit")) {
+            System.out.println("choose one of the following options:\n");
+            System.out.println("write \"1\" for signIn.");
+            System.out.println("write \"2\" for logIn.");
+            System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+        }
+        input = "";
+        while (input.equals("")){
+            input = scanInput.nextLine();
+        }
+        switch (input){
+
+            case "1":{
+                try {
+                    String[] details = fillFormSignIn();
+                    try {
+                        member = controller.signIn(details[1],details[0],details[2]);
+                        showMenu(member);
+                    } catch (MemberAlreadyExistException e) {
+                        System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
+                    }
+
+                } catch (IncorrectPasswordInputException e) {
+                    System.out.println("you entered wrong password - please enter password that contains only numbers and letters.");
+                } catch (IncorrectInputException e) {
+                    System.out.println("you entered invalid mail.");
+                }
+            }
+
+            case "2":{
+                String[] details = fillFormLogIn();
+                try {
+                    member = controller.logIn(details[1],details[0]);
+                    showMenu(member);
+                } catch (MemberDontExist e) {
+                    System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail");
+                }
+            }
+
+            case "Exit":{
+
+            }
+        }
+
+/***************************************************tests********************************************************/
+  /*      SecurityMachine securityMachine = new SecurityMachine();
         String afterEncrtypt = securityMachine.encrypt("stamLibdok", "key");
         String afterDycrypt = securityMachine.decrypt(afterEncrtypt, "key");
         System.out.println(afterEncrtypt);
@@ -62,7 +116,7 @@ public class Main {
         systemManager.addNewTeam(onlyTheIdPlayers1, onlyTheIdCoach1, onlyTheIdManager21, onlyTheIdOwner1, "macabi");
         System.out.println("done");
         int x = 0;
-        x++;
+        x++;*/
 
         // system.addCoach();
         //system.addManager();
@@ -116,5 +170,115 @@ public class Main {
 */
 
 
+    }
+
+    private static void guestMenu() {
+
+    }
+
+    /***********************************************private function**************************************************/
+
+    private static void showMenu(Role member) {
+        if(member instanceof Fan){
+
+        }
+        else if (member instanceof MainReferee){
+
+        }
+        else if (member instanceof SecondaryReferee){
+
+        }
+        else if (member instanceof SystemManager){
+
+        }
+        else if (member instanceof Owner){
+
+        }
+    }
+    /*******************************private function for guest menu**********************************/
+
+    /**
+     * This function fill the signIn-form with user mail, user name and user password
+     * @return String array - details[mail,name,password]
+     */
+    private static String[] fillFormSignIn() throws IncorrectPasswordInputException, IncorrectInputException {
+        String[] details = {};
+        Scanner scanInput = new Scanner(System.in);
+        try {
+            System.out.println("please enter your mail");
+            String mailInput = scanInput.nextLine();
+            if(!checkMailInput(mailInput)){
+                throw new IncorrectInputException("incorrect mail input");
+            }
+            System.out.println("please enter full name");
+            String nameInput = scanInput.nextLine();
+            System.out.println("please enter password - contains only numbers and letters");
+            String password = scanInput.nextLine();
+            if(!checkPasswordValue(password)){
+                throw (new IncorrectPasswordInputException());
+            }
+            System.out.println("please verify your password");
+            String password2 = scanInput.nextLine();
+            while (password.compareTo(password2) == 0){
+                System.out.println("you entered two different password");
+                System.out.println("please enter password");
+                password = scanInput.nextLine();
+                System.out.println("please verify your password");
+                password2 = scanInput.nextLine();
+            }
+
+            System.out.println("your details entered successfully!\nplease wait for confirmation");
+            details[0]=mailInput;
+            details[1]=nameInput;
+            details[2]=password;
+        }catch (IncorrectPasswordInputException e){
+        }catch (IncorrectInputException e){ }
+
+        return details;
+    }
+    /**
+     * this function fill the logIn-form : user name , user password
+     * @return String array  - details[mail,password]
+     */
+    private static String[] fillFormLogIn() {
+        String[] details = {,};
+        Scanner scanInput = new Scanner(System.in);
+        System.out.println("please enter your mail");
+        String mailInput = scanInput.nextLine();
+        System.out.println("please enter password");
+        String password = scanInput.nextLine();
+        details[0]=mailInput;
+        details[1]=password;
+        return details;
+    }
+    /**
+     * this function check if an email address is valid using Regex.
+     * @param mailInput
+     * @return
+     */
+    private static  boolean checkMailInput(String mailInput) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (mailInput == null)
+            return false;
+        return pat.matcher(mailInput).matches();
+    }
+    /**
+     * this function Use a regular expression (regex) to check for only letters and numbers
+     * The regex will check for upper and lower case letters and digits
+     * @param password
+     * @return
+     */
+    private static boolean checkPasswordValue(String password) {
+        // todo - check input of password - only numbers and letters
+        if( !password.matches("[a-zA-Z0-9]+") ){
+            /* A non-alphanumeric character was found, return false */
+            return false;
+        }
+        return true;
     }
 }
