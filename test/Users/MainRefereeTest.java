@@ -1,10 +1,12 @@
 package Users;
 
 import org.junit.Test;
+import system.SystemController;
 
 import static org.junit.Assert.*;
 
 public class MainRefereeTest {
+    SystemController controller = new SystemController("test controller");
 
     @Test
     public void printGameSchedule() {
@@ -12,6 +14,9 @@ public class MainRefereeTest {
 
     @Test
     public void updateDetails() {
+        // todo - UC 3 test - noa
+        //  check empty list , check 5 hours , check notApprove button ,
+        //  check Approve button - with correct events , check incorrect events
     }
 
     @Test

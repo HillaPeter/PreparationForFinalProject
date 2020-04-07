@@ -395,4 +395,22 @@ public class SystemController {
         roles.put(fan1.getUserMail() ,fan1);
     }
 
+    /**
+     * this function is used in test - return if the member exist in the system
+     * @param memberMail
+     * @return
+     */
+    public boolean ifMemberExistTesting(String memberMail){
+        if(memberMail!=null){
+            return roles.containsKey(memberMail);
+        }
+        return false;
+    }
+    public int sizeOfMembersListTesting(){
+        return this.roles.size();
+    }
+    public void addMemberTesting(Member member){
+        this.roles.put(member.getUserMail(),member);
+    }
+
 }
