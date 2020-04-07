@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
 /****************************************************menu******************************************************/
-        Role member = new Guest();
+        Role member;
         String input ="";
         Scanner scanInput = new Scanner(System.in);
         SystemController controller = new SystemController("System Controller");
@@ -27,44 +27,46 @@ public class Main {
             System.out.println("write \"1\" for signIn.");
             System.out.println("write \"2\" for logIn.");
             System.out.println("\nwrite \"Exit\" if you want to finish. \n");
-        }
-        input = "";
-        while (input.equals("")){
-            input = scanInput.nextLine();
-        }
-        switch (input){
+            input = "";
+            while (input.equals("")){
+                input = scanInput.nextLine();
+            }
+            switch (input){
 
-            case "1":{
-                try {
-                    String[] details = fillFormSignIn();
+                case "1":{
                     try {
-                        member = controller.signIn(details[1],details[0],details[2]);
-                        showMenu(member);
-                    } catch (MemberAlreadyExistException e) {
-                        System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
+                        String[] details = fillFormSignIn();
+                        try {
+                            member = controller.signIn(details[1],details[0],details[2]);
+                            System.out.println("succseed to signIn!!");
+                            showMenu(member);
+                        } catch (MemberAlreadyExistException e) {
+                            System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
+                        }
+
+                    } catch (IncorrectPasswordInputException e) {
+                        System.out.println("you entered wrong password - please enter password that contains only numbers and letters.");
+                    } catch (IncorrectInputException e) {
+                        System.out.println("you entered invalid mail.");
                     }
+                }break;
 
-                } catch (IncorrectPasswordInputException e) {
-                    System.out.println("you entered wrong password - please enter password that contains only numbers and letters.");
-                } catch (IncorrectInputException e) {
-                    System.out.println("you entered invalid mail.");
+                case "2":{
+                    String[] details = fillFormLogIn();
+                    try {
+                        member = controller.logIn(details[1],details[0]);
+                        showMenu(member);
+                    } catch (MemberDontExist e) {
+                        System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail");
+                    }
+                }break;
+
+                case "Exit":{
+
                 }
-            }
-
-            case "2":{
-                String[] details = fillFormLogIn();
-                try {
-                    member = controller.logIn(details[1],details[0]);
-                    showMenu(member);
-                } catch (MemberDontExist e) {
-                    System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail");
-                }
-            }
-
-            case "Exit":{
-
             }
         }
+
 
 /***************************************************tests********************************************************/
   /*      SecurityMachine securityMachine = new SecurityMachine();
@@ -202,37 +204,34 @@ public class Main {
      * @return String array - details[mail,name,password]
      */
     private static String[] fillFormSignIn() throws IncorrectPasswordInputException, IncorrectInputException {
-        String[] details = {};
+        String[] details = new String[3];
         Scanner scanInput = new Scanner(System.in);
-        try {
-            System.out.println("please enter your mail");
-            String mailInput = scanInput.nextLine();
-            if(!checkMailInput(mailInput)){
-                throw new IncorrectInputException("incorrect mail input");
-            }
-            System.out.println("please enter full name");
-            String nameInput = scanInput.nextLine();
-            System.out.println("please enter password - contains only numbers and letters");
-            String password = scanInput.nextLine();
-            if(!checkPasswordValue(password)){
-                throw (new IncorrectPasswordInputException());
-            }
+        System.out.println("please enter your mail");
+        String mailInput = scanInput.nextLine();
+        if(!checkMailInput(mailInput)){
+            throw new IncorrectInputException("incorrect mail input");
+        }
+        System.out.println("please enter full name");
+        String nameInput = scanInput.nextLine();
+        System.out.println("please enter password - contains only numbers and letters");
+        String password = scanInput.nextLine();
+        if(!checkPasswordValue(password)){
+            throw (new IncorrectPasswordInputException());
+        }
+        System.out.println("please verify your password");
+        String password2 = scanInput.nextLine();
+        while (password.compareTo(password2)!=0){
+            System.out.println("you entered two different password");
+            System.out.println("please enter password");
+            password = scanInput.nextLine();
             System.out.println("please verify your password");
-            String password2 = scanInput.nextLine();
-            while (password.compareTo(password2) == 0){
-                System.out.println("you entered two different password");
-                System.out.println("please enter password");
-                password = scanInput.nextLine();
-                System.out.println("please verify your password");
-                password2 = scanInput.nextLine();
-            }
+            password2 = scanInput.nextLine();
+        }
 
-            System.out.println("your details entered successfully!\nplease wait for confirmation");
-            details[0]=mailInput;
-            details[1]=nameInput;
-            details[2]=password;
-        }catch (IncorrectPasswordInputException e){
-        }catch (IncorrectInputException e){ }
+        System.out.println("your details entered successfully!\nplease wait for confirmation");
+        details[0]=mailInput;
+        details[1]=nameInput;
+        details[2]=password;
 
         return details;
     }
