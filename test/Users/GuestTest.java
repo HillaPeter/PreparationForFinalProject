@@ -23,15 +23,18 @@ public class GuestTest {
     @Test
     public void signInWithException() throws MemberAlreadyExistException {
         thrown.expect(MemberAlreadyExistException.class);
+
+        /*try to sign in but he is a member now*/
         Player player = new Player("noa","noa@gmail.com","123",null,"");
         controller.addPlayer(player);
-        controller.signIn("noa", "noa@gmail.com", "1--23");
+        controller.signIn("noa", "noa@gmail.com", "11123");
     }
     @Test
     public void signIn() {
         boolean notThrown = true;
         Player player = new Player("noa","noa@gmail.com","123",null,"");
         controller.addPlayer(player);
+        /*try to sign in with correct inputs  - result should be correct*/
         try {
             Member newMember = controller.signIn("noa", "noa2@gmail.com", "123");
             assertTrue(notThrown);
@@ -44,23 +47,32 @@ public class GuestTest {
         assertTrue(notThrown);
     }
     @Test
-    public void logInWithException() throws MemberDontExist {
+    public void logInWithException() throws MemberDontExist, PasswordDontMatchException {
         thrown.expect(MemberDontExist.class);
         controller.addPlayer(new Player("n","noa@gmail.com",null,""));
+
+        /*try to log in with not exist member - result should be negative*/
         Member member = controller.logIn("notExist@gmail.com","1223");
         assertNull(member);
     }
     @Test
-    public void logInIncorrectPassword() throws MemberDontExist, MemberAlreadyExistException {
-        controller.signIn("noa","noa@gmail.com","123");
-        Member member = controller.logIn("noa@gmail.com","1223");
-        assertNotNull(member);
-        //todo - incorrect password exception
+    public void logInIncorrectPassword() throws MemberDontExist, PasswordDontMatchException {
+        thrown.expect(PasswordDontMatchException.class);
+        Player player = new Player("noa","noa@gmail.com","123",null,"");
+        controller.addPlayer(player);
+
+        /*try to log in with different password - result should be negative*/
+        controller.logIn("noa@gmail.com","1223");
     }
     @Test
-    public void logIn() throws MemberDontExist, MemberAlreadyExistException {
-        controller.signIn("noa","noa@gmail.com","123Nn");
-        Member member = controller.logIn("noa@gmail.com","123Nn");
+    public void logIn() throws MemberDontExist, PasswordDontMatchException {
+        Player player = new Player("noa","noa@gmail.com","123",null,"");
+        controller.addPlayer(player);
+        assertTrue(controller.ifMemberExistTesting("noa@gmail.com"));
+
+        /*try to log in with correct details - result should be positive*/
+        Member member = controller.logIn("noa@gmail.com","123");
         assertNotNull(member);
+        assertThat(player, instanceOf(Player.class));
     }
 }

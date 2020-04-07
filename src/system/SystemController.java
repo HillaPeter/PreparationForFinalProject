@@ -13,6 +13,8 @@ import javafx.util.Pair;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class SystemController {
     private String name;
@@ -74,20 +76,21 @@ public class SystemController {
      *
      * @return
      */
-    public Member logIn(String userMail, String userPassword) throws MemberDontExist {
-        if (roles.containsKey(userMail)) {
+    public Member logIn(String userMail, String userPassword) throws MemberDontExist, PasswordDontMatchException {
+        if (roles.containsKey(userMail) || systemManagers.containsKey(userMail)) {
             Member existingMember = (Member) roles.get(userMail);
-            roles.remove("0");
-            return existingMember;
-        }
-        else if(systemManagers.containsKey(userMail)) {
-            Member existingMember = (Member) roles.get(userMail);
-            roles.remove("0");
+            checkValidationPassword(existingMember,userPassword);
             return existingMember;
         }
         else {
             throw new MemberDontExist();
         }
+    }
+
+    private void checkValidationPassword(Member member, String userPassword) throws PasswordDontMatchException{
+        if(! member.getPassword().equals(userPassword) )
+            throw new PasswordDontMatchException();
+        return;
     }
 
 
@@ -394,6 +397,9 @@ public class SystemController {
     public void addFan(Fan fan1) {
         roles.put(fan1.getUserMail() ,fan1);
     }
+
+
+    /******************************* function for Testing!!!!! (noa) *********************************/
 
     /**
      * this function is used in test - return if the member exist in the system

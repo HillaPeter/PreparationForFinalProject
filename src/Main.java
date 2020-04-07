@@ -68,7 +68,9 @@ public class Main {
                         member = controller.logIn(details[0], details[1]);
                         showMenu(member);
                     } catch (MemberDontExist e) {
-                        System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail");
+                        System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail.");
+                    } catch (PasswordDontMatchException e) {
+                        System.out.println("You entered incorrect password.\nlog in with the correct password.");
                     }
                 }
                 break;
@@ -487,9 +489,7 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
         System.out.println("--done.");
 
 */
-
-
-    /*******************************private function for guest menu**********************************/
+    /******************************* public function for guest menu (noa) **********************************/
 
     /**
      * This function fill the signIn-form with user mail, user name and user password
@@ -497,7 +497,7 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
      * @return String array - details[mail,name,password]
      */
 
-    private static String[] fillFormSignIn() throws IncorrectPasswordInputException, IncorrectInputException {
+    public static String[] fillFormSignIn() throws IncorrectPasswordInputException, IncorrectInputException {
         String[] details = new String[3];
         Scanner scanInput = new Scanner(System.in);
         System.out.println("please enter your mail");
@@ -535,7 +535,7 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
      *
      * @return String array  - details[mail,password]
      */
-    private static String[] fillFormLogIn() {
+    public static String[] fillFormLogIn() {
         String[] details = {"", ""};
         Scanner scanInput = new Scanner(System.in);
         System.out.println("please enter your mail");
@@ -553,7 +553,7 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
      * @param mailInput
      * @return
      */
-    private static boolean checkMailInput(String mailInput) {
+    public static boolean checkMailInput(String mailInput) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -572,7 +572,7 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
      * @param password
      * @return
      */
-    private static boolean checkPasswordValue(String password) {
+    public static boolean checkPasswordValue(String password) {
         // todo - check input of password - only numbers and letters
         if (!password.matches("[a-zA-Z0-9]+")) {
             /* A non-alphanumeric character was found, return false */
@@ -580,4 +580,5 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
         }
         return true;
     }
+
 }
