@@ -1,6 +1,7 @@
 package Game;
 
 import Asset.*;
+import Users.Member;
 import Users.Owner;
 
 import java.util.HashSet;
@@ -36,6 +37,40 @@ public class Team {
         this.players.addAll(players);
         this.owners.addAll(owners);
         this.managers.addAll(managers);
+        updateTheTeamListCoach(coaches);
+        updateTheTeamListPlayer(players);
+        updateTheTeamListManager(managers);
+        updateTheTeamListForOwner(owners);
+
+    }
+
+    private void updateTheTeamListCoach(LinkedList<Coach> list) {
+        for(int i=0; i<list.size(); i++)
+        {
+            TeamMember member=list.get(i);
+            member.addTeam(this);
+        }
+    }
+    private void updateTheTeamListManager(LinkedList<Manager> list) {
+        for(int i=0; i<list.size(); i++)
+        {
+            TeamMember member=list.get(i);
+            member.addTeam(this);
+        }
+    }
+    private void updateTheTeamListPlayer(LinkedList<Player> list) {
+        for(int i=0; i<list.size(); i++)
+        {
+            TeamMember member=list.get(i);
+            member.addTeam(this);
+        }
+    }
+    private void updateTheTeamListForOwner(LinkedList<Owner> list) {
+        for(int i=0; i<list.size(); i++)
+        {
+            Owner owner=list.get(i);
+            owner.addTeam(this);
+        }
     }
 
     public String getName() {

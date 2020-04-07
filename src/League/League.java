@@ -10,4 +10,9 @@ public class League {
         this.name = name;
         leagueInSeasons=new HashMap<>();
     }
+
+    public LeagueInSeason getLeagueInSeason(Season season)
+    {
+        return leagueInSeasons.get(season);
+    }
 }

@@ -17,6 +17,14 @@ public class Owner extends Member {
         //todo addTeam func?
     }
 
+    public void addTeam(Team team)
+    {
+        if(teams==null)
+        {
+            teams=new HashMap<>();
+        }
+        teams.put(team.getName() , team);
+    }
     public void removeTheTeamFromMyList(String name) {
         teams.remove(name);
     }

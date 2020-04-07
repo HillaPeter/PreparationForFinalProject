@@ -5,11 +5,16 @@ import Asset.Manager;
 import Asset.Player;
 import Game.Account;
 import Game.Team;
+import League.Season;
+import League.League;
+import League.LeagueInSeason;
+
 import system.SystemController;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -26,70 +31,11 @@ public class SystemManager extends Member {
         //todo
     }
 
-
-    public void schedulingGames() {
-        //todo
+    public void schedulingGames(String seasonId , String leagueId) {
+        League league=SystemController.getLeague(leagueId);
+        Season season=SystemController.getSeason(seasonId);
+        LeagueInSeason leagueInSeason=league.getLeagueInSeason(season);
     }
-    //this function return true if the team added and false if there were problem with the data
-    public boolean addNewTeam(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner, String teamName) {
-
-        if (idPlayers.size() < 11 || alreadyIncludeThisTeamName(teamName) == true || notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
-            return false;
-        } else {
-            LinkedList<Coach> coaches = makeCoachList(SystemController.returnFromSystemTheExactUsers(idCoach));
-            LinkedList<Player> players = makePlayerList(SystemController.returnFromSystemTheExactUsers(idPlayers));
-            LinkedList<Manager> managers = makeManagerList(SystemController.returnFromSystemTheExactUsers(idManager));
-            LinkedList<Owner> owners = makeOwnerList(SystemController.returnFromSystemTheExactUsers(idOwner));
-            Account account = new Account();
-            Team newTeam = new Team(account, players, coaches, managers, owners, teamName);
-            SystemController.addTeam(newTeam);
-            return true;
-        }
-    }
-
-    //from here help function for add new team
-    private LinkedList<Coach> makeCoachList(LinkedList<Member> returnFromSystemTheExactUsers) {
-        LinkedList<Coach> newList = new LinkedList<>();
-        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Coach) returnFromSystemTheExactUsers.get(i));
-        }
-        return newList;
-    }
-
-    private LinkedList<Player> makePlayerList(LinkedList<Member> returnFromSystemTheExactUsers) {
-        LinkedList<Player> newList = new LinkedList<>();
-        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Player) returnFromSystemTheExactUsers.get(i));
-        }
-        return newList;
-    }
-
-    private LinkedList<Owner> makeOwnerList(LinkedList<Member> returnFromSystemTheExactUsers) {
-        LinkedList<Owner> newList = new LinkedList<>();
-        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Owner) returnFromSystemTheExactUsers.get(i));
-        }
-        return newList;
-    }
-
-    private LinkedList<Manager> makeManagerList(LinkedList<Member> returnFromSystemTheExactUsers) {
-        LinkedList<Manager> newList = new LinkedList<>();
-        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Manager) returnFromSystemTheExactUsers.get(i));
-        }
-        return newList;
-    }
-
-    private boolean notAllTheIdAreMembers(LinkedList<Integer> idPlayers, LinkedList<Integer> idCoach, LinkedList<Integer> idManager, LinkedList<Integer> idOwner) {
-        return SystemController.notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner);
-
-    }
-
-    private boolean alreadyIncludeThisTeamName(String teamName) {
-
-        return SystemController.alreadyIncludeThisTeamName(teamName);
-    }
-    //until here
 
     public boolean removeReferee(String id) {
         //shachar
@@ -140,18 +86,90 @@ public class SystemManager extends Member {
         }
     }
 
+    /**
+     *     this function return true if the team added and false if there were problem with the data
+     */
+    public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner, String teamName) {
+
+        if (idPlayers.size() < 11 || alreadyIncludeThisTeamName(teamName) == true || notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
+            return false;
+        } else {
+            LinkedList<Coach> coaches = makeCoachList(SystemController.returnFromSystemTheExactUsers(idCoach));
+            LinkedList<Player> players = makePlayerList(SystemController.returnFromSystemTheExactUsers(idPlayers));
+            LinkedList<Manager> managers = makeManagerList(SystemController.returnFromSystemTheExactUsers(idManager));
+            LinkedList<Owner> owners = makeOwnerList(SystemController.returnFromSystemTheExactUsers(idOwner));
+            Account account = new Account();
+            Team newTeam = new Team(account, players, coaches, managers, owners, teamName);
+            SystemController.addTeam(newTeam);
+            return true;
+        }
+    }
+
+    /*************************************** help function for addNewTeam******************************************/
+
+    private LinkedList<Coach> makeCoachList(LinkedList<Member> returnFromSystemTheExactUsers) {
+        LinkedList<Coach> newList = new LinkedList<>();
+        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
+            newList.add((Coach) returnFromSystemTheExactUsers.get(i));
+        }
+        return newList;
+    }
+
+    private LinkedList<Player> makePlayerList(LinkedList<Member> returnFromSystemTheExactUsers) {
+        LinkedList<Player> newList = new LinkedList<>();
+        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
+            newList.add((Player) returnFromSystemTheExactUsers.get(i));
+        }
+        return newList;
+    }
+
+    private LinkedList<Owner> makeOwnerList(LinkedList<Member> returnFromSystemTheExactUsers) {
+        LinkedList<Owner> newList = new LinkedList<>();
+        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
+            newList.add((Owner) returnFromSystemTheExactUsers.get(i));
+        }
+        return newList;
+    }
+
+    private LinkedList<Manager> makeManagerList(LinkedList<Member> returnFromSystemTheExactUsers) {
+        LinkedList<Manager> newList = new LinkedList<>();
+        for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
+            newList.add((Manager) returnFromSystemTheExactUsers.get(i));
+        }
+        return newList;
+    }
+
+    private boolean notAllTheIdAreMembers(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner) {
+        return SystemController.notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner);
+
+    }
+
+    private boolean alreadyIncludeThisTeamName(String teamName) {
+
+        return SystemController.alreadyIncludeThisTeamName(teamName);
+    }
+
+    /*****************************************all the complaint function**************************************************/
+
     public LinkedList<String> watchComplaint(String path) {
         LinkedList<String> complaintList=readLineByLine(path);
         return complaintList;
     }
 
-    public boolean ResponseComplaint(String path ,LinkedList<String> response) {
+    /***
+     *
+     * @param path
+     * @param response this hashMap represent - the number of the complaint and the response for the complain
+     * @return
+     */
+    public boolean ResponseComplaint(String path , HashMap<Integer,String> response) {
         //this function get the linkes list after the manager added his response for the complaint
         writeToFile(path,response);
         return true;
     }
 
-    private void writeToFile(String path, LinkedList<String> response) {
+///////to change !!!! write to the specific line
+    private void writeToFile(String path, HashMap<Integer , String> response) {
         //to write in the specific line
         try {
             FileWriter fw = new FileWriter(path, true);

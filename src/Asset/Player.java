@@ -10,7 +10,7 @@ public class Player extends TeamMember{
     private HashSet<Event> events;
     private Date birthDate;
     private String role;
-    private Team team;//maybe just one team
+  //  private Team team;//maybe just one team
 
 
     public Player(String name, String userMail, String password, Date birthDate, String role) {

@@ -17,6 +17,14 @@ public class TeamMember extends Member {
         super(name, userMail);
     }
 
+    public void addTeam(Team teamToEnter)
+    {
+        if(team==null)
+        {
+            team=new HashMap<>();
+        }
+        team.put(teamToEnter.getName(), teamToEnter);
+    }
     public void removeTheTeamFromMyList(String name)
     {
         team.remove(name);

@@ -26,10 +26,12 @@ public abstract class Referee extends Member{
 
     public void deleteTheGames()
     {
+        /*
         for (Game game:games
              ) {
             game.removeRefree(this);
         }
+        */
     }
 
 
