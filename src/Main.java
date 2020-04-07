@@ -2,6 +2,7 @@
 import Asset.*;
 import Exception.*;
 import Users.*;
+import javafx.util.Pair;
 import system.SystemController;
 
 import java.util.*;
@@ -249,7 +250,7 @@ public class Main {
                             }
                             case "2": {
                                 try {
-                                    HashMap<Integer, String> responseForComplaint = new HashMap<>();
+                                    LinkedList<Pair<String , String>> responseForComplaint = new LinkedList<>();
                                     boolean success = controller.responseComplaint(member.getUserMail(), path, responseForComplaint);
                                 } catch (MemberNotSystemManager e) {
                                     System.out.println("you don't have the premission to remove refree");
@@ -285,28 +286,28 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
 
     Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
     Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
-    Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1, 1, 1995), "player");
-    Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1, 1, 1995), "player");
-    Player player3 = new Player("hilla", "hilla@gmail.com", "hilla", new Date(1, 1, 1995), "player");
-    Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1, 1, 1995), "player");
-    Player player5 = new Player("liat", "liat@gmail.com", "liat", new Date(1, 1, 1995), "player");
-    Player player6 = new Player("gadi", "gadi@gmail.com", "gadi", new Date(1, 1, 1995), "player");
-    Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1, 1, 1995), "player");
-    Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1, 1, 1995), "player");
-    Player player9 = new Player("or", "or@gmail.com", "or", new Date(1, 1, 1995), "player");
-    Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1, 1, 1995), "player");
-    Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1, 1, 1995), "player");
-    Player player12 = new Player("michelle", "michelle@gmail.com", "michelle", new Date(1, 1, 1995), "player");
-    Player player13 = new Player("gabi", "gabi@gmail.com", "gabi", new Date(1, 1, 1995), "player");
-    Player player14 = new Player("almog", "almog@gmail.com", "almog", new Date(1, 1, 1995), "player");
-    Player player15 = new Player("shani", "shani@gmail.com", "shani", new Date(1, 1, 1995), "player");
-    Player player16 = new Player("ifat", "ifat@gmail.com", "ifat", new Date(1, 1, 1995), "player");
-    Player player17 = new Player("inbal", "inbal@gmail.com", "dor", new Date(1, 1, 1995), "player");
-    Player player18 = new Player("oscar", "oscar@gmail.com", "oscar", new Date(1, 1, 1995), "player");
-    Player player19 = new Player("roman", "roman@gmail.com", "roman", new Date(1, 1, 1995), "player");
-    Player player20 = new Player("omer", "omer@gmail.com", "omer", new Date(1, 1, 1995), "player");
-    Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1, 1, 1995), "player");
-    Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1, 1, 1995), "player");
+    Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1995, 1, 1), "player");
+    Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1995, 1, 1), "player");
+    Player player3 = new Player("hilla", "hilla@gmail.com", "hilla", new Date(1995, 1, 1), "player");
+    Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1995, 1, 1), "player");
+    Player player5 = new Player("liat", "liat@gmail.com", "liat", new Date(1995, 1, 1), "player");
+    Player player6 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
+    Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1995, 1, 1), "player");
+    Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
+    Player player9 = new Player("or", "or@gmail.com", "or", new Date(1995, 1, 1), "player");
+    Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
+    Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
+    Player player12 = new Player("michelle", "michelle@gmail.com", "michelle", new Date(1995, 1, 1), "player");
+    Player player13 = new Player("gabi", "gabi@gmail.com", "gabi", new Date(1995, 1, 1), "player");
+    Player player14 = new Player("almog", "almog@gmail.com", "almog", new Date(1995, 1, 1), "player");
+    Player player15 = new Player("shani", "shani@gmail.com", "shani", new Date(1995, 1, 1), "player");
+    Player player16 = new Player("ifat", "ifat@gmail.com", "ifat", new Date(1995, 1, 1), "player");
+    Player player17 = new Player("inbal", "inbal@gmail.com", "dor", new Date(1995, 1, 1), "player");
+    Player player18 = new Player("oscar", "oscar@gmail.com", "oscar", new Date(1995, 1, 1), "player");
+    Player player19 = new Player("roman", "roman@gmail.com", "roman", new Date(1995, 1, 1), "player");
+    Player player20 = new Player("omer", "omer@gmail.com", "omer", new Date(1995, 1, 1), "player");
+    Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1995, 1, 1), "player");
+    Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1995, 1, 1), "player");
 
     controller.addPlayer(player1);
     controller.addPlayer(player2);

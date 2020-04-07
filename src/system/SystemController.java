@@ -8,6 +8,7 @@ import Game.Team;
 import League.*;
 import Users.*;
 import Exception.*;
+import javafx.util.Pair;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -177,7 +178,7 @@ public class SystemController {
      * @return
      * @throws MemberNotSystemManager
      */
-    public boolean responseComplaint(String systemManagerId , String path , HashMap<Integer,String> responseForComplaint) throws MemberNotSystemManager {
+    public boolean responseComplaint(String systemManagerId , String path , LinkedList<Pair<String , String>>responseForComplaint) throws MemberNotSystemManager {
         SystemManager systemManager = systemManagers.get(systemManagerId);
         if (null != systemManager) {
             return systemManager.ResponseComplaint(path , responseForComplaint);
