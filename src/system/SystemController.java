@@ -195,9 +195,9 @@ public class SystemController {
      * if the member exist - return the member
      * @return
      */
-    public Role logIn(String userMail , String userPassword)throws MemberDontExist{
+    public Member logIn(String userMail , String userPassword)throws MemberDontExist{
         if(roles.containsKey(userMail)){
-            Role existingMember = roles.get(userMail);
+            Member existingMember =(Member) roles.get(userMail);
             roles.remove("0");
             return existingMember;
         }

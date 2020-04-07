@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
 /****************************************************menu******************************************************/
-        Role member;
+        Member member;
         String input ="";
         Scanner scanInput = new Scanner(System.in);
         SystemController controller = new SystemController("System Controller");
