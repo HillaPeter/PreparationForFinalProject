@@ -19,8 +19,8 @@ public class Main {
         //SystemController controller =
 
         /**********for my test - shacahr********/
-        //Main main = new Main();
-        //main.shacharFunctionForTesting();
+        Main main = new Main();
+        main.shacharFunctionForTesting();
         /***************************************/
 
         startMenu();
@@ -379,6 +379,7 @@ private static void shacharFunctionForTesting() throws MemberNotSystemManager {
     owners1.add(owner1.getUserMail());
 
     controller.addTeam(systemManager.getUserMail(), players1, coaches1, managers1, owners1, name);
+    systemManager.watchComplaint("C:\\Users\\shachar meretz\\Desktop\\semesterB\\arnold\\projectGit\\PreparationForFinalProject\\complaint.txt");
     int x = 0;
 
 

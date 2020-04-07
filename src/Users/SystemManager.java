@@ -8,9 +8,8 @@ import Game.Team;
 import League.Season;
 import League.League;
 import League.LeagueInSeason;
-
+import javafx.util.Pair;
 import system.SystemController;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -162,20 +161,24 @@ public class SystemManager extends Member {
      * @param response this hashMap represent - the number of the complaint and the response for the complain
      * @return
      */
-    public boolean ResponseComplaint(String path , HashMap<Integer,String> response) {
+    public boolean ResponseComplaint(String path , LinkedList<Pair<String , String> >response) {
         //this function get the linkes list after the manager added his response for the complaint
         writeToFile(path,response);
         return true;
     }
 
-///////to change !!!! write to the specific line
-    private void writeToFile(String path, HashMap<Integer , String> response) {
-        //to write in the specific line
+    private void writeToFile(String path, LinkedList<Pair<String , String> >response) {
         try {
             FileWriter fw = new FileWriter(path, true);
             BufferedWriter bw = new BufferedWriter(fw);
             for(int i=0; i<response.size(); i++) {
-                bw.write(response.get(i));
+                if(!response.get(i).getValue().equals("")) {
+                    bw.write(i + "." + response.get(i).getKey() + ". answer: " + response.get(i).getValue());
+                }
+                else
+                {
+                    bw.write(i + "." + response.get(i).getKey() + ".");
+                }
             }
             bw.close();
         } catch (Exception e) {
