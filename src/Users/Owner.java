@@ -166,8 +166,7 @@ public class Owner extends Member {
     }
 
     public void removeManager(Team team, Manager manager) {
-        Team toDel=teams.get(team.getName());
-        HashSet<Manager> managers=toDel.getManagers();
+        HashSet<Manager> managers=team.getManagers();
         managers.remove(manager);
     }
 

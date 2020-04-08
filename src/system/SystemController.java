@@ -349,9 +349,11 @@ public class SystemController {
         return (Owner) roles.get(id);
     }
 
-    public Role getRole(String id) {
-        return roles.get(id);
-    }
+    public Player getPlayer(String id) { return (Player) roles.get(id); }
+
+    public Manager getManager(String id) { return (Manager) roles.get(id); }
+
+    public Coach getCoach(String id) { return (Coach) roles.get(id); }
 
     public HashMap<String, Role> getRoles() {
         return roles;
@@ -475,46 +477,50 @@ public class SystemController {
             Manager manager = new Manager(name, systemManager.getUserMail(), systemManager.getPassword());
             systemManagers.remove(systemManager);
             owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
         } else if (role instanceof Player) {
-            HashSet<Player> players = team.getPlayers();
-            for (Player p : players) {
-                if (p.getUserMail().equals(mail)) {
-                    Manager manager = new Manager(name, p.getUserMail(), p.getPassword());
-                    players.remove(p);
-                    roles.remove(p);
-                    owner.addNewManager(manager, getTeam(team.getName()));
-                }
-            }
+            Player p=getPlayer(mail);
+            Manager manager = new Manager(name, p.getUserMail(), p.getPassword());
+            roles.remove(p);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
         } else if (role instanceof Coach) {
-            HashSet<Coach> coaches = team.getCoaches();
-            for (Coach c : coaches) {
-                if (c.getUserMail().equals(mail)) {
-                    Manager manager = new Manager(name, c.getUserMail(), c.getPassword());
-                    coaches.remove(c);
-                    roles.remove(c);
-                    owner.addNewManager(manager, getTeam(team.getName()));
-                }
-            }
+            Coach c=getCoach(mail);
+            Manager manager = new Manager(name, c.getUserMail(), c.getPassword());
+            roles.remove(c);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
         } else if (role instanceof Fan) {
             Fan fan = (Fan) role;
             Manager manager = new Manager(name, fan.getUserMail(), fan.getPassword());
             roles.remove(fan);
             owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
         } else if (role instanceof AssociationDelegate) {
             AssociationDelegate associationDelegate = (AssociationDelegate) role;
             Manager manager = new Manager(name, associationDelegate.getUserMail(), associationDelegate.getPassword());
             roles.remove(associationDelegate);
             owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
         } else if (role instanceof Referee) {
             Referee referee = (Referee) role;
             Manager manager = new Manager(name, referee.getUserMail(), referee.getPassword());
             roles.remove(referee);
             owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
         }
     }
 
 
-    public void removeManager(Owner owner, Team team, Manager manager) {
+    /**
+     * owner:
+     * removes a manager
+     * @param owner
+     * @param team
+     * @param mailInput
+     */
+    public void removeManager(Owner owner, Team team, String mailInput) {
+        Manager manager=getManager(mailInput);
         owner.removeManager(team, manager);
         Fan fan=new Fan(manager.getName(),manager.getUserMail(),manager.getPassword());
         roles.remove(manager);

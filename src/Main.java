@@ -90,10 +90,10 @@ public class Main {
 
     private static void showMenu(Role member) {
         //just for testing
-        member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
+        //    member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
 
 
-        //    member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
+        member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
 
 
         if (member instanceof SystemManager) {
@@ -456,17 +456,11 @@ public class Main {
                             throw new RoleNotExist();
                         } else {
                             HashMap<String, Team> teams = controller.getTeams();
-                            if (owner != null) {
-
-                            } else {
-                                throw new OwnerNotExist();
-                            }
                             printTeamsBelongToOwner(owner, teams);
                             input = scanInput.nextLine();
                             team = teams.get(input);
                             controller.addManager(owner, team, role, mailId);
                         }
-                        System.out.println("FINISHED");
                         break;
                     }
                     case "5": {
@@ -487,16 +481,7 @@ public class Main {
                             System.out.println(m.getUserMail());
                         }
                         String mailInput = scanInput.nextLine();
-
-                        Role role = controller.getRole(mailInput);
-                        Manager m = (Manager) role;
-                        if (m == null) {
-                            System.out.println("fix me manager null");
-                        } else {
-                            controller.removeManager(owner, team, m);
-                            System.out.println("FINISHSHSHSDHS");
-                        }
-
+                        controller.removeManager(owner, team, mailInput);
                         break;
                     }
                     case "7": {
@@ -522,13 +507,11 @@ public class Main {
 
                 }
             }
-        } catch (TeamNotExist e) {
+        } catch (TeamNotExist teamNotExist) {
 
-        } catch (RoleNotExist e) {
+        } catch (RoleNotExist roleNotExist) {
 
-        } catch (NoEnoughMoney e) {
-
-        } catch (OwnerNotExist ownerNotExist) {
+        } catch (NoEnoughMoney noEnoughMoney) {
 
         }
 
@@ -728,8 +711,8 @@ public class Main {
 
         Owner ownerHilla = new Owner("hilla", "hilla@gmail.com", "h1", controller);
         Owner ownerLiat = new Owner("liat", "liat@gmail.com", "l1", controller);
-        Manager manager1 = new Manager("oren tzur", "oren@gmaill.com", "125");
-        Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
+        Manager manager1 = new Manager("oren tzur", "oren@gmail.com", "125");
+        Manager manager2 = new Manager("guy shani", "guy@gmail.com", "126");
         controller.addManager(manager1);
         controller.addManager(manager2);
         controller.addOwner(ownerHilla);
@@ -788,14 +771,14 @@ public class Main {
 
         Account account0 = new Account("Hapoel", listTransactions, 123123);
         Field field0 = new Field();
-        Team team0 = new Team("Hapoel Haifa", account0, field0);
+        Team team0 = new Team("hapoel", account0, field0);
         field0.setTeam(team0);
         HashSet<Owner> ownersTeam0 = team0.getOwners();
         ownersTeam0.add(ownerHilla);
 
         Account account1 = new Account("Maccabi", listTransactions, 12335435);
         //  Field field1= new Field("Sami offer");
-        Team team1 = new Team("Maccabi Haifa", account1, null);
+        Team team1 = new Team("maccabi", account1, null);
         // field1.setTeam(team1);
         HashSet<Owner> ownersTeam1 = team1.getOwners();
         ownersTeam1.add(ownerHilla);
@@ -805,8 +788,7 @@ public class Main {
         hashMapTeams.put("Hapoel", team1);
 
         ownerHilla.setTeams(hashMapTeams);
-        controller.addTeam(team0);
-        controller.addTeam(team1);
+
 
 
         team0.setPlayers(players);
@@ -824,7 +806,8 @@ public class Main {
         managers.add(manager2);
         team0.setManagers(managers);
 
-
+        controller.addTeam(team0);
+        controller.addTeam(team1);
     }
 
 
