@@ -17,6 +17,7 @@ public class Team {
     private HashSet<Manager> managers;
     private HashSet<Owner> owners;
     private Field field;
+    private Boolean status; //true=> team is open , false=>team is closed
 
     public Team(String name, Account account, Field field) {
         this.name = name;
@@ -146,6 +147,19 @@ public class Team {
     public void addManager(Manager someone) {
         if(someone!=null && !this.managers.contains(someone))
             this.managers.add(someone);
+    }
+
+    public boolean getStatus() {
+        return this.status;
+    }
+    public void setStatus(boolean status){
+        this.status = status;
+    }
+
+    public boolean isOwner(Owner owner) {
+        if(this.owners!=null && this.owners.contains(owner))
+            return true;
+        return false;
     }
 }
 

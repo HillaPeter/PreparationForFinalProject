@@ -246,6 +246,16 @@ public class Owner extends Member {
         return found;
     }
 
+    /**
+     * check if team belongs to owner
+     * @param teamId
+     * @return
+     */
+    public boolean checkIfTeamExist(String teamId) {
+        if(this.teams!=null && this.teams.containsKey(teamId))
+            return true;
+        return false;
+    }
 
     /***************************Getters************************************************************/
     public HashMap<String, Team> getTeams() {

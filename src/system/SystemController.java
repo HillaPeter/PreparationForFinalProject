@@ -450,9 +450,6 @@ public class SystemController {
     public int sizeOfMembersListTesting() {
         return this.roles.size();
     }
-    public int sizeOfManagerListTesting() {
-        return this.systemManagers.size();
-    }
 
     public Role getMember(String id){
         if(this.roles.get(id) == null )
@@ -557,5 +554,51 @@ public class SystemController {
 
     }
 
+    /**
+     * Owner:
+     * reopen team
+     * @param ownerMail
+     * @param teamId
+     */
+    public void reopenTeam(String ownerMail, String teamId) throws OwnerNotExist, TeamNotExist, UnavalableOption {
+        if(!roles.containsKey(ownerMail))
+            throw new OwnerNotExist();
+        if (!teams.containsKey(teamId))
+            throw new TeamNotExist();
 
+        Owner owner = getOwner(ownerMail);
+        Team team = getTeam(teamId);
+
+        if(! owner.checkIfTeamExist(teamId))
+            throw new TeamNotExist();
+        if(team.getStatus())
+            throw new UnavalableOption();
+
+        //todo
+    }
+
+    /**
+     * Owner :
+     * temporary Team Closeing
+     * @param ownerMail
+     * @param teamId
+     */
+    public void temporaryTeamClosing(String ownerMail, String teamId) throws OwnerNotExist, TeamNotExist, UnavalableOption{
+        if(!roles.containsKey(ownerMail))
+            throw new OwnerNotExist();
+        if (!teams.containsKey(teamId))
+            throw new TeamNotExist();
+
+        Owner owner = getOwner(ownerMail);
+        Team team = getTeam(teamId);
+
+        if(! owner.checkIfTeamExist(teamId))
+            throw new TeamNotExist();
+        if(!team.getStatus())
+            throw new UnavalableOption();
+
+
+        //todo
+
+    }
 }

@@ -72,6 +72,9 @@ public class OwnerTest {
         listTransactions.add(transaction);
     }
 
+    @Rule
+    public final ExpectedException thrown= ExpectedException.none();
+
     @Test
     public void getUserMail() {
     }
@@ -123,9 +126,8 @@ public class OwnerTest {
     @Test
     public void removeAsset() {
     }
+    /******************************************addNewManager******************************************/
 
-    @Rule
-    public final ExpectedException thrown= ExpectedException.none();
     @Test
     public void addNewManagerNoEnoughMoney() throws NoEnoughMoney, TeamNotExist, OwnerNotExist {
         thrown.expect(NoEnoughMoney.class);
@@ -204,10 +206,12 @@ public class OwnerTest {
         assertThat(controller.getMember(exist.getUserMail()),instanceOf(Manager.class));
         assertFalse(team0.isManager(exist));
     }
+    /******************************************addNewOwner******************************************/
 
     @Test
     public void addNewOwner() {
     }
+    /******************************************removeManager******************************************/
 
     @Test
     public void removeManagerTeamNotExist() throws OwnerNotExist, TeamNotExist, ManagerNotExist {
@@ -257,7 +261,6 @@ public class OwnerTest {
         /* try to remove manager who not exist in the team - result should be negative */
         controller.removeManager(owner,team0,notExist.getUserMail());
     }
-
     @Test
     public void removeManager() throws OwnerNotExist, TeamNotExist , ManagerNotExist{
         /* init */
@@ -279,14 +282,146 @@ public class OwnerTest {
         assertEquals(sizeBeforeTeams-1 , manager.getTeam().size());
         assertEquals(sizeBeforeManagers-1 , team0.getManagers().size());
     }
+    /******************************************temporaryTeamClosing******************************************/
+    @Test
+    public void temporaryTeamClosingTeamNotExist1() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        thrown.expect(TeamNotExist.class);
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        Team team1 = new Team("Hapoel1", account0, field0);
+        team0.setPlayers(players);
+        team0.setStatus(true);
+        team1.setStatus(true);
+        controller.addTeam(team0);
+        owner.addTeam(team0);
+
+
+        /* try to close team who not exist - result negative*/
+        controller.temporaryTeamClosing(owner.getUserMail(),team1.getName());
+
+    }
+    @Test
+    public void temporaryTeamClosingTeamNotExist2() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        thrown.expect(TeamNotExist.class);
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        Team team1 = new Team("Hapoel1", account0, field0);
+        team0.setPlayers(players);
+
+        controller.addTeam(team0);
+        controller.addTeam(team1);
+        team0.setStatus(true);
+        team1.setStatus(true);
+        owner.addTeam(team0);
+
+        /* try to close team who not exist in owner's teams- result negative*/
+        controller.temporaryTeamClosing(owner.getUserMail(),team1.getName());
+    }
+    @Test
+    public void temporaryTeamClosingUnavalableOption() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        thrown.expect(UnavalableOption.class);
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        team0.setPlayers(players);
+        team0.setStatus(false);
+        controller.addTeam(team0);
+        owner.addTeam(team0);
+
+        /* try to close team who close already - result negative*/
+        controller.temporaryTeamClosing(owner.getUserMail(),team0.getName());
+        assertFalse(team0.getStatus());
+        assertTrue(controller.existTeamName(team0.getName()));
+        assertTrue(owner.getTeams().containsKey(team0.getName()));
+        assertTrue(team0.isOwner(owner));
+    }
+    @Test
+    public void temporaryTeamClosing() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        team0.setPlayers(players);
+        team0.setStatus(false);
+        controller.addTeam(team0);
+        owner.addTeam(team0);
+        int sizeBefore = this.owner.getTeams().size();
+
+        /* try to reopen team who open already - result negative*/
+        controller.temporaryTeamClosing(owner.getUserMail(),team0.getName());
+        assertFalse(team0.getStatus());
+        assertEquals(sizeBefore , owner.getTeams().size());
+        assertTrue(controller.existTeamName(team0.getName()));
+    }
+    /******************************************reopenClosedTeam******************************************/
 
     @Test
-    public void temporaryTeamClosing() {
-    }
+    public void reopenClosedTeamTeamNotExist1() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        thrown.expect(TeamNotExist.class);
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        Team team1 = new Team("Hapoel1", account0, field0);
 
-    @Test
-    public void reopenClosedTeam() {
+        team0.setPlayers(players);
+        controller.addTeam(team0);
+        owner.addTeam(team0);
+
+        /* try to reopen team who not exist - result negative*/
+        controller.reopenTeam(owner.getUserMail(),team1.getName());
+
     }
+    @Test
+    public void reopenClosedTeamTeamNotExist2() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        thrown.expect(TeamNotExist.class);
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        Team team1 = new Team("Hapoel1", account0, field0);
+        team0.setPlayers(players);
+
+        controller.addTeam(team0);
+        controller.addTeam(team1);
+        owner.addTeam(team0);
+
+        /* try to reopen team who not exist in owner's teams- result negative*/
+        controller.reopenTeam(owner.getUserMail(),team1.getName());
+    }
+    @Test
+    public void reopenClosedUnavalableOption() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        thrown.expect(UnavalableOption.class);
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        team0.setPlayers(players);
+        team0.setStatus(true);
+        controller.addTeam(team0);
+        owner.addTeam(team0);
+
+        /* try to reopen team who open already - result negative*/
+        controller.reopenTeam(owner.getUserMail(),team0.getName());
+    }
+    @Test
+    public void reopenClosed() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+        /* init */
+        account0 = new Account("Hapoel", listTransactions, 0);
+        Team team0 = new Team("Hapoel", account0, field0);
+        team0.setPlayers(players);
+        team0.setStatus(false);
+        controller.addTeam(team0);
+        owner.addTeam(team0);
+        int sizeBefore = this.owner.getTeams().size();
+
+        /* try to reopen team who open already - result negative*/
+        controller.reopenTeam(owner.getUserMail(),team0.getName());
+        assertTrue(team0.getStatus());
+        assertEquals(sizeBefore , owner.getTeams().size());
+        assertTrue(controller.existTeamName(team0.getName()));
+        assertTrue(owner.getTeams().containsKey(team0.getName()));
+        assertTrue(team0.isOwner(owner));
+    }
+    /******************************************addIncome******************************************/
 
     @Test
     public void addIncome() {
