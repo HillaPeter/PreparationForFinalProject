@@ -5,8 +5,7 @@ import java.util.ArrayList;
 public class Account {
     private String name;
     private ArrayList<Transaction> transactions;
-    //todo:
-    private double amountOfTeam;//?????do we need this??
+    private double amountOfTeam;
 
     public Account(String name, ArrayList<Transaction> transactions, double amountOfTeam) {
         this.name = name;
@@ -31,5 +30,9 @@ public class Account {
 
     public ArrayList<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public double getAmountOfTeam() {
+        return amountOfTeam;
     }
 }

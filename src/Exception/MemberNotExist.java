@@ -1,7 +1,7 @@
 package Exception;
 
-public class MemberDontExist extends Exception{
-    public MemberDontExist(){
+public class MemberNotExist extends Exception{
+    public MemberNotExist(){
         super("this mail member doest exist in the system");
     }
 }

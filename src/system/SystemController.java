@@ -3,7 +3,7 @@ package system;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
-import Asset.TeamMember;
+import Game.Account;
 import Game.Team;
 import League.*;
 import Users.*;
@@ -13,13 +13,11 @@ import javafx.util.Pair;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class SystemController {
     private String name;
-    private HashMap<String , League> leagues;
-    private HashMap<String , Season> seasons;
+    private HashMap<String, League> leagues;
+    private HashMap<String, Season> seasons;
     private HashMap<String, SystemManager> systemManagers;
     private HashMap<String, Role> roles; // hash map <mail,role>
     private HashMap<String, Team> teams;
@@ -27,6 +25,7 @@ public class SystemController {
 
     /**
      * constructor
+     *
      * @param name
      */
     public SystemController(String name) {
@@ -57,6 +56,7 @@ public class SystemController {
      * if the member's mail doesnt exist -
      * we will remove the Guest from the roles map and add create a Fan member by default and return true
      * if the member's mail exist in the system - prints a error message and return false.
+     *
      * @return true = success or false = failed to sign
      */
     public Member signIn(String userName, String userMail, String password) throws MemberAlreadyExistException {
@@ -76,19 +76,18 @@ public class SystemController {
      *
      * @return
      */
-    public Member logIn(String userMail, String userPassword) throws MemberDontExist, PasswordDontMatchException {
+    public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
         if (roles.containsKey(userMail) || systemManagers.containsKey(userMail)) {
             Member existingMember = (Member) roles.get(userMail);
-            checkValidationPassword(existingMember,userPassword);
+            checkValidationPassword(existingMember, userPassword);
             return existingMember;
-        }
-        else {
-            throw new MemberDontExist();
+        } else {
+            throw new MemberNotExist();
         }
     }
 
-    private void checkValidationPassword(Member member, String userPassword) throws PasswordDontMatchException{
-        if(! member.getPassword().equals(userPassword) )
+    private void checkValidationPassword(Member member, String userPassword) throws PasswordDontMatchException {
+        if (!member.getPassword().equals(userPassword))
             throw new PasswordDontMatchException();
         return;
     }
@@ -128,6 +127,7 @@ public class SystemController {
      * this function get the team name and the id of the system manager that take care of this function
      * if the team name already exist - close the team and return true
      * if the team dont exist return false
+     *
      * @param systemManagerId
      * @param teamName
      * @return
@@ -144,6 +144,7 @@ public class SystemController {
 
     /**
      * this function get the id of the member we want to delete and the id of the system manager that take care of this function
+     *
      * @param systemManagerId
      * @param id
      * @return
@@ -160,14 +161,15 @@ public class SystemController {
 
     /**
      * this function get the path to the complaint file and the id of the system manager that take care of this function
+     *
      * @param systemManagerId
      * @param path
      * @throws MemberNotSystemManager
      */
-    public void watchComplaint(String systemManagerId , String path) throws MemberNotSystemManager {
+    public void watchComplaint(String systemManagerId, String path) throws MemberNotSystemManager {
         SystemManager systemManager = systemManagers.get(systemManagerId);
         if (null != systemManager) {
-            LinkedList<String> complaint= systemManager.watchComplaint(path);
+            LinkedList<String> complaint = systemManager.watchComplaint(path);
         } else {
             throw new MemberNotSystemManager();
         }
@@ -175,16 +177,17 @@ public class SystemController {
 
     /**
      * this function get the path to the complaint file , the response for the complaint and the id of the system manager that take care of this function
+     *
      * @param systemManagerId
      * @param path
      * @param responseForComplaint
      * @return
      * @throws MemberNotSystemManager
      */
-    public boolean responseComplaint(String systemManagerId , String path , LinkedList<Pair<String , String>>responseForComplaint) throws MemberNotSystemManager {
+    public boolean responseComplaint(String systemManagerId, String path, LinkedList<Pair<String, String>> responseForComplaint) throws MemberNotSystemManager {
         SystemManager systemManager = systemManagers.get(systemManagerId);
         if (null != systemManager) {
-            return systemManager.ResponseComplaint(path , responseForComplaint);
+            return systemManager.ResponseComplaint(path, responseForComplaint);
         } else {
             throw new MemberNotSystemManager();
         }
@@ -193,7 +196,7 @@ public class SystemController {
     public void schedulingGames(String systemManagerId) throws MemberNotSystemManager {
         SystemManager systemManager = systemManagers.get(systemManagerId);
         if (null != systemManager) {
-         //   systemManager.schedulingGames();
+            //   systemManager.schedulingGames();
         } else {
             throw new MemberNotSystemManager();
         }
@@ -209,9 +212,10 @@ public class SystemController {
     }
 
     /**
-     *  this function get the team name and all the team member and the id of the system manager that take care of this function
-     *   if the team name not exist - open the team and return true
-     *   if the team exist return false
+     * this function get the team name and all the team member and the id of the system manager that take care of this function
+     * if the team name not exist - open the team and return true
+     * if the team exist return false
+     *
      * @param systemManagerId
      * @param players
      * @param coachs
@@ -224,7 +228,7 @@ public class SystemController {
     public boolean addTeam(String systemManagerId, LinkedList<String> players, LinkedList<String> coachs, LinkedList<String> managers, LinkedList<String> owners, String teamName) throws MemberNotSystemManager {
         SystemManager systemManager = systemManagers.get(systemManagerId);
         if (null != systemManager) {
-            return systemManager.addNewTeam(players,coachs,managers,owners,teamName);
+            return systemManager.addNewTeam(players, coachs, managers, owners, teamName);
         } else {
             throw new MemberNotSystemManager();
         }
@@ -340,7 +344,26 @@ public class SystemController {
     public Referee getRefree(String id) {
         return (Referee) roles.get(id);
     }
-/***************************************add function******************************************/
+
+    public Owner getOwner(String id) {
+        return (Owner) roles.get(id);
+    }
+
+    public Player getPlayer(String id) { return (Player) roles.get(id); }
+
+    public Manager getManager(String id) { return (Manager) roles.get(id); }
+
+    public Coach getCoach(String id) { return (Coach) roles.get(id); }
+
+    public HashMap<String, Role> getRoles() {
+        return roles;
+    }
+
+    public HashMap<String, Team> getTeams() {
+        return teams;
+    }
+
+    /***************************************add function******************************************/
 
     /***
      * this function add player to the roles list
@@ -360,6 +383,7 @@ public class SystemController {
 
     /**
      * this function add manager to the roles list
+     *
      * @param manager
      */
     public void addManager(Manager manager) {
@@ -368,6 +392,7 @@ public class SystemController {
 
     /**
      * this function add owner to the roles list
+     *
      * @param owner
      */
     public void addOwner(Owner owner) {
@@ -376,6 +401,7 @@ public class SystemController {
 
     /**
      * this function add team to the teams list
+     *
      * @param team
      */
     public void addTeam(Team team) {
@@ -384,6 +410,7 @@ public class SystemController {
 
     /**
      * this function add system manager to the system manager list
+     *
      * @param systemManager
      */
     public void addSystemManager(SystemManager systemManager) {
@@ -392,10 +419,11 @@ public class SystemController {
 
     /**
      * this function add fan to the roles list
+     *
      * @param fan1
      */
     public void addFan(Fan fan1) {
-        roles.put(fan1.getUserMail() ,fan1);
+        roles.put(fan1.getUserMail(), fan1);
     }
 
 
@@ -403,20 +431,100 @@ public class SystemController {
 
     /**
      * this function is used in test - return if the member exist in the system
+     *
      * @param memberMail
      * @return
      */
-    public boolean ifMemberExistTesting(String memberMail){
-        if(memberMail!=null){
+    public boolean ifMemberExistTesting(String memberMail) {
+        if (memberMail != null) {
             return roles.containsKey(memberMail);
         }
         return false;
     }
-    public int sizeOfMembersListTesting(){
+
+    public int sizeOfMembersListTesting() {
         return this.roles.size();
     }
-    public void addMemberTesting(Member member){
-        this.roles.put(member.getUserMail(),member);
+
+    public void addMemberTesting(Member member) {
+        this.roles.put(member.getUserMail(), member);
     }
 
+
+    /*************************************** function for owner******************************************/
+
+    /**
+     * owner:
+     * add a new manager to team
+     * delete his prev role
+     * @param owner
+     * @param team
+     * @param role
+     * @param mail
+     * @throws NoEnoughMoney
+     */
+    public void addManager(Owner owner, Team team, Role role, String mail) throws NoEnoughMoney {
+        Account account = team.getAccount();
+        //how much it cost?
+        if (account.getAmountOfTeam() >= 0) {
+            account.setAmountOfTeam(account.getAmountOfTeam() - 0);
+        } else {
+            throw new NoEnoughMoney();
+        }
+
+        if (role instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) role;
+            Manager manager = new Manager(name, systemManager.getUserMail(), systemManager.getPassword());
+            systemManagers.remove(systemManager);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
+        } else if (role instanceof Player) {
+            Player p=getPlayer(mail);
+            Manager manager = new Manager(name, p.getUserMail(), p.getPassword());
+            roles.remove(p);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
+        } else if (role instanceof Coach) {
+            Coach c=getCoach(mail);
+            Manager manager = new Manager(name, c.getUserMail(), c.getPassword());
+            roles.remove(c);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
+        } else if (role instanceof Fan) {
+            Fan fan = (Fan) role;
+            Manager manager = new Manager(name, fan.getUserMail(), fan.getPassword());
+            roles.remove(fan);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
+        } else if (role instanceof AssociationDelegate) {
+            AssociationDelegate associationDelegate = (AssociationDelegate) role;
+            Manager manager = new Manager(name, associationDelegate.getUserMail(), associationDelegate.getPassword());
+            roles.remove(associationDelegate);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
+        } else if (role instanceof Referee) {
+            Referee referee = (Referee) role;
+            Manager manager = new Manager(name, referee.getUserMail(), referee.getPassword());
+            roles.remove(referee);
+            owner.addNewManager(manager, getTeam(team.getName()));
+            addManager(manager);
+        }
+    }
+
+
+    /**
+     * owner:
+     * removes a manager
+     * @param owner
+     * @param team
+     * @param mailInput
+     */
+    public void removeManager(Owner owner, Team team, String mailInput) {
+        Manager manager=getManager(mailInput);
+        owner.removeManager(team, manager);
+        Fan fan=new Fan(manager.getName(),manager.getUserMail(),manager.getPassword());
+        roles.remove(manager);
+        roles.put(fan.getUserMail(),fan);
+
+    }
 }
