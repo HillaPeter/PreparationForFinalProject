@@ -90,10 +90,10 @@ public class Main {
 
     private static void showMenu(Role member) {
         //just for testing
-          member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
+        member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
 
 
-     //   member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
+        //    member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
 
 
         if (member instanceof SystemManager) {
@@ -456,12 +456,12 @@ public class Main {
                             throw new RoleNotExist();
                         } else {
                             HashMap<String, Team> teams = controller.getTeams();
-                            if(owner!=null){
+                            if (owner != null) {
 
-                            }else{
+                            } else {
                                 throw new OwnerNotExist();
                             }
-                            printTeamsBelongToOwner(owner,teams);
+                            printTeamsBelongToOwner(owner, teams);
                             input = scanInput.nextLine();
                             team = teams.get(input);
                             controller.addManager(owner, team, role, mailId);
@@ -477,23 +477,26 @@ public class Main {
                     case "6": {
                         //print all teams
                         HashMap<String, Team> teams = controller.getTeams();
-                        printTeamsBelongToOwner(owner,teams);
+                        printTeamsBelongToOwner(owner, teams);
                         input = scanInput.nextLine();
                         team = teams.get(input);
 
                         System.out.println("Choose role to delete him from being manager");
-                        HashSet<Manager> managers=team.getManagers();
-                        for(Manager m: managers){
+                        HashSet<Manager> managers = team.getManagers();
+                        for (Manager m : managers) {
                             System.out.println(m.getUserMail());
                         }
                         String mailInput = scanInput.nextLine();
 
-                        for(Manager m: managers){
-                           if(mailInput.equals(m.getUserMail())){
-                               controller.removeManager(owner,team,m);
-                               System.out.println("FINISHSHSHSDHS");
-                           }
+                        Role role = controller.getRole(mailInput);
+                        Manager m = (Manager) role;
+                        if (m == null) {
+                            System.out.println("fix me manager null");
+                        } else {
+                            controller.removeManager(owner, team, m);
+                            System.out.println("FINISHSHSHSDHS");
                         }
+
                         break;
                     }
                     case "7": {
@@ -535,6 +538,7 @@ public class Main {
 
     /**
      * print all the teams belong to owner
+     *
      * @param owner
      * @param teams
      */
@@ -757,7 +761,7 @@ public class Main {
         controller.addPlayer(player10);
         controller.addPlayer(player11);
 
-        HashSet<Player> players=new HashSet<>();
+        HashSet<Player> players = new HashSet<>();
         players.add(player1);
         players.add(player2);
         players.add(player3);
@@ -808,19 +812,17 @@ public class Main {
         team0.setPlayers(players);
 
 
-        HashSet<Owner> owners=new HashSet<>();
+        HashSet<Owner> owners = new HashSet<>();
         owners.add(ownerHilla);
         owners.add(ownerLiat);
 
         team0.setOwners(owners);
 
         //managers
-        HashSet<Manager> managers=new HashSet<>();
+        HashSet<Manager> managers = new HashSet<>();
         managers.add(manager1);
         managers.add(manager2);
         team0.setManagers(managers);
-
-
 
 
     }
