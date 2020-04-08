@@ -24,7 +24,9 @@ public class TeamMember extends Member {
         {
             team=new HashMap<>();
         }
-        team.put(teamToEnter.getName(), teamToEnter);
+        if(!team.containsKey(teamToEnter.getName())){
+            team.put(teamToEnter.getName(), teamToEnter);
+        }
     }
     public void removeTheTeamFromMyList(String name)
     {

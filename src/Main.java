@@ -306,7 +306,7 @@ public class Main {
                 System.out.println("write \"2\" Update Asset");
                 System.out.println("write \"3\" Remove Asset");
                 System.out.println("write \"4\" Add New Manager");
-                System.out.println("write \"5\" Add another Owner");
+                System.out.println("write \"5\" Add New Owner");
                 System.out.println("write \"6\" Remove Manager");
                 System.out.println("write \"7\" Temporary Team Closing");
                 System.out.println("write \"8\" Reopen Closed Team");
@@ -459,7 +459,13 @@ public class Main {
                             printTeamsBelongToOwner(owner, teams);
                             input = scanInput.nextLine();
                             team = teams.get(input);
-                            controller.addManager(owner, team, role, mailId);
+                            try {
+                                controller.addManager(owner, team, role, mailId);
+                            } catch (OwnerNotExist ownerNotExist) {
+                                System.out.println("Owner doesnt exist");
+                            }catch (TeamNotExist teamNotExist){
+                                System.out.println("Team doesnt exist");
+                            }
                         }
                         break;
                     }
@@ -481,7 +487,15 @@ public class Main {
                             System.out.println(m.getUserMail());
                         }
                         String mailInput = scanInput.nextLine();
-                        controller.removeManager(owner, team, mailInput);
+                        try {
+                            controller.removeManager(owner, team, mailInput);
+                        } catch (OwnerNotExist ownerNotExist) {
+                            System.out.println("Owner doesnt exist");
+                        }catch (TeamNotExist teamNotExist){
+                            System.out.println("Team doesnt exist");
+                        } catch (ManagerNotExist managerNotExist) {
+                            System.out.println("Manager doesnt exist in the team");
+                        }
                         break;
                     }
                     case "7": {

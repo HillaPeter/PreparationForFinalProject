@@ -45,7 +45,6 @@ public class SystemManagerTest {
     @Test
     public void schedulingGames() {
         //todo - UC4 noa
-
     }
 
     @Test

@@ -23,7 +23,9 @@ public class Owner extends Member {
         {
             teams=new HashMap<>();
         }
-        teams.put(team.getName() , team);
+        if(!teams.containsKey(team.getName())){
+            teams.put(team.getName() , team);
+        }
     }
     public void removeTheTeamFromMyList(String name) {
         teams.remove(name);
@@ -158,6 +160,8 @@ public class Owner extends Member {
      */
     public void addNewManager(Manager manager,Team team) {
       HashSet<Manager> managers=team.getManagers();
+      manager.addTeam(team);
+      team.addManager(manager);
       managers.add(manager);
     }
 

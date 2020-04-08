@@ -4,6 +4,7 @@ import Asset.*;
 import Users.Member;
 import Users.Owner;
 import Users.Role;
+import Users.SystemManager;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -136,6 +137,15 @@ public class Team {
 
     public void setOwners(HashSet<Owner> owners) {
         this.owners = owners;
+    }
+
+    public boolean isManager(Manager someone) {
+        return this.managers.contains(someone);
+    }
+
+    public void addManager(Manager someone) {
+        if(someone!=null && !this.managers.contains(someone))
+            this.managers.add(someone);
     }
 }
 

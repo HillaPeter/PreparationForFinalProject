@@ -355,6 +355,8 @@ public class SystemController {
 
     public Coach getCoach(String id) { return (Coach) roles.get(id); }
 
+    public Fan getFan(String id){ return (Fan)roles.get(id); }
+
     public HashMap<String, Role> getRoles() {
         return roles;
     }
@@ -362,6 +364,9 @@ public class SystemController {
     public HashMap<String, Team> getTeams() {
         return teams;
     }
+
+    public SystemManager getSystemManager(String id){ return systemManagers.get(id); }
+
 
     /***************************************add function******************************************/
 
@@ -445,11 +450,18 @@ public class SystemController {
     public int sizeOfMembersListTesting() {
         return this.roles.size();
     }
+    public int sizeOfManagerListTesting() {
+        return this.systemManagers.size();
+    }
 
+    public Role getMember(String id){
+        if(this.roles.get(id) == null )
+            return this.systemManagers.get(id);
+        return this.roles.get(id);
+    }
     public void addMemberTesting(Member member) {
         this.roles.put(member.getUserMail(), member);
     }
-
 
     /*************************************** function for owner******************************************/
 
@@ -463,7 +475,13 @@ public class SystemController {
      * @param mail
      * @throws NoEnoughMoney
      */
-    public void addManager(Owner owner, Team team, Role role, String mail) throws NoEnoughMoney {
+    public void addManager(Owner owner, Team team, Role role, String mail) throws NoEnoughMoney, OwnerNotExist, TeamNotExist {
+        /*for tests*/
+        if(!this.roles.containsKey(owner.getUserMail()))
+            throw new OwnerNotExist();
+        if(!this.teams.containsKey(team.getName()))
+            throw new TeamNotExist();
+
         Account account = team.getAccount();
         //how much it cost?
         if (account.getAmountOfTeam() >= 0) {
@@ -519,12 +537,25 @@ public class SystemController {
      * @param team
      * @param mailInput
      */
-    public void removeManager(Owner owner, Team team, String mailInput) {
+    public void removeManager(Owner owner, Team team, String mailInput) throws TeamNotExist, OwnerNotExist, ManagerNotExist{
         Manager manager=getManager(mailInput);
+
+        /*for tests*/
+        if(!this.roles.containsKey(owner.getUserMail()))
+            throw new OwnerNotExist();
+        if(!this.teams.containsKey(team.getName()))
+            throw new TeamNotExist();
+        if(! (owner.getTeams() !=null && owner.getTeams().containsKey(team.getName())) )
+            throw new TeamNotExist();
+        if(! team.isManager(manager))
+            throw new ManagerNotExist();
+
         owner.removeManager(team, manager);
         Fan fan=new Fan(manager.getName(),manager.getUserMail(),manager.getPassword());
         roles.remove(manager);
         roles.put(fan.getUserMail(),fan);
 
     }
+
+
 }
