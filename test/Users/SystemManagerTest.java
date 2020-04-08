@@ -128,7 +128,7 @@ public class SystemManagerTest {
 
         /*try to remove referee with member who not systemManager  */
         SystemManager systemManagertest = new SystemManager("shachar","shachar@gmail.com","123",controller);
-        Owner owner = new Owner("owner","owner@gmail.com","123");
+        Owner owner = new Owner("owner","owner@gmail.com","123", controller);
         controller.removeReferee(owner.getUserMail(),"id");
     }
 

@@ -47,8 +47,8 @@ public class GuestTest {
         assertTrue(notThrown);
     }
     @Test
-    public void logInWithException() throws MemberDontExist, PasswordDontMatchException {
-        thrown.expect(MemberDontExist.class);
+    public void logInWithException() throws MemberNotExist, PasswordDontMatchException {
+        thrown.expect(MemberNotExist.class);
         controller.addPlayer(new Player("n","noa@gmail.com",null,""));
 
         /*try to log in with not exist member - result should be negative*/
@@ -56,7 +56,7 @@ public class GuestTest {
         assertNull(member);
     }
     @Test
-    public void logInIncorrectPassword() throws MemberDontExist, PasswordDontMatchException {
+    public void logInIncorrectPassword() throws MemberNotExist, PasswordDontMatchException {
         thrown.expect(PasswordDontMatchException.class);
         Player player = new Player("noa","noa@gmail.com","123",null,"");
         controller.addPlayer(player);
@@ -65,7 +65,7 @@ public class GuestTest {
         controller.logIn("noa@gmail.com","1223");
     }
     @Test
-    public void logIn() throws MemberDontExist, PasswordDontMatchException {
+    public void logIn() throws MemberNotExist, PasswordDontMatchException {
         Player player = new Player("noa","noa@gmail.com","123",null,"");
         controller.addPlayer(player);
         assertTrue(controller.ifMemberExistTesting("noa@gmail.com"));

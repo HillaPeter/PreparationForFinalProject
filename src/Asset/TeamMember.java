@@ -2,6 +2,7 @@ package Asset;
 
 import Game.Team;
 import Users.Member;
+import Users.Role;
 
 import java.util.HashMap;
 
@@ -37,4 +38,12 @@ public class TeamMember extends Member {
     public void setTeam(HashMap<String, Team> team) {
         this.team = team;
     }
+
+
+   public boolean existInTeam(String mail){
+        if(team.containsKey(mail)){
+            return true;
+        }
+        return false;
+   }
 }

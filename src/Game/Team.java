@@ -3,6 +3,7 @@ package Game;
 import Asset.*;
 import Users.Member;
 import Users.Owner;
+import Users.Role;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -127,6 +128,14 @@ public class Team {
 
     public void setField(Field field) {
         this.field = field;
+    }
+
+    public void setPlayers(HashSet<Player> players) {
+        this.players = players;
+    }
+
+    public void setOwners(HashSet<Owner> owners) {
+        this.owners = owners;
     }
 }
 
