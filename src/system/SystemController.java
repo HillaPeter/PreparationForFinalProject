@@ -326,7 +326,9 @@ public class SystemController {
         return roles.containsKey(id);
     }
 
-
+    private boolean existLeague(League league) {
+        return this.leagues.containsKey(league.getName());
+    }
     /***************************************get function******************************************/
 
     public League getLeague(String leagueId) {
@@ -431,6 +433,25 @@ public class SystemController {
         roles.put(fan1.getUserMail(), fan1);
     }
 
+    /**
+     * this function add League to leagues list
+     * @param league
+     */
+    public void addLeague(League league) {
+        if(!leagues.containsKey(league.getName())){
+            leagues.put(league.getName(),league);
+        }
+    }
+
+    /**
+     * this function add AssociationDelegate to roles list
+     * @param associationDelegate
+     */
+    public void addAssociationDelegate(AssociationDelegate associationDelegate) {
+        if(!this.roles.containsKey(associationDelegate.getUserMail())){
+            this.roles.put(associationDelegate.getUserMail(),associationDelegate);
+        }
+    }
 
     /******************************* function for Testing!!!!! (noa) *********************************/
 
@@ -601,4 +622,23 @@ public class SystemController {
         //todo
 
     }
+
+    /*************************************** function for associationDelegate******************************************/
+
+    /**
+     * this
+     * @param associationDelegate
+     * @param league
+     * @throws AlreadyExistException
+     */
+    public void setLeague(AssociationDelegate associationDelegate, League league) throws AlreadyExistException, DontHavePermissionException{
+        if(!existRole(associationDelegate.getUserMail()) || associationDelegate instanceof AssociationDelegate)
+            throw new DontHavePermissionException();
+        if(existLeague(league))
+            throw new AlreadyExistException();
+
+        //todo
+    }
+
+
 }

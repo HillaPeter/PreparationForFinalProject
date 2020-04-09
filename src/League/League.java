@@ -15,4 +15,8 @@ public class League {
     {
         return leagueInSeasons.get(season);
     }
+
+    public String getName() {
+        return this.name;
+    }
 }

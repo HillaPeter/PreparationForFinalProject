@@ -1,11 +1,21 @@
 package Users;
 
+import League.League;
+import Exception.*;
+import org.junit.Before;
 import org.junit.Test;
+import system.SystemController;
 
 import static org.junit.Assert.*;
 
 public class AssociationDelegateTest {
+    SystemController controller= new SystemController("test");
+    AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123");
 
+    @Before
+    public void init(){
+        controller.addAssociationDelegate(a_s_Test);
+    }
     @Test
     public void getUserMail() {
     }
@@ -27,11 +37,28 @@ public class AssociationDelegateTest {
     }
 
     @Test
-    public void setLeague() {
+    public void setLeagueAlreadyExistException() throws AlreadyExistException, DontHavePermissionException {
+        /* UC 19 (noa) */
+        /*init*/
+        League league1 = new League("champions");
+        League league2 = new League("league2");
+        controller.addLeague(league1);
+        controller.addLeague(league2);
+
+        controller.setLeague(a_s_Test , league1);
+
+        //todo
+
     }
 
     @Test
     public void setLeagueByYear() {
+        //UC20
+
+
+
+
+
     }
 
     @Test
