@@ -29,8 +29,8 @@ public class Game {
         this.leagueInSeason=leagueInSeason;
     }
 
-    public void removeRefree(Referee referee) {
+    public void removeReferee(Referee referee) {
         referees.remove(referee);
-        //put new refree after the delete
+        //put new referee after the delete
     }
 }

@@ -61,7 +61,7 @@ public class SystemManagerTest {
        /*try to add referee who doesnt exist in the system - result should be positive*/
         assertFalse(controller.ifMemberExistTesting("referee@gmail.com"));
         int sizeBefore = controller.sizeOfMembersListTesting();
-        controller.addRefree(systemManager.getUserMail(),"referee@gmail.com",false);
+        controller.addReferee(systemManager.getUserMail(),"referee@gmail.com",false);
         assertTrue(controller.ifMemberExistTesting("referee@gmail,com"));
         assertEquals(sizeBefore+1,controller.sizeOfMembersListTesting());
 
@@ -70,9 +70,9 @@ public class SystemManagerTest {
         controller.addMemberTesting(refereeToAdd);
         assertTrue(controller.ifMemberExistTesting(refereeToAdd.getUserMail()));
         sizeBefore = controller.sizeOfMembersListTesting();
-        controller.addRefree(systemManager.getUserMail(),refereeToAdd.getUserMail(),false);
+        controller.addReferee(systemManager.getUserMail(),refereeToAdd.getUserMail(),false);
         assertEquals(sizeBefore,controller.sizeOfMembersListTesting());
-        assertThat(controller.getRefree(refereeToAdd.getUserMail()), instanceOf(Fan.class));
+        assertThat(controller.getReferee(refereeToAdd.getUserMail()), instanceOf(Fan.class));
 
         //todo -  מבחני קבלה בוורד לא ברורים לי, משתמש הרשום במערכת כאוהד לא יכול להיות שופט? יש למשתמש מנהל מערכת הרשאות לבצע מינוי של שופטים?
     }
@@ -84,7 +84,7 @@ public class SystemManagerTest {
         int sizeBefore = this.controller.sizeOfMembersListTesting();
 
         /*try to add referee with incorrect mail*/
-        controller.addRefree(systemManager.getUserMail(),"refere",false);
+        controller.addReferee(systemManager.getUserMail(),"refere",false);
         assertEquals(sizeBefore,controller.sizeOfMembersListTesting());
         assertFalse(controller.ifMemberExistTesting("refere"));
     }
@@ -104,7 +104,7 @@ public class SystemManagerTest {
         Referee refereeToRemove = new SecondaryReferee("referee","referee@gmail,com","123","");
         controller.addSystemManager(this.systemManager);
         controller.addMemberTesting(refereeToRemove);
-        //controller.addRefree(systemManager.getUserMail(),refereeToRemove.getUserMail(),false);
+        //controller.addReferee(systemManager.getUserMail(),refereeToRemove.getUserMail(),false);
         //todo - remove the "//" after fixing addReferee()
         assertTrue(controller.ifMemberExistTesting(refereeToRemove.getUserMail()));
         int size = controller.sizeOfMembersListTesting();

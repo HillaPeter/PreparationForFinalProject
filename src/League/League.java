@@ -19,4 +19,10 @@ public class League {
     public String getName() {
         return this.name;
     }
+
+    public void addLeagueInSeason(LeagueInSeason leagueInSeason){
+        if(leagueInSeason != null && !leagueInSeasons.containsKey(leagueInSeason.getSeason())){
+            leagueInSeasons.put(leagueInSeason.getSeason(), leagueInSeason);
+        }
+    }
 }

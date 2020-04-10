@@ -37,7 +37,7 @@ public class AssociationDelegateTest {
     }
 
     @Test
-    public void setLeagueAlreadyExistException() throws AlreadyExistException, DontHavePermissionException {
+    public void addLeagueAlreadyExistException() throws AlreadyExistException, DontHavePermissionException {
         /* UC 19 (noa) */
         /*init*/
         League league1 = new League("champions");

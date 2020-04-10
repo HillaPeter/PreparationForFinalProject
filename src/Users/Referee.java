@@ -29,7 +29,7 @@ public abstract class Referee extends Member{
         /*
         for (Game game:games
              ) {
-            game.removeRefree(this);
+            game.removeReferee(this);
         }
         */
     }

@@ -1,32 +1,77 @@
 package Users;
 
-public class AssociationDelegate extends Member{
+import League.*;
+import system.DBController;
+import Exception.*;
+
+
+import java.util.HashMap;
+import java.util.regex.Pattern;
+
+public class AssociationDelegate extends Member {
+
+    private DBController dbController;
 
     public AssociationDelegate(String name, String userMail, String password) {
         super(name, userMail, password);
+        dbController = new DBController();
     }
 
-    public void setLeague(){
+    public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException {
+        HashMap<String, League> leagues = dbController.getLeagues();
+        League league;
+        if (Pattern.matches("[a-zA-Z]+", leagueName)) { //checks that the name contains only letters(true=just letters)
+            if(!leagues.containsKey(leagueName)){
+                league = new League(leagueName);
+                dbController.addLeague(league);
+            }
+            else{
+                throw new AlreadyExistException();
+            }
+
+        }
+        else {
+            throw new IncorrectInputException(leagueName);
+        }
+    //todo
+}
+
+    public void setLeagueByYear(String specificLeague, String year) throws IncorrectInputException, AlreadyExistException {
+        HashMap<String, League> leagues = dbController.getLeagues();
+        League league = leagues.get(specificLeague);
+        if(league == null){
+            throw new IncorrectInputException("There is no league called "+ specificLeague);
+        }
+
+        Season season = new Season(year);
+        if(league.getLeagueInSeason(season) != null){ //check if the season is already exist in this league
+            throw new AlreadyExistException();
+        }
+        LeagueInSeason leagueInSeason = new LeagueInSeason(league, season);
+        //do the scheduling policy
+        //do the score policy
+        league.addLeagueInSeason(leagueInSeason);
+        season.addLeagueInSeason(leagueInSeason);
+        dbController.removeLeague(league.getName());
+        dbController.addLeague(league);
+        dbController.removeSeason(season.getYear());
+        dbController.addSeason(season);
         //todo
     }
 
-    public void setLeagueByYear(){
+
+    public void signRefereeToSeason() {
         //todo
     }
 
 
-    public void signRefereeToSeason(){
+    public void insertSchedulingPolicy() {
         //todo
     }
 
 
-    public void insertSchedulingPolicy(){
+    public void changeScorePolicy() {
         //todo
     }
 
-
-    public void changeScorePolicy(){
-        //todo
-    }
-    
 }

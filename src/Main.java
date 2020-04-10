@@ -4,10 +4,12 @@ import Exception.*;
 import Game.Account;
 import Game.Team;
 import Game.Transaction;
+import League.League;
 import Users.*;
 import javafx.util.Pair;
 import system.SystemController;
 
+import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -56,7 +58,7 @@ public class Main {
                         String[] details = fillFormSignIn();
                         try {
                             member = controller.signIn(details[1], details[0], details[2]);
-                            System.out.println("succseed to signIn!!");
+                            System.out.println("succeed to signIn!!");
                             showMenu(member);
                         } catch (MemberAlreadyExistException e) {
                             System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
@@ -93,7 +95,7 @@ public class Main {
         //    member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
 
 
-        member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
+       // member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
 
 
         if (member instanceof SystemManager) {
@@ -106,6 +108,9 @@ public class Main {
 
         } else if (member instanceof Owner) {
             OwnerMenu((Member) member);
+        }
+        else if(member instanceof AssociationDelegate){
+            AssociationDelegateMenu((Member)member);
         }
     }
 
@@ -131,9 +136,9 @@ public class Main {
 
                     while (!input.equals("Exit")) {
                         System.out.println("choose one of the following options:\n");
-                        System.out.println("write \"1\" to remove refree");
-                        System.out.println("write \"2\" to add refree");
-                        System.out.println("write \"3\" to update refree details");
+                        System.out.println("write \"1\" to remove referee");
+                        System.out.println("write \"2\" to add referee");
+                        System.out.println("write \"3\" to update referee details");
                         System.out.println("\nwrite \"Exit\" if you want to finish. \n");
                         input = "";
                         while (input.equals("")) {
@@ -141,12 +146,12 @@ public class Main {
                         }
                         switch (input) {
                             case "1": {
-                                System.out.println("please enter the Id of the refree");
+                                System.out.println("please enter the Id of the referee");
                                 String id = scanInput.nextLine();
                                 try {
                                     boolean success = controller.removeReferee(member.getUserMail(), id);
                                 } catch (MemberNotSystemManager e) {
-                                    System.out.println("you don't have the premission to remove refree");
+                                    System.out.println("you don't have the permission to remove referee");
                                 }
                             }
 
@@ -155,20 +160,20 @@ public class Main {
                                 String id = scanInput.nextLine();
                                 System.out.println("would you like this refree will be main refree ? yes/no");
                                 String bool = scanInput.nextLine();
-                                boolean mainRefree;
+                                boolean mainReferee;
                                 if (bool.equals("yes"))
-                                    mainRefree = true;
+                                    mainReferee = true;
                                 else {
-                                    mainRefree = false;
+                                    mainReferee = false;
                                 }
                                 try {
-                                    boolean success = controller.addRefree(member.getUserMail(), id, mainRefree);
+                                    boolean success = controller.addReferee(member.getUserMail(), id, mainReferee);
                                 } catch (MemberNotSystemManager e) {
-                                    System.out.println("you don't have the premission to remove refree");
+                                    System.out.println("you don't have the permission to remove referee");
                                 }
                             }
                             case "3": {
-                                // controller.updateRefree();
+                               //  controller.updateReferee();
                             }
                         }
                     }
@@ -186,7 +191,7 @@ public class Main {
                         switch (input) {
                             case "1": {
                                 LinkedList<String> players = new LinkedList<>();
-                                LinkedList<String> coachs = new LinkedList<>();
+                                LinkedList<String> coaches = new LinkedList<>();
                                 LinkedList<String> managers = new LinkedList<>();
                                 LinkedList<String> owners = new LinkedList<>();
                                 String teamName = "";
@@ -200,10 +205,10 @@ public class Main {
                                         players.add(id);
                                 }
                                 while (!id.equals("0")) {
-                                    System.out.println("please enter the id of the coachs in the team \n when you finish press 0");
+                                    System.out.println("please enter the id of the coaches in the team \n when you finish press 0");
                                     id = scanInput.nextLine();
                                     if (!id.equals(0))
-                                        coachs.add(id);
+                                        coaches.add(id);
                                 }
                                 while (!id.equals("0")) {
                                     System.out.println("please enter the id of the managers in the team \n when you finish press 0");
@@ -218,18 +223,18 @@ public class Main {
                                         owners.add(id);
                                 }
                                 try {
-                                    boolean success = controller.addTeam(member.getUserMail(), players, coachs, managers, owners, teamName);
+                                    boolean success = controller.addTeam(member.getUserMail(), players, coaches, managers, owners, teamName);
                                 } catch (MemberNotSystemManager e) {
-                                    System.out.println("you don't have the premission to remove refree");
+                                    System.out.println("you don't have the permission to remove referee");
                                 }
                             }
                             case "2": {
-                                System.out.println("please enter the team nama you want to close");
+                                System.out.println("please enter the team name you want to close");
                                 String TeamName = scanInput.nextLine();
                                 try {
                                     boolean success = controller.closeTeam(member.getUserMail(), TeamName);
                                 } catch (MemberNotSystemManager e) {
-                                    System.out.println("you don't have the premission to remove refree");
+                                    System.out.println("you don't have the permission to remove referee");
                                 }
                             }
                         }
@@ -241,7 +246,7 @@ public class Main {
                     try {
                         boolean success = controller.removeMember(member.getUserMail(), id);
                     } catch (MemberNotSystemManager e) {
-                        System.out.println("you don't have the premission to remove refree");
+                        System.out.println("you don't have the permission to remove referee");
                     }
                 }
                 case "4": {
@@ -260,7 +265,7 @@ public class Main {
                                 try {
                                     controller.watchComplaint(member.getUserMail(), path);
                                 } catch (MemberNotSystemManager e) {
-                                    System.out.println("you don't have the premission to remove refree");
+                                    System.out.println("you don't have the permission to remove referee");
                                 }
                             }
                             case "2": {
@@ -268,7 +273,7 @@ public class Main {
                                     LinkedList<Pair<String, String>> responseForComplaint = new LinkedList<>();
                                     boolean success = controller.responseComplaint(member.getUserMail(), path, responseForComplaint);
                                 } catch (MemberNotSystemManager e) {
-                                    System.out.println("you don't have the premission to remove refree");
+                                    System.out.println("you don't have the permission to remove referee");
                                 }
                             }
                         }
@@ -278,14 +283,14 @@ public class Main {
                     try {
                         controller.schedulingGames(member.getUserMail());
                     } catch (MemberNotSystemManager e) {
-                        System.out.println("you don't have the premission to remove refree");
+                        System.out.println("you don't have the permission to remove referee");
                     }
                 }
                 case "6": {
                     try {
                         controller.viewSystemInformation(member.getUserMail());
                     } catch (MemberNotSystemManager e) {
-                        System.out.println("you don't have the premission to remove refree");
+                        System.out.println("you don't have the permission to remove referee");
                     }
                 }
             }
@@ -618,7 +623,7 @@ public class Main {
         SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller);
         controller.addSystemManager(systemManager);
         controller.addFan(fan1);
-        //  controller.addRefree(systemManager.getUserMail(), fan1.getUserMail(), true);
+        //  controller.addReferee(systemManager.getUserMail(), fan1.getUserMail(), true);
         //   controller.removeReferee(systemManager.getUserMail(), fan1.getUserMail());
         // controller.removeMember(systemManager.getUserMail(), coach1.getUserMail());
         //  controller.removeMember(systemManager.getUserMail(), manager1.getUserMail());
@@ -710,7 +715,7 @@ public class Main {
     // system.addCoach();
     //system.addManager();
     //system.addOwner();
-    //system.addRefree();
+    //system.addReferee();
     //system
     //system.addTeam();
 
@@ -916,5 +921,77 @@ public class Main {
         }
         return true;
     }
+
+    /***********************************************AssociationDelegate**************************************************/
+
+    private static void AssociationDelegateMenu(Member member) {
+        String input = "";
+        while (!input.equals("Exit")) {
+            System.out.println("choose one of the following options:\n");
+            System.out.println("write \"1\" to add new league");
+            System.out.println("write \"2\" to define season in a specific league");
+            System.out.println("write \"3\" to set referee to a league in a specific season");
+            System.out.println("write \"4\" to change the score policy in a specific league in season");
+            System.out.println("write \"5\" to set scheduling policy in a specific league in season");
+            System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+            input = "";
+            while (input.equals("")) {
+                input = scanInput.nextLine();
+            }
+            switch (input) {
+                case "1":
+                    System.out.println("Please write a name for new league");
+                    String leagueName = scanInput.nextLine();
+                    try{
+                        controller.setLeague(leagueName);
+                    }
+                    catch(IncorrectInputException incorrectInput){
+                        System.out.println("The name of league must contains only letters");
+                    } catch (AlreadyExistException alreadyExist) {
+                        System.out.println("This name is already exists");
+                    }
+                    catch(Exception e){
+                        System.out.println("You can't define a league");
+                    }
+                    break;
+
+                case "2":
+                    System.out.println("Please choose a specific league (only letters)");
+                    HashMap<String, League> leagues = controller.getLeagues();
+                    for (String league : leagues.keySet()) {
+                        System.out.println("League: "+league);
+                    }
+                    String specificLeague = scanInput.nextLine();
+                    System.out.println("Please write the year of this league");
+                    String year = scanInput.nextLine();
+                    try {
+                        controller.setLeagueByYear(specificLeague, year);
+                    }
+                    catch(IncorrectInputException incorrectInput) {
+                        System.out.println(incorrectInput.getMessage());
+
+                    } catch (AlreadyExistException alreadyExist) {
+                        System.out.println("This season is already exist in this league");
+                    }
+                    catch(Exception e){
+                        System.out.println("You can't do this functionality");
+                    }
+                    break;
+
+                case "3":
+
+
+                case "4":
+
+                case "5":
+
+                case "Exit":
+
+                default:
+
+            }
+        }
+    }
+
 
 }

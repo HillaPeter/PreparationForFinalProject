@@ -16,12 +16,11 @@ import java.util.LinkedList;
 
 public class SystemController {
     private String name;
-    private HashMap<String, League> leagues;
-    private HashMap<String, Season> seasons;
-    private HashMap<String, SystemManager> systemManagers;
-    private HashMap<String, Role> roles; // hash map <mail,role>
-    private HashMap<String, Team> teams;
+    private  Role connectedUser;
+    private DBController dbController;
     //  private HashMap<Member,String> passwordValidation;
+
+
 
     /**
      * constructor
@@ -30,11 +29,8 @@ public class SystemController {
      */
     public SystemController(String name) {
         this.name = name;
-        leagues = new HashMap<>();
-        seasons = new HashMap<>();
-        systemManagers = new HashMap<>();
-        roles = new HashMap<>();
-        teams = new HashMap<>();
+
+        connectedUser= new Guest();
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -43,6 +39,7 @@ public class SystemController {
 //                
 //            }
 //        }
+        //member = user; (argument in the constructor-Member user- Fan, Owner, AD, Referee...)
     }
 
     public void initSystem(String userName, String password) {
@@ -114,7 +111,7 @@ public class SystemController {
      * if the refree already exist - return false
      * if the refree not exist and success of adding it - add it and return true
      */
-    public boolean addRefree(String systemManagerId, String refreeId, boolean ifMainRefree) throws MemberNotSystemManager {
+    public boolean addReferee(String systemManagerId, String refreeId, boolean ifMainRefree) throws MemberNotSystemManager {
         SystemManager systemManager = systemManagers.get(systemManagerId);
         if (null != systemManager) {
             return systemManager.addReferee(refreeId, ifMainRefree);
@@ -276,12 +273,12 @@ public class SystemController {
         return toReturn;
     }
 
-    public void makeTheRoleARefree(String id, boolean mainRefree) {
-        //if the refree is main refree the boolean filed wil be true
-        //change the role from fan to refree
+    public void makeTheRoleAReferee(String id, boolean mainReferee) {
+        //if the referee is main referee the boolean filed wil be true
+        //change the role from fan to referee
         Fan fan = (Fan) roles.get(id);
         Referee referee;
-        if (mainRefree)
+        if (mainReferee)
             referee = new MainReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
         else
             referee = new SecondaryReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
@@ -294,7 +291,7 @@ public class SystemController {
         teams.remove(teamName);
     }
 
-    public void deleteRefree(String id) {
+    public void deleteReferee(String id) {
         roles.remove(id);
     }
 
@@ -315,7 +312,7 @@ public class SystemController {
             return false;
     }
 
-    public boolean existRefree(String id) {
+    public boolean existReferee(String id) {
         if (roles.get(id) instanceof Referee)
             return true;
         else
@@ -326,14 +323,15 @@ public class SystemController {
         return roles.containsKey(id);
     }
 
-    private boolean existLeague(League league) {
-        return this.leagues.containsKey(league.getName());
-    }
+//    private boolean existLeague(League league) {
+//        return this.leagues.containsKey(league.getName());
+//    }
     /***************************************get function******************************************/
 
-    public League getLeague(String leagueId) {
-        return leagues.get(leagueId);
-    }
+       public League getLeague(String leagueId) {
+//        return leagues.get(leagueId);
+           return null;
+        }
 
     public Season getSeason(String seasonId) {
         return seasons.get(seasonId);
@@ -343,7 +341,7 @@ public class SystemController {
         return teams.get(teamName);
     }
 
-    public Referee getRefree(String id) {
+    public Referee getReferee(String id) {
         return (Referee) roles.get(id);
     }
 
@@ -433,15 +431,8 @@ public class SystemController {
         roles.put(fan1.getUserMail(), fan1);
     }
 
-    /**
-     * this function add League to leagues list
-     * @param league
-     */
-    public void addLeague(League league) {
-        if(!leagues.containsKey(league.getName())){
-            leagues.put(league.getName(),league);
-        }
-    }
+
+
 
     /**
      * this function add AssociationDelegate to roles list
@@ -627,18 +618,38 @@ public class SystemController {
 
     /**
      * this
-     * @param associationDelegate
-     * @param league
+     * @param
+     * @param leagueName
      * @throws AlreadyExistException
      */
-    public void setLeague(AssociationDelegate associationDelegate, League league) throws AlreadyExistException, DontHavePermissionException{
-        if(!existRole(associationDelegate.getUserMail()) || associationDelegate instanceof AssociationDelegate)
-            throw new DontHavePermissionException();
-        if(existLeague(league))
+    public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException {
+        try{
+            ((AssociationDelegate)connectedUser).setLeague(leagueName);
+        }
+        catch (IncorrectInputException incorrectInput){
+            throw new IncorrectInputException(leagueName);
+        }
+        catch (AlreadyExistException alreadyExist){
             throw new AlreadyExistException();
+        }
+        catch(Exception e){
 
-        //todo
+        }
     }
 
+    public void setLeagueByYear(String specificLeague, String year) throws IncorrectInputException, AlreadyExistException {
+        try{
+            ((AssociationDelegate)connectedUser).setLeagueByYear(specificLeague,year);
+        }
+        catch (IncorrectInputException incorrectInput){
+            throw new IncorrectInputException(incorrectInput.getMessage());
+        }
+        catch (AlreadyExistException alreadyExist){
+           throw new AlreadyExistException();
+        }
+    }
 
+    public HashMap<String,League> getLeagues() {
+        return dbController.getLeagues();
+    }
 }

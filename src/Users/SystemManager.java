@@ -13,7 +13,6 @@ import system.SystemController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -39,13 +38,13 @@ public class SystemManager extends Member {
     public boolean removeReferee(String id) {
         //shachar
         //if the system manager want to delete the refree he delete it from the system
-        if (SystemController.existRefree(id) == false)
+        if (SystemController.existReferee(id) == false)
             return false;
         else {
-            Referee referee = SystemController.getRefree(id);
+            Referee referee = SystemController.getReferee(id);
             referee.deleteTheGames();
             //6.המערכת משבצת מחדש את השופטים למשחקים ששופטיהם נמחקו
-            SystemController.deleteRefree(id);
+            SystemController.deleteReferee(id);
             return true;
         }
     }
@@ -55,7 +54,7 @@ public class SystemManager extends Member {
             return false;
         else
         {
-            SystemController.makeTheRoleARefree(id ,ifMainRefree );
+            SystemController.makeTheRoleAReferee(id ,ifMainRefree );
             return true;
         }
     }
