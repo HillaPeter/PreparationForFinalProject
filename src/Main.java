@@ -7,6 +7,7 @@ import Game.Transaction;
 import League.League;
 import Users.*;
 import javafx.util.Pair;
+import system.DBController;
 import system.SystemController;
 
 import javax.sound.midi.Soundbank;
@@ -19,7 +20,7 @@ public class Main {
     static Member member;
     static String path;
 
-    public static void main(String[] args) throws TeamNotExist {
+    public static void main(String[] args) {
 /****************************************************menu******************************************************/
         path = "";
         //SystemController controller =
@@ -33,8 +34,8 @@ public class Main {
 
 
         /**** Hilla Peter Tests!!****/
-        Main main = new Main();
-        main.hillaPeterFunctionForTesting();
+      //  Main main = new Main();
+       // main.hillaPeterFunctionForTesting();
         startMenu();
     }
 
@@ -107,12 +108,13 @@ public class Main {
         } else if (member instanceof Fan) {
 
         } else if (member instanceof Owner) {
-            OwnerMenu((Member) member);
+            OwnerMenu();
         } else if (member instanceof AssociationDelegate) {
             AssociationDelegateMenu((Member) member);
         }
     }
 
+    /*********************************************System Manager**********************************************/
     private static void SystemManagerMenu(Member member) {
         String input = "";
         while (!input.equals("Exit")) {
@@ -297,7 +299,9 @@ public class Main {
         }
     }
 
-    private static void OwnerMenu(Member member) {
+
+    /*********************************************Owner**********************************************/
+    private static void OwnerMenu() {
         try {
             Team team;
             String input = "";
@@ -393,24 +397,21 @@ public class Main {
                         }
                         String mailId = scanInput.nextLine();
                         Role role = allRoles.get(mailId);
-                        if (role == null) {
-                            throw new RoleNotExist();
-                        } else {
-                            HashMap<String, Team> teams = controller.getTeams();
-                            System.out.println("Choose team name to add new owner");
-                            for (String teamName : teams.keySet()) {
-                                System.out.println(teamName);
-                            }
-
-                            String teamName = scanInput.nextLine();
-                            try {
-                                controller.addNewOwner(teamName, mailId);
-                            } catch (TeamNotExist exception) {
-
-                            } catch (OwnerNotExist ownerNotExist) {
-                                ownerNotExist.printStackTrace();
-                            }
+                        HashMap<String, Team> teams = controller.getTeams();
+                        System.out.println("Choose team name to add new owner");
+                        for (String teamName : teams.keySet()) {
+                            System.out.println(teamName);
                         }
+
+                        String teamName = scanInput.nextLine();
+                        try {
+                            controller.addNewOwner(teamName, mailId);
+                        } catch (TeamNotExist exception) {
+
+                        } catch (OwnerNotExist ownerNotExist) {
+                            ownerNotExist.printStackTrace();
+                        }
+
                         break;
 
                     }
@@ -479,7 +480,7 @@ public class Main {
                     }
                 }
             }
-        } catch (TeamNotExist | RoleNotExist | NoEnoughMoney | UnavailableOption | IncorrectInputException | AccountNotExist | ManagerNotExist | OwnerNotExist teamNotExist) {
+        } catch (Exception ownerNotExist) {
         }
 
     }
@@ -487,7 +488,7 @@ public class Main {
     /**
      * Private functions for Owner main-don't delete!
      **/
-    private static void addTeamManager() throws RoleNotExist {
+    private static void addTeamManager() {
         System.out.println("Choose role by mail to make him manager");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -499,24 +500,21 @@ public class Main {
         }
         String mailId = scanInput.nextLine();
         Role role = allRoles.get(mailId);
-        if (role == null) {
-            throw new RoleNotExist();
-        } else {
-            HashMap<String, Team> teams = controller.getTeams();
-            System.out.println("Choose team name to add new manager");
-            for (String teamName : teams.keySet()) {
-                System.out.println(teamName);
-            }
-
-            String teamName = scanInput.nextLine();
-            try {
-                controller.addManager(teamName, mailId);
-            } catch (TeamNotExist | ManagerNotExist | NoEnoughMoney exception) {
-
-            }
+        HashMap<String, Team> teams = controller.getTeams();
+        System.out.println("Choose team name to add new manager");
+        for (String teamName : teams.keySet()) {
+            System.out.println(teamName);
         }
+
+        String teamName = scanInput.nextLine();
+        try {
+            controller.addManager(teamName, mailId);
+        } catch (Exception ownerNotExist) {
+        }
+
     }
-    private static void addTeamCoach() throws RoleNotExist {
+
+    private static void addTeamCoach() {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -528,24 +526,21 @@ public class Main {
         }
         String mailId = scanInput.nextLine();
         Role role = allRoles.get(mailId);
-        if (role == null) {
-            throw new RoleNotExist();
-        } else {
-            HashMap<String, Team> teams = controller.getTeams();
-            System.out.println("Choose team name to add new coach");
-            for (String teamName : teams.keySet()) {
-                System.out.println(teamName);
-            }
-
-            String teamName = scanInput.nextLine();
-            try {
-                controller.addCoach(teamName, mailId);
-            } catch (TeamNotExist | ManagerNotExist | NoEnoughMoney exception) {
-
-            }
+        HashMap<String, Team> teams = controller.getTeams();
+        System.out.println("Choose team name to add new coach");
+        for (String teamName : teams.keySet()) {
+            System.out.println(teamName);
         }
+
+        String teamName = scanInput.nextLine();
+        try {
+            controller.addCoach(teamName, mailId);
+        } catch (Exception ownerNotExist) {
+        }
+
     }
-    private static void addTeamPlayer() throws RoleNotExist, IncorrectInputException, TeamNotExist, ManagerNotExist {
+
+    private static void addTeamPlayer() throws IncorrectInputException, TeamNotExist, ManagerNotExist, MemberNotExist, AlreadyExistException {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -557,28 +552,27 @@ public class Main {
         }
         String mailId = scanInput.nextLine();
         Role role = allRoles.get(mailId);
-        if (role == null) {
-            throw new RoleNotExist();
-        } else {
-            HashMap<String, Team> teams = controller.getTeams();
-            System.out.println("Choose team name to add new player");
-            for (String teamName : teams.keySet()) {
-                System.out.println(teamName);
-            }
-            String teamName = scanInput.nextLine();
-            System.out.println("Enter year of birth of player");
-            int year = scanInput.nextInt();
-            System.out.println("Enter month of birth of player");
-            int month = scanInput.nextInt();
-            System.out.println("Enter day of birth of player");
-            int day = scanInput.nextInt();
-            System.out.println("Choose role for the player");
-            String rolePlayer = scanInput.nextLine();
 
-            controller.addPlayer(mailId, teamName, year, month, day, rolePlayer);
+        HashMap<String, Team> teams = controller.getTeams();
+        System.out.println("Choose team name to add new player");
+        for (String teamName : teams.keySet()) {
+            System.out.println(teamName);
         }
+        String teamName = scanInput.nextLine();
+        System.out.println("Enter year of birth of player");
+        int year = scanInput.nextInt();
+        System.out.println("Enter month of birth of player");
+        int month = scanInput.nextInt();
+        System.out.println("Enter day of birth of player");
+        int day = scanInput.nextInt();
+        System.out.println("Choose role for the player");
+        String rolePlayer = scanInput.nextLine();
+
+        controller.addPlayer(mailId, teamName, year, month, day, rolePlayer);
+
     }
-    private static void addTeamField() throws RoleNotExist, IncorrectInputException, TeamNotExist, ManagerNotExist {
+
+    private static void addTeamField() throws IncorrectInputException, TeamNotExist, ManagerNotExist {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to add new field");
         for (String teamName : teams.keySet()) {
@@ -611,9 +605,7 @@ public class Main {
 
         try {
             controller.removeManager(teamName, mailToRemove);
-        } catch (OwnerNotExist ownerNotExist) {
-        } catch (TeamNotExist teamNotExist) {
-        } catch (ManagerNotExist managerNotExist) {
+        } catch (Exception ownerNotExist) {
         }
     }
 
@@ -636,10 +628,7 @@ public class Main {
 
         try {
             controller.removeCoach(teamName, mailToRemove);
-        } catch (OwnerNotExist ownerNotExist) {
-        } catch (TeamNotExist teamNotExist) {
-        } catch (MemberNotExist memberNotExist) {
-
+        } catch (Exception ownerNotExist) {
         }
     }
 
@@ -662,10 +651,7 @@ public class Main {
 
         try {
             controller.removePlayer(teamName, mailToRemove);
-        } catch (OwnerNotExist ownerNotExist) {
-        } catch (TeamNotExist teamNotExist) {
-        } catch (MemberNotExist memberNotExist) {
-
+        } catch (Exception ownerNotExist) {
         }
     }
 
@@ -854,10 +840,12 @@ public class Main {
      * checking owner- please don't delete it! (Hilla P)
      */
 
-    private static void hillaPeterFunctionForTesting() throws TeamNotExist {
+    private static void hillaPeterFunctionForTesting() {
 
-        Owner ownerHilla = new Owner("hilla", "hilla@gmail.com", "h1");
-        Owner ownerLiat = new Owner("liat", "liat@gmail.com", "l1");
+        DBController dbController = new DBController();
+
+        Owner ownerHilla = new Owner("hilla", "hilla@gmail.com", "h1", dbController);
+        Owner ownerLiat = new Owner("liat", "liat@gmail.com", "l1", dbController);
         Manager manager1 = new Manager("oren tzur", "oren@gmail.com", "125");
         Manager manager2 = new Manager("guy shani", "guy@gmail.com", "126");
 
@@ -876,18 +864,21 @@ public class Main {
         Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
         Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
 
-//        controller.addPlayer(player1);
-//        controller.addPlayer(player2);
-//        controller.addPlayer(player3);
-//        controller.addPlayer(player4);
-//        controller.addPlayer(player5);
-//        controller.addPlayer(player6);
-//        controller.addPlayer(player7);
-//        controller.addPlayer(player8);
-//        controller.addPlayer(player9);
-//        controller.addPlayer(player10);
-//        controller.addPlayer(player11);
+        try {
+            dbController.addPlayer(player1);
+            dbController.addPlayer(player2);
+            dbController.addPlayer(player3);
+            dbController.addPlayer(player4);
+            dbController.addPlayer(player5);
+            dbController.addPlayer(player6);
+            dbController.addPlayer(player7);
+            dbController.addPlayer(player8);
+            dbController.addPlayer(player9);
+            dbController.addPlayer(player10);
+            dbController.addPlayer(player11);
+        } catch (Exception e) {
 
+        }
         HashSet<Player> players = new HashSet<>();
         players.add(player1);
         players.add(player2);
@@ -914,7 +905,7 @@ public class Main {
         listTransactions.add(transaction2);
 
         Account account0 = new Account("Hapoel", listTransactions, 123123);
-        Field field0 = new Field();
+        Field field0 = new Field("sami");
         Team team0 = new Team("hapoel", account0, field0);
         field0.setTeam(team0);
         HashSet<Owner> ownersTeam0 = team0.getOwners();
@@ -931,7 +922,7 @@ public class Main {
         hashMapTeams.put("Maccabi", team0);
         hashMapTeams.put("Hapoel", team1);
 
-        ownerHilla.setTeams(hashMapTeams);
+        //    ownerHilla.setTeams(hashMapTeams);
 
 
         team0.setPlayers(players);
@@ -1011,6 +1002,7 @@ public class Main {
         details[1] = password;
         return details;
     }
+
     /**
      * this function check if an email address is valid using Regex.
      *

@@ -9,9 +9,6 @@ public class Field{
     public Field(String nameOfField) {
         this.nameOfField = nameOfField;
     }
-//
-//    public Field() {
-//    }
 
     public void setTeam(Team team) {
         this.team = team;

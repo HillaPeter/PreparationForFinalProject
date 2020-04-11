@@ -1,6 +1,7 @@
 package Game;
 
 import Asset.*;
+import Exception.*;
 import Users.Owner;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class Team {
         trainingFields=new HashSet<>();
     }
 
-    public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) {
+    public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) throws AlreadyExistException {
         this.name = teamName;
         this.account = account;
         this.coaches = new HashSet<>();
@@ -68,7 +69,7 @@ public class Team {
         }
     }
 
-    private void updateTheTeamListForOwner(LinkedList<Owner> list) {
+    private void updateTheTeamListForOwner(LinkedList<Owner> list) throws AlreadyExistException {
         for (int i = 0; i < list.size(); i++) {
             Owner owner = list.get(i);
             owner.addTeam(this);
@@ -79,7 +80,7 @@ public class Team {
         return name;
     }
 
-    public void deleteTheData() {
+    public void deleteTheData() throws TeamNotExist {
         for (Player player : players
         ) {
             player.removeTheTeamFromMyList(this.name);
