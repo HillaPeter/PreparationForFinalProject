@@ -60,7 +60,7 @@ public class Main {
                             member = controller.signIn(details[1], details[0], details[2]);
                             System.out.println("succeed to signIn!!");
                             showMenu(member);
-                        } catch (MemberAlreadyExistException e) {
+                        } catch (AlreadyExistException e) {
                             System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
                         }
 
@@ -981,7 +981,7 @@ public class Main {
         System.out.println("please enter password - contains only numbers and letters");
         String password = scanInput.nextLine();
         if (!checkPasswordValue(password)) {
-            throw (new IncorrectPasswordInputException());
+            throw new IncorrectPasswordInputException();
         }
         System.out.println("please verify your password");
         String password2 = scanInput.nextLine();
@@ -1017,7 +1017,6 @@ public class Main {
         details[1] = password;
         return details;
     }
-
     /**
      * this function check if an email address is valid using Regex.
      *
@@ -1051,6 +1050,7 @@ public class Main {
         }
         return true;
     }
+
 
     /***********************************************AssociationDelegate**************************************************/
 

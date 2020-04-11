@@ -6,6 +6,7 @@ import Asset.Player;
 import Game.Team;
 import League.*;
 import Users.*;
+import Exception.*;
 
 import java.util.HashMap;
 
@@ -17,6 +18,22 @@ public class DBController {
         this.db = new DB();
     }
 
+
+    /***************************************Guest function******************************************/
+    /**
+     * this function check if the guest is the one who call the function. and then
+     * @param guest
+     * @param fan
+     * @throws AlreadyExistException
+     */
+    public void addFan(Role guest , Fan fan) throws AlreadyExistException {db.addFan(fan);}
+
+    public boolean existMember(String id) {
+        return db.existMember(id);
+    }
+    public Role getMember(String id) throws MemberNotExist {
+        return db.getMember(id) ;
+    }
 
 
     /***************************************Getters******************************************/
@@ -67,10 +84,6 @@ public class DBController {
         db.addSystemManager(systemManager);
     }
 
-    public void addFan(Fan fan) {
-        db.addFan(fan);
-    }
-
     public void addTeam(Team team) {
         db.addTeam(team);
     }
@@ -87,6 +100,8 @@ public class DBController {
     public void removeTeam(String name) {
         db.removeTeam(name);
     }
+
+    /***************************************exist function******************************************/
 
 
 }

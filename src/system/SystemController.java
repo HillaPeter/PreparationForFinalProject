@@ -25,7 +25,7 @@ public class SystemController {
     public SystemController(String name) {
         this.name = name;
 
-        connectedUser = new Guest();
+        connectedUser = new Guest(dbController);
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -42,7 +42,6 @@ public class SystemController {
     }
 
     /*************************************** function for guest******************************************/
-
     /**
      * this function makes a Guest into a member
      * if the member's mail doesnt exist -
@@ -51,16 +50,10 @@ public class SystemController {
      *
      * @return true = success or false = failed to sign
      */
-    public Member signIn(String userName, String userMail, String password) throws MemberAlreadyExistException {
-        if (roles.containsKey(userMail)) {
-            throw new MemberAlreadyExistException();
-        } else {
-            Fan newMember = new Fan(userName, userMail, password);
-            roles.put(newMember.getUserMail(), newMember);
-            return newMember;
-        }
-    }
+    public Member signIn(String userName, String userMail, String password) throws IncorrectInputException, AlreadyExistException {
+        return ((Guest)connectedUser).signIn(userMail,userName,password);
 
+    }
     /**
      * this function makes a guest into an existing member.
      * if the member doesnt exist - return null
@@ -69,22 +62,8 @@ public class SystemController {
      * @return
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
-        if (roles.containsKey(userMail) || systemManagers.containsKey(userMail)) {
-            Member existingMember = (Member) roles.get(userMail);
-            checkValidationPassword(existingMember, userPassword);
-            return existingMember;
-        } else {
-            throw new MemberNotExist();
-        }
+        return ((Guest)connectedUser).logIn(userMail,userPassword);
     }
-
-    private void checkValidationPassword(Member member, String userPassword) throws PasswordDontMatchException {
-        if (!member.getPassword().equals(userPassword))
-            throw new PasswordDontMatchException();
-        return;
-    }
-
-
     /*************************************** function for system manager******************************************/
 
     /***
@@ -283,27 +262,23 @@ public class SystemController {
 
     /***************************************exist function******************************************/
 
-    public boolean existFan(String id) {
-        return roles.get(id) instanceof Fan;
-    }
-
-    public boolean existTeamName(String teamName) {
-        if (teams.containsKey(teamName))
-            return true;
-        else
-            return false;
-    }
-
-    public boolean existReferee(String id) {
-        if (roles.get(id) instanceof Referee)
-            return true;
-        else
-            return false;
-    }
-
-    public boolean existRole(String id) {
-        return roles.containsKey(id);
-    }
+//    public boolean existFan(String id) {
+//        return roles.get(id) instanceof Fan;
+//    }
+//
+//    public boolean existTeamName(String teamName) {
+//        if (teams.containsKey(teamName))
+//            return true;
+//        else
+//            return false;
+//    }
+//
+//    public boolean existReferee(String id) {
+//        if (roles.get(id) instanceof Referee)
+//            return true;
+//        else
+//            return false;
+//    }
 
 //    private boolean existLeague(League league) {
 //        return this.leagues.containsKey(league.getName());
@@ -312,32 +287,32 @@ public class SystemController {
 
     /******************************* function for Testing!!!!! (noa) *********************************/
 
-    /**
-     * this function is used in test - return if the member exist in the system
-     *
-     * @param memberMail
-     * @return
-     */
-    public boolean ifMemberExistTesting(String memberMail) {
-        if (memberMail != null) {
-            return roles.containsKey(memberMail);
-        }
-        return false;
-    }
-
-    public int sizeOfMembersListTesting() {
-        return this.roles.size();
-    }
-
-    public Role getMember(String id) {
-        if (this.roles.get(id) == null)
-            return this.systemManagers.get(id);
-        return this.roles.get(id);
-    }
-
-    public void addMemberTesting(Member member) {
-        this.roles.put(member.getUserMail(), member);
-    }
+//    /**
+//     * this function is used in test - return if the member exist in the system
+//     *
+//     * @param memberMail
+//     * @return
+//     */
+//    public boolean ifMemberExistTesting(String memberMail) {
+//        if (memberMail != null) {
+//            return roles.containsKey(memberMail);
+//        }
+//        return false;
+//    }
+//
+//    public int sizeOfMembersListTesting() {
+//        return this.roles.size();
+//    }
+//
+//    public Role getMember(String id) {
+//        if (this.roles.get(id) == null)
+//            return this.systemManagers.get(id);
+//        return this.roles.get(id);
+//    }
+//
+//    public void addMemberTesting(Member member) {
+//        this.roles.put(member.getUserMail(), member);
+//    }
 
     /*************************************** function for owner******************************************/
 

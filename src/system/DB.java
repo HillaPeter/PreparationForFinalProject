@@ -6,6 +6,7 @@ import Asset.Player;
 import Game.Team;
 import League.*;
 import Users.*;
+import Exception.*;
 
 import java.util.HashMap;
 
@@ -119,12 +120,6 @@ public class DB {
      */
     public void addSystemManager(SystemManager systemManager) { systemManagers.put(systemManager.getUserMail(), systemManager); }
 
-    /**
-     * this function add fan to the roles list
-     *
-     * @param fan
-     */
-    public void addFan(Fan fan) { roles.put(fan.getUserMail(), fan); }
 
     /**
      * this function add AssociationDelegate to roles list
@@ -135,7 +130,31 @@ public class DB {
             this.roles.put(associationDelegate.getUserMail(),associationDelegate);
         }
     }
+    /***************************************Guest function******************************************/
 
-
-
+    /**
+     * this function check if this member exist
+     * @param id
+     * @return
+     */
+    public boolean existMember(String id) {
+        return (this.roles.containsKey(id)|| this.systemManagers.containsKey(id));
+    }
+    /**
+     * this function add fan to the roles list
+     *
+     * @param fan
+     */
+    public void addFan(Fan fan) throws AlreadyExistException {
+        if(existMember(fan.getUserMail()))
+            throw new AlreadyExistException();
+        roles.put(fan.getUserMail(), fan);
+    }
+    public Member getMember(String id) throws MemberNotExist {
+        if(! existMember(id))
+            throw new MemberNotExist();
+        if(roles.containsKey(id))
+            return (Member)this.roles.get(id);
+        return (Member)this.systemManagers.get(id);
+    }
 }
