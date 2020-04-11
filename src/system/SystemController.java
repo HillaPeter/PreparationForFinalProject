@@ -1,25 +1,20 @@
 package system;
 
-import Asset.Coach;
-import Asset.Manager;
-import Asset.Player;
-import Game.Account;
 import Game.Team;
 import League.*;
 import Users.*;
 import Exception.*;
 import javafx.util.Pair;
 
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 public class SystemController {
     private String name;
-    private  Role connectedUser;
+    private Role connectedUser;
     private DBController dbController;
     //  private HashMap<Member,String> passwordValidation;
-
 
 
     /**
@@ -30,7 +25,7 @@ public class SystemController {
     public SystemController(String name) {
         this.name = name;
 
-        connectedUser= new Guest();
+        connectedUser = new Guest();
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -285,19 +280,6 @@ public class SystemController {
         roles.put(fan.getUserMail(), referee);
     }
 
-    /***************************************delete function function******************************************/
-
-    public void deleteTeam(String teamName) {
-        teams.remove(teamName);
-    }
-
-    public void deleteReferee(String id) {
-        roles.remove(id);
-    }
-
-    public void deleteRole(String id) {
-        roles.remove(id);
-    }
 
     /***************************************exist function******************************************/
 
@@ -326,123 +308,7 @@ public class SystemController {
 //    private boolean existLeague(League league) {
 //        return this.leagues.containsKey(league.getName());
 //    }
-    /***************************************get function******************************************/
 
-       public League getLeague(String leagueId) {
-//        return leagues.get(leagueId);
-           return null;
-        }
-
-    public Season getSeason(String seasonId) {
-        return seasons.get(seasonId);
-    }
-
-    public Team getTeam(String teamName) {
-        return teams.get(teamName);
-    }
-
-    public Referee getReferee(String id) {
-        return (Referee) roles.get(id);
-    }
-
-    public Owner getOwner(String id) {
-        return (Owner) roles.get(id);
-    }
-
-    public Player getPlayer(String id) { return (Player) roles.get(id); }
-
-    public Manager getManager(String id) { return (Manager) roles.get(id); }
-
-    public Coach getCoach(String id) { return (Coach) roles.get(id); }
-
-    public Fan getFan(String id){ return (Fan)roles.get(id); }
-
-    public HashMap<String, Role> getRoles() {
-        return roles;
-    }
-
-    public HashMap<String, Team> getTeams() {
-        return teams;
-    }
-
-    public SystemManager getSystemManager(String id){ return systemManagers.get(id); }
-
-
-    /***************************************add function******************************************/
-
-    /***
-     * this function add player to the roles list
-     * @param player
-     */
-    public void addPlayer(Player player) {
-        roles.put(player.getUserMail(), player);
-    }
-
-    /***
-     * this function add coach to the roles list
-     * @param coach
-     */
-    public void addCoach(Coach coach) {
-        roles.put(coach.getUserMail(), coach);
-    }
-
-    /**
-     * this function add manager to the roles list
-     *
-     * @param manager
-     */
-    public void addManager(Manager manager) {
-        roles.put(manager.getUserMail(), manager);
-    }
-
-    /**
-     * this function add owner to the roles list
-     *
-     * @param owner
-     */
-    public void addOwner(Owner owner) {
-        roles.put(owner.getUserMail(), owner);
-    }
-
-    /**
-     * this function add team to the teams list
-     *
-     * @param team
-     */
-    public void addTeam(Team team) {
-        teams.put(team.getName(), team);
-    }
-
-    /**
-     * this function add system manager to the system manager list
-     *
-     * @param systemManager
-     */
-    public void addSystemManager(SystemManager systemManager) {
-        systemManagers.put(systemManager.getUserMail(), systemManager);
-    }
-
-    /**
-     * this function add fan to the roles list
-     *
-     * @param fan1
-     */
-    public void addFan(Fan fan1) {
-        roles.put(fan1.getUserMail(), fan1);
-    }
-
-
-
-
-    /**
-     * this function add AssociationDelegate to roles list
-     * @param associationDelegate
-     */
-    public void addAssociationDelegate(AssociationDelegate associationDelegate) {
-        if(!this.roles.containsKey(associationDelegate.getUserMail())){
-            this.roles.put(associationDelegate.getUserMail(),associationDelegate);
-        }
-    }
 
     /******************************* function for Testing!!!!! (noa) *********************************/
 
@@ -463,11 +329,12 @@ public class SystemController {
         return this.roles.size();
     }
 
-    public Role getMember(String id){
-        if(this.roles.get(id) == null )
+    public Role getMember(String id) {
+        if (this.roles.get(id) == null)
             return this.systemManagers.get(id);
         return this.roles.get(id);
     }
+
     public void addMemberTesting(Member member) {
         this.roles.put(member.getUserMail(), member);
     }
@@ -476,180 +343,354 @@ public class SystemController {
 
     /**
      * owner:
-     * add a new manager to team
-     * delete his prev role
-     * @param owner
-     * @param team
-     * @param role
-     * @param mail
+     * add a coach
+     *
+     * @param teamName
+     * @param mailId
+     * @throws ManagerNotExist
+     * @throws TeamNotExist
      * @throws NoEnoughMoney
      */
-    public void addManager(Owner owner, Team team, Role role, String mail) throws NoEnoughMoney, OwnerNotExist, TeamNotExist {
-        /*for tests*/
-        if(!this.roles.containsKey(owner.getUserMail()))
-            throw new OwnerNotExist();
-        if(!this.teams.containsKey(team.getName()))
+    public void addCoach(String teamName, String mailId) throws ManagerNotExist, TeamNotExist, NoEnoughMoney {
+        if (!dbController.getRoles().containsKey(mailId))
+            throw new ManagerNotExist();
+        if (!dbController.getTeams().containsKey(teamName))
             throw new TeamNotExist();
-
-        Account account = team.getAccount();
-        //how much it cost?
-        if (account.getAmountOfTeam() >= 0) {
-            account.setAmountOfTeam(account.getAmountOfTeam() - 0);
-        } else {
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() < 0)
             throw new NoEnoughMoney();
-        }
 
-        if (role instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) role;
-            Manager manager = new Manager(name, systemManager.getUserMail(), systemManager.getPassword());
-            systemManagers.remove(systemManager);
-            owner.addNewManager(manager, getTeam(team.getName()));
-            addManager(manager);
-        } else if (role instanceof Player) {
-            Player p=getPlayer(mail);
-            Manager manager = new Manager(name, p.getUserMail(), p.getPassword());
-            roles.remove(p);
-            owner.addNewManager(manager, getTeam(team.getName()));
-            addManager(manager);
-        } else if (role instanceof Coach) {
-            Coach c=getCoach(mail);
-            Manager manager = new Manager(name, c.getUserMail(), c.getPassword());
-            roles.remove(c);
-            owner.addNewManager(manager, getTeam(team.getName()));
-            addManager(manager);
-        } else if (role instanceof Fan) {
-            Fan fan = (Fan) role;
-            Manager manager = new Manager(name, fan.getUserMail(), fan.getPassword());
-            roles.remove(fan);
-            owner.addNewManager(manager, getTeam(team.getName()));
-            addManager(manager);
-        } else if (role instanceof AssociationDelegate) {
-            AssociationDelegate associationDelegate = (AssociationDelegate) role;
-            Manager manager = new Manager(name, associationDelegate.getUserMail(), associationDelegate.getPassword());
-            roles.remove(associationDelegate);
-            owner.addNewManager(manager, getTeam(team.getName()));
-            addManager(manager);
-        } else if (role instanceof Referee) {
-            Referee referee = (Referee) role;
-            Manager manager = new Manager(name, referee.getUserMail(), referee.getPassword());
-            roles.remove(referee);
-            owner.addNewManager(manager, getTeam(team.getName()));
-            addManager(manager);
-        }
+        ((Owner) connectedUser).addCoach(teamName, mailId, dbController);
     }
 
+    /**
+     * owner:
+     * add a player
+     *
+     * @param mailId
+     * @param teamName
+     * @param year
+     * @param month
+     * @param day
+     * @param rolePlayer
+     */
+    public void addPlayer(String mailId, String teamName, int year, int month, int day, String rolePlayer) throws ManagerNotExist, TeamNotExist, IncorrectInputException {
+        if (!dbController.getRoles().containsKey(mailId))
+            throw new ManagerNotExist();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (year < 0 || year > 2020 || month > 12 || month < 1 || day < 1 || day > 32 || rolePlayer == null)
+            throw new IncorrectInputException();
+
+        ((Owner) connectedUser).addPlayer(teamName, mailId, dbController, year, month, day, rolePlayer);
+    }
+
+    /**
+     * owner:
+     * add a field to list of training field of his team
+     *
+     * @param teamName
+     * @param fieldName
+     */
+    public void addField(String teamName, String fieldName) throws ManagerNotExist, TeamNotExist, IncorrectInputException {
+
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!dbController.getTeams().get(teamName).getTrainingFields().contains(fieldName))
+            throw new IncorrectInputException();
+        if (!dbController.getTeams().get(teamName).getHomeField().equals(fieldName))
+            throw new IncorrectInputException();
+
+        ((Owner) connectedUser).addField(teamName, dbController, fieldName);
+    }
+
+    /**
+     * owner:
+     * add new manager to one of his groups
+     *
+     * @param teamName
+     * @param mailId
+     * @throws NoEnoughMoney
+     * @throws TeamNotExist
+     * @throws ManagerNotExist
+     */
+    public void addManager(String teamName, String mailId) throws NoEnoughMoney, TeamNotExist, ManagerNotExist {
+
+        /*for tests*/
+//        if(!dbController.getRoles().containsKey(owner.getUserMail()))
+//            throw new OwnerNotExist();
+        if (!dbController.getRoles().containsKey(mailId))
+            throw new ManagerNotExist();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() < 0)
+            throw new NoEnoughMoney();
+
+        ((Owner) connectedUser).addManager(teamName, mailId, dbController);
+    }
 
     /**
      * owner:
      * removes a manager
-     * @param owner
-     * @param team
-     * @param mailInput
+     *
+     * @param teamName
+     * @param mailToRemove
      */
-    public void removeManager(Owner owner, Team team, String mailInput) throws TeamNotExist, OwnerNotExist, ManagerNotExist{
-        Manager manager=getManager(mailInput);
+    public void removeManager(String teamName, String mailToRemove) throws TeamNotExist, OwnerNotExist, ManagerNotExist {
 
         /*for tests*/
-        if(!this.roles.containsKey(owner.getUserMail()))
+//        if(!dbController.getRoles().containsKey(this.getUserMail()))
+//            throw new OwnerNotExist();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!(dbController.getRoles().containsKey(connectedUser.getName())))
             throw new OwnerNotExist();
-        if(!this.teams.containsKey(team.getName()))
-            throw new TeamNotExist();
-        if(! (owner.getTeams() !=null && owner.getTeams().containsKey(team.getName())) )
-            throw new TeamNotExist();
-        if(! team.isManager(manager))
+        if (!dbController.getRoles().containsKey(mailToRemove))
             throw new ManagerNotExist();
 
-        owner.removeManager(team, manager);
-        Fan fan=new Fan(manager.getName(),manager.getUserMail(),manager.getPassword());
-        roles.remove(manager);
-        roles.put(fan.getUserMail(),fan);
+//        if(! team.isManager(manager))
+//            throw new ManagerNotExist();
+
+        ((Owner) connectedUser).removeManager(teamName, mailToRemove, dbController);
 
     }
 
     /**
-     * Owner:
+     * owner:
+     * remove coach
+     *
+     * @param teamName
+     * @param mailToRemove
+     * @throws TeamNotExist
+     * @throws OwnerNotExist
+     * @throws MemberNotExist
+     */
+    public void removeCoach(String teamName, String mailToRemove) throws TeamNotExist, OwnerNotExist, MemberNotExist {
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!(dbController.getRoles().containsKey(connectedUser.getName())))
+            throw new OwnerNotExist();
+        if (!dbController.getRoles().containsKey(mailToRemove))
+            throw new MemberNotExist();
+
+        ((Owner) connectedUser).removeCoach(teamName, mailToRemove, dbController);
+    }
+
+    /**
+     * owner:
+     * remove player from team
+     *
+     * @param teamName
+     * @param mailToRemove
+     */
+    public void removePlayer(String teamName, String mailToRemove) throws TeamNotExist, OwnerNotExist, MemberNotExist {
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!(dbController.getRoles().containsKey(connectedUser.getName())))
+            throw new OwnerNotExist();
+        if (!dbController.getRoles().containsKey(mailToRemove))
+            throw new MemberNotExist();
+
+        ((Owner) connectedUser).removePlayer(teamName, mailToRemove, dbController);
+    }
+
+    /**
+     * owner:
+     * removes a field
+     *
+     * @param teamName
+     * @param fieldName
+     */
+    public void removeField(String teamName, String fieldName) throws TeamNotExist, IncorrectInputException, OwnerNotExist {
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!(dbController.getRoles().containsKey(connectedUser.getName())))
+            throw new OwnerNotExist();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!dbController.getTeams().get(teamName).getTrainingFields().contains(fieldName))
+            throw new IncorrectInputException();
+        if (!dbController.getTeams().get(teamName).getHomeField().equals(fieldName))
+            throw new IncorrectInputException();
+
+        ((Owner) connectedUser).removeField(teamName, fieldName, dbController);
+    }
+
+    /**
+     * owner:
+     * add new owner to one of his groups
+     *
+     * @param teamName
+     * @param mailId
+     * @throws NoEnoughMoney
+     * @throws TeamNotExist
+     * @throws ManagerNotExist
+     */
+    public void addNewOwner(String teamName, String mailId) throws NoEnoughMoney, TeamNotExist, OwnerNotExist {
+
+        /*for tests*/
+//        if(!dbController.getRoles().containsKey(owner.getUserMail()))
+//            throw new OwnerNotExist();
+        if (!dbController.getRoles().containsKey(mailId))
+            throw new OwnerNotExist();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() < 0)
+            throw new NoEnoughMoney();
+
+        ((Owner) connectedUser).addNewOwner(teamName, mailId, dbController);
+    }
+
+    /**
+     * owner:
+     * close team temporary
+     *
+     * @param teamName
+     * @throws TeamNotExist
+     */
+    public void temporaryTeamClosing(String teamName) throws TeamNotExist, UnavailableOption {
+//        if(!roles.containsKey(ownerMail))
+//            throw new OwnerNotExist();
+//        if (!teams.containsKey(teamId))
+//            throw new TeamNotExist();
+//
+//        Owner owner = getOwner(ownerMail);
+//        Team team = getTeam(teamId);
+//
+//        if(! owner.checkIfTeamExist(teamId))
+//            throw new TeamNotExist();
+//        if(!team.getStatus())
+//            throw new UnavalableOption();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!((Owner) connectedUser).getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (!((Owner) connectedUser).getTeams().get(teamName).getStatus())
+            throw new UnavailableOption();
+
+        ((Owner) connectedUser).temporaryTeamClosing(teamName, dbController);
+    }
+
+    /**
+     * owner:
      * reopen team
-     * @param ownerMail
-     * @param teamId
+     *
+     * @param teamName
+     * @throws TeamNotExist
      */
-    public void reopenTeam(String ownerMail, String teamId) throws OwnerNotExist, TeamNotExist, UnavalableOption {
-        if(!roles.containsKey(ownerMail))
-            throw new OwnerNotExist();
-        if (!teams.containsKey(teamId))
+    public void reopenClosedTeam(String teamName) throws TeamNotExist, UnavailableOption {
+//        if(!roles.containsKey(ownerMail))
+//            throw new OwnerNotExist();
+//        if (!teams.containsKey(teamId))
+//            throw new TeamNotExist();
+//
+//        Owner owner = getOwner(ownerMail);
+//        Team team = getTeam(teamId);
+//
+//        if(! owner.checkIfTeamExist(teamId))
+//            throw new TeamNotExist();
+//        if(!team.getStatus())
+//            throw new UnavalableOption();
+        if (!dbController.getTeams().containsKey(teamName))
             throw new TeamNotExist();
-
-        Owner owner = getOwner(ownerMail);
-        Team team = getTeam(teamId);
-
-        if(! owner.checkIfTeamExist(teamId))
+        if (!((Owner) connectedUser).getTeams().containsKey(teamName))
             throw new TeamNotExist();
-        if(team.getStatus())
-            throw new UnavalableOption();
+        if (!((Owner) connectedUser).getTeams().get(teamName).getStatus())
+            throw new UnavailableOption();
 
-        //todo
+        ((Owner) connectedUser).reopenClosedTeam(teamName, dbController);
     }
 
     /**
-     * Owner :
-     * temporary Team Closeing
-     * @param ownerMail
-     * @param teamId
+     * owner:
+     * add outcome of team
+     *
+     * @param teamName
+     * @throws NoEnoughMoney
+     * @throws TeamNotExist
+     * @throws ManagerNotExist
      */
-    public void temporaryTeamClosing(String ownerMail, String teamId) throws OwnerNotExist, TeamNotExist, UnavalableOption{
-        if(!roles.containsKey(ownerMail))
-            throw new OwnerNotExist();
-        if (!teams.containsKey(teamId))
+    public void addOutCome(String teamName, String description, double amount) throws NoEnoughMoney, TeamNotExist, AccountNotExist, IncorrectInputException {
+        if (description == null || amount < 0)
+            throw new IncorrectInputException();
+        if (!dbController.getTeams().containsKey(teamName))
             throw new TeamNotExist();
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() < 0)
+            throw new NoEnoughMoney();
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() - amount < 0)
+            throw new NoEnoughMoney();
+        if (dbController.getTeams().get(teamName).getAccount() == null)
+            throw new AccountNotExist();
 
-        Owner owner = getOwner(ownerMail);
-        Team team = getTeam(teamId);
-
-        if(! owner.checkIfTeamExist(teamId))
-            throw new TeamNotExist();
-        if(!team.getStatus())
-            throw new UnavalableOption();
-
-
-        //todo
-
+        ((Owner) connectedUser).addOutCome(teamName, description, amount, dbController);
     }
+
+    /**
+     * owner:
+     * add outcome of team
+     *
+     * @param teamName
+     * @throws NoEnoughMoney
+     * @throws TeamNotExist
+     * @throws ManagerNotExist
+     */
+    public void addInCome(String teamName, String description, double amount) throws NoEnoughMoney, TeamNotExist, AccountNotExist, IncorrectInputException {
+        if (description == null || amount < 0)
+            throw new IncorrectInputException();
+        if (!dbController.getTeams().containsKey(teamName))
+            throw new TeamNotExist();
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() < 0)
+            throw new NoEnoughMoney();
+        if (dbController.getTeams().get(teamName).getAccount() == null)
+            throw new AccountNotExist();
+
+        ((Owner) connectedUser).addInCome(teamName, description, amount, dbController);
+    }
+
+
+    /********Getters for Owner********/
+    public HashMap<String, Role> getRoles() throws RoleNotExist {
+        return dbController.getRoles();
+    }
+
+    public HashMap<String, Team> getTeams() {
+        return ((Owner) connectedUser).getTeams();
+    }
+
 
     /*************************************** function for associationDelegate******************************************/
 
     /**
      * this
+     *
      * @param
      * @param leagueName
      * @throws AlreadyExistException
      */
     public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException {
-        try{
-            ((AssociationDelegate)connectedUser).setLeague(leagueName);
-        }
-        catch (IncorrectInputException incorrectInput){
+        try {
+            ((AssociationDelegate) connectedUser).setLeague(leagueName);
+        } catch (IncorrectInputException incorrectInput) {
             throw new IncorrectInputException(leagueName);
-        }
-        catch (AlreadyExistException alreadyExist){
+        } catch (AlreadyExistException alreadyExist) {
             throw new AlreadyExistException();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
 
         }
     }
 
     public void setLeagueByYear(String specificLeague, String year) throws IncorrectInputException, AlreadyExistException {
-        try{
-            ((AssociationDelegate)connectedUser).setLeagueByYear(specificLeague,year);
-        }
-        catch (IncorrectInputException incorrectInput){
+        try {
+            ((AssociationDelegate) connectedUser).setLeagueByYear(specificLeague, year);
+        } catch (IncorrectInputException incorrectInput) {
             throw new IncorrectInputException(incorrectInput.getMessage());
-        }
-        catch (AlreadyExistException alreadyExist){
-           throw new AlreadyExistException();
+        } catch (AlreadyExistException alreadyExist) {
+            throw new AlreadyExistException();
         }
     }
 
-    public HashMap<String,League> getLeagues() {
+    public HashMap<String, League> getLeagues() {
         return dbController.getLeagues();
     }
+
+
 }

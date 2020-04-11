@@ -11,4 +11,6 @@ public class Manager extends TeamMember {
         this.setPassword(null);
     }
 
+
+
 }

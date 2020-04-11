@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 
 public class TeamMember extends Member {
-    private HashMap<String , Team> team;
+    private HashMap<String, Team> team;
 
     public TeamMember(String name, String userMail, String password) {
         super(name, userMail, password);
@@ -18,18 +18,16 @@ public class TeamMember extends Member {
         super(name, userMail);
     }
 
-    public void addTeam(Team teamToEnter)
-    {
-        if(team==null)
-        {
-            team=new HashMap<>();
+    public void addTeam(Team teamToEnter) {
+        if (team == null) {
+            team = new HashMap<>();
         }
-        if(!team.containsKey(teamToEnter.getName())){
+        if (!team.containsKey(teamToEnter.getName())) {
             team.put(teamToEnter.getName(), teamToEnter);
         }
     }
-    public void removeTheTeamFromMyList(String name)
-    {
+
+    public void removeTheTeamFromMyList(String name) {
         team.remove(name);
     }
 
@@ -41,11 +39,10 @@ public class TeamMember extends Member {
         this.team = team;
     }
 
-
-   public boolean existInTeam(String mail){
-        if(team.containsKey(mail)){
+    public boolean existInTeam(String mail) {
+        if (team.containsKey(mail)) {
             return true;
         }
         return false;
-   }
+    }
 }

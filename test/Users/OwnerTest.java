@@ -284,7 +284,7 @@ public class OwnerTest {
     }
     /******************************************temporaryTeamClosing******************************************/
     @Test
-    public void temporaryTeamClosingTeamNotExist1() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void temporaryTeamClosingTeamNotExist1() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
         thrown.expect(TeamNotExist.class);
         account0 = new Account("Hapoel", listTransactions, 0);
@@ -302,7 +302,7 @@ public class OwnerTest {
 
     }
     @Test
-    public void temporaryTeamClosingTeamNotExist2() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void temporaryTeamClosingTeamNotExist2() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
         thrown.expect(TeamNotExist.class);
         account0 = new Account("Hapoel", listTransactions, 0);
@@ -320,9 +320,9 @@ public class OwnerTest {
         controller.temporaryTeamClosing(owner.getUserMail(),team1.getName());
     }
     @Test
-    public void temporaryTeamClosingUnavalableOption() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void temporaryTeamClosingUnavalableOption() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
-        thrown.expect(UnavalableOption.class);
+        thrown.expect(UnavailableOption.class);
         account0 = new Account("Hapoel", listTransactions, 0);
         Team team0 = new Team("Hapoel", account0, field0);
         team0.setPlayers(players);
@@ -338,7 +338,7 @@ public class OwnerTest {
         assertTrue(team0.isOwner(owner));
     }
     @Test
-    public void temporaryTeamClosing() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void temporaryTeamClosing() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
         account0 = new Account("Hapoel", listTransactions, 0);
         Team team0 = new Team("Hapoel", account0, field0);
@@ -357,7 +357,7 @@ public class OwnerTest {
     /******************************************reopenClosedTeam******************************************/
 
     @Test
-    public void reopenClosedTeamTeamNotExist1() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void reopenClosedTeamTeamNotExist1() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
         thrown.expect(TeamNotExist.class);
         account0 = new Account("Hapoel", listTransactions, 0);
@@ -373,7 +373,7 @@ public class OwnerTest {
 
     }
     @Test
-    public void reopenClosedTeamTeamNotExist2() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void reopenClosedTeamTeamNotExist2() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
         thrown.expect(TeamNotExist.class);
         account0 = new Account("Hapoel", listTransactions, 0);
@@ -389,9 +389,9 @@ public class OwnerTest {
         controller.reopenTeam(owner.getUserMail(),team1.getName());
     }
     @Test
-    public void reopenClosedUnavalableOption() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void reopenClosedUnavalableOption() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
-        thrown.expect(UnavalableOption.class);
+        thrown.expect(UnavailableOption.class);
         account0 = new Account("Hapoel", listTransactions, 0);
         Team team0 = new Team("Hapoel", account0, field0);
         team0.setPlayers(players);
@@ -403,7 +403,7 @@ public class OwnerTest {
         controller.reopenTeam(owner.getUserMail(),team0.getName());
     }
     @Test
-    public void reopenClosed() throws UnavalableOption, TeamNotExist, OwnerNotExist {
+    public void reopenClosed() throws UnavailableOption, TeamNotExist, OwnerNotExist {
         /* init */
         account0 = new Account("Hapoel", listTransactions, 0);
         Team team0 = new Team("Hapoel", account0, field0);

@@ -1,5 +1,4 @@
 package Game;
-
 import java.util.ArrayList;
 
 public class Account {
@@ -13,15 +12,15 @@ public class Account {
         this.amountOfTeam = amountOfTeam;
     }
 
-    public void setAmountOfTeam(double amountOfTeam) {
-        this.amountOfTeam = amountOfTeam;
+    public void setAmountOfTeam(double amountOfTeam){
+        this.amountOfTeam =amountOfTeam;
     }
 
     //todo!
     public Account() {
         this.name = "";
         this.transactions = new ArrayList<Transaction>();
-        amountOfTeam=0; //default->need to update!
+        amountOfTeam = 0; //default->need to update!
     }
 
     public void setTransactions(ArrayList<Transaction> transactions) {
