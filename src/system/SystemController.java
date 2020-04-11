@@ -653,7 +653,7 @@ public class SystemController {
     }
 
     public HashMap<String, Team> getTeams() {
-        return ((Owner) connectedUser).getTeams();
+        return dbController.getTeams();
     }
 
 
