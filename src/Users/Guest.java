@@ -25,7 +25,7 @@ public class Guest extends Role{
             throw new IncorrectPasswordInputException();
         }
         Fan newMember = new Fan(userName, userMail, password);
-        dbController.addFan(this,newMember);
+        dbController.addFan(newMember);
         return newMember;
     }
 
@@ -76,6 +76,7 @@ public class Guest extends Role{
         return true;
     }
     private void checkValidationPassword(Member member, String userPassword) throws PasswordDontMatchException {
+
         if (!member.getPassword().equals(userPassword))
             throw new PasswordDontMatchException();
         return;

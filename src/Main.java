@@ -19,7 +19,7 @@ public class Main {
     static Member member;
     static String path;
 
-    public static void main(String[] args) throws MemberNotSystemManager, TeamNotExist {
+    public static void main(String[] args) throws TeamNotExist {
 /****************************************************menu******************************************************/
         path = "";
         //SystemController controller =
@@ -112,7 +112,6 @@ public class Main {
             AssociationDelegateMenu((Member) member);
         }
     }
-
 
     private static void SystemManagerMenu(Member member) {
         String input = "";
@@ -485,11 +484,9 @@ public class Main {
 
     }
 
-
     /**
      * Private functions for Owner main-don't delete!
      **/
-
     private static void addTeamManager() throws RoleNotExist {
         System.out.println("Choose role by mail to make him manager");
         HashMap<String, Role> allRoles = controller.getRoles();
@@ -519,7 +516,6 @@ public class Main {
             }
         }
     }
-
     private static void addTeamCoach() throws RoleNotExist {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
@@ -549,7 +545,6 @@ public class Main {
             }
         }
     }
-
     private static void addTeamPlayer() throws RoleNotExist, IncorrectInputException, TeamNotExist, ManagerNotExist {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
@@ -583,7 +578,6 @@ public class Main {
             controller.addPlayer(mailId, teamName, year, month, day, rolePlayer);
         }
     }
-
     private static void addTeamField() throws RoleNotExist, IncorrectInputException, TeamNotExist, ManagerNotExist {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to add new field");
@@ -691,109 +685,109 @@ public class Main {
 
     /***************************************************tests********************************************************/
 
-    private static void shacharFunctionForTesting() throws MemberNotSystemManager {
-
-        Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
-        Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
-        Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1995, 1, 1), "player");
-        Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1995, 1, 1), "player");
-        Player player3 = new Player("hilla", "hilla@gmail.com", "hilla", new Date(1995, 1, 1), "player");
-        Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1995, 1, 1), "player");
-        Player player5 = new Player("liat", "liat@gmail.com", "liat", new Date(1995, 1, 1), "player");
-        Player player6 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
-        Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1995, 1, 1), "player");
-        Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
-        Player player9 = new Player("or", "or@gmail.com", "or", new Date(1995, 1, 1), "player");
-        Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
-        Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
-        Player player12 = new Player("michelle", "michelle@gmail.com", "michelle", new Date(1995, 1, 1), "player");
-        Player player13 = new Player("gabi", "gabi@gmail.com", "gabi", new Date(1995, 1, 1), "player");
-        Player player14 = new Player("almog", "almog@gmail.com", "almog", new Date(1995, 1, 1), "player");
-        Player player15 = new Player("shani", "shani@gmail.com", "shani", new Date(1995, 1, 1), "player");
-        Player player16 = new Player("ifat", "ifat@gmail.com", "ifat", new Date(1995, 1, 1), "player");
-        Player player17 = new Player("inbal", "inbal@gmail.com", "dor", new Date(1995, 1, 1), "player");
-        Player player18 = new Player("oscar", "oscar@gmail.com", "oscar", new Date(1995, 1, 1), "player");
-        Player player19 = new Player("roman", "roman@gmail.com", "roman", new Date(1995, 1, 1), "player");
-        Player player20 = new Player("omer", "omer@gmail.com", "omer", new Date(1995, 1, 1), "player");
-        Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1995, 1, 1), "player");
-        Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1995, 1, 1), "player");
-
-        controller.addPlayer(player1);
-        controller.addPlayer(player2);
-        controller.addPlayer(player3);
-        controller.addPlayer(player4);
-        controller.addPlayer(player5);
-        controller.addPlayer(player6);
-        controller.addPlayer(player7);
-        controller.addPlayer(player8);
-        controller.addPlayer(player9);
-        controller.addPlayer(player10);
-        controller.addPlayer(player11);
-        controller.addPlayer(player12);
-        controller.addPlayer(player13);
-        controller.addPlayer(player14);
-        controller.addPlayer(player15);
-        controller.addPlayer(player16);
-        controller.addPlayer(player17);
-        controller.addPlayer(player18);
-        controller.addPlayer(player19);
-        controller.addPlayer(player20);
-        controller.addPlayer(player21);
-        controller.addPlayer(player22);
-
-
-        Coach coach1 = new Coach("yosi oren", "yosi@gmaill.com", "123", "Coach");
-        Coach coach2 = new Coach("arnold strum", "arnold@gmaill.com", "124", "Coach");
-        controller.addCoach(coach1);
-        controller.addCoach(coach2);
-        Manager manager1 = new Manager("oren tzur", "oren@gmaill.com", "125");
-        Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
-        controller.addManager(manager1);
-        controller.addManager(manager2);
-        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127", controller);
-        Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", controller);
-        controller.addOwner(owner1);
-        controller.addOwner(owner2);
-        SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller);
-        controller.addSystemManager(systemManager);
-        controller.addFan(fan1);
-        //  controller.addReferee(systemManager.getUserMail(), fan1.getUserMail(), true);
-        //   controller.removeReferee(systemManager.getUserMail(), fan1.getUserMail());
-        // controller.removeMember(systemManager.getUserMail(), coach1.getUserMail());
-        //  controller.removeMember(systemManager.getUserMail(), manager1.getUserMail());
-        //   controller.removeMember(systemManager.getUserMail(), owner1.getUserMail());
-        //   controller.removeMember(systemManager.getUserMail(), player1.getUserMail());
-        //   controller.removeMember(systemManager.getUserMail(), fan2.getUserMail());
-
-        String name = "macabi";
-        LinkedList<String> players1 = new LinkedList<>();
-        players1.add(player1.getUserMail());
-        players1.add(player2.getUserMail());
-        players1.add(player3.getUserMail());
-        players1.add(player4.getUserMail());
-        players1.add(player5.getUserMail());
-        players1.add(player6.getUserMail());
-        players1.add(player7.getUserMail());
-        players1.add(player8.getUserMail());
-        players1.add(player9.getUserMail());
-        players1.add(player10.getUserMail());
-        players1.add(player11.getUserMail());
-
-        LinkedList<String> coaches1 = new LinkedList<>();
-        coaches1.add(coach1.getUserMail());
-
-        LinkedList<String> managers1 = new LinkedList<>();
-        managers1.add(manager1.getUserMail());
-
-        LinkedList<String> owners1 = new LinkedList<>();
-        owners1.add(owner1.getUserMail());
-
-        controller.addTeam(systemManager.getUserMail(), players1, coaches1, managers1, owners1, name);
-        systemManager.watchComplaint("C:\\Users\\shachar meretz\\Desktop\\semesterB\\arnold\\projectGit\\PreparationForFinalProject\\complaint.txt");
-        int x = 0;
-
-
-    }
+//    private static void shacharFunctionForTesting() throws MemberNotSystemManager {
+//
+//        Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
+//        Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
+//        Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1995, 1, 1), "player");
+//        Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1995, 1, 1), "player");
+//        Player player3 = new Player("hilla", "hilla@gmail.com", "hilla", new Date(1995, 1, 1), "player");
+//        Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1995, 1, 1), "player");
+//        Player player5 = new Player("liat", "liat@gmail.com", "liat", new Date(1995, 1, 1), "player");
+//        Player player6 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
+//        Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1995, 1, 1), "player");
+//        Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
+//        Player player9 = new Player("or", "or@gmail.com", "or", new Date(1995, 1, 1), "player");
+//        Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
+//        Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
+//        Player player12 = new Player("michelle", "michelle@gmail.com", "michelle", new Date(1995, 1, 1), "player");
+//        Player player13 = new Player("gabi", "gabi@gmail.com", "gabi", new Date(1995, 1, 1), "player");
+//        Player player14 = new Player("almog", "almog@gmail.com", "almog", new Date(1995, 1, 1), "player");
+//        Player player15 = new Player("shani", "shani@gmail.com", "shani", new Date(1995, 1, 1), "player");
+//        Player player16 = new Player("ifat", "ifat@gmail.com", "ifat", new Date(1995, 1, 1), "player");
+//        Player player17 = new Player("inbal", "inbal@gmail.com", "dor", new Date(1995, 1, 1), "player");
+//        Player player18 = new Player("oscar", "oscar@gmail.com", "oscar", new Date(1995, 1, 1), "player");
+//        Player player19 = new Player("roman", "roman@gmail.com", "roman", new Date(1995, 1, 1), "player");
+//        Player player20 = new Player("omer", "omer@gmail.com", "omer", new Date(1995, 1, 1), "player");
+//        Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1995, 1, 1), "player");
+//        Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1995, 1, 1), "player");
+//
+//        controller.addPlayer(player1);
+//        controller.addPlayer(player2);
+//        controller.addPlayer(player3);
+//        controller.addPlayer(player4);
+//        controller.addPlayer(player5);
+//        controller.addPlayer(player6);
+//        controller.addPlayer(player7);
+//        controller.addPlayer(player8);
+//        controller.addPlayer(player9);
+//        controller.addPlayer(player10);
+//        controller.addPlayer(player11);
+//        controller.addPlayer(player12);
+//        controller.addPlayer(player13);
+//        controller.addPlayer(player14);
+//        controller.addPlayer(player15);
+//        controller.addPlayer(player16);
+//        controller.addPlayer(player17);
+//        controller.addPlayer(player18);
+//        controller.addPlayer(player19);
+//        controller.addPlayer(player20);
+//        controller.addPlayer(player21);
+//        controller.addPlayer(player22);
+//
+//
+//        Coach coach1 = new Coach("yosi oren", "yosi@gmaill.com", "123", "Coach");
+//        Coach coach2 = new Coach("arnold strum", "arnold@gmaill.com", "124", "Coach");
+//        controller.addCoach(coach1);
+//        controller.addCoach(coach2);
+//        Manager manager1 = new Manager("oren tzur", "oren@gmaill.com", "125");
+//        Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
+//        controller.addManager(manager1);
+//        controller.addManager(manager2);
+//        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127", controller);
+//        Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", controller);
+//        controller.addOwner(owner1);
+//        controller.addOwner(owner2);
+//        SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller);
+//        controller.addSystemManager(systemManager);
+//        controller.addFan(fan1);
+//        //  controller.addReferee(systemManager.getUserMail(), fan1.getUserMail(), true);
+//        //   controller.removeReferee(systemManager.getUserMail(), fan1.getUserMail());
+//        // controller.removeMember(systemManager.getUserMail(), coach1.getUserMail());
+//        //  controller.removeMember(systemManager.getUserMail(), manager1.getUserMail());
+//        //   controller.removeMember(systemManager.getUserMail(), owner1.getUserMail());
+//        //   controller.removeMember(systemManager.getUserMail(), player1.getUserMail());
+//        //   controller.removeMember(systemManager.getUserMail(), fan2.getUserMail());
+//
+//        String name = "macabi";
+//        LinkedList<String> players1 = new LinkedList<>();
+//        players1.add(player1.getUserMail());
+//        players1.add(player2.getUserMail());
+//        players1.add(player3.getUserMail());
+//        players1.add(player4.getUserMail());
+//        players1.add(player5.getUserMail());
+//        players1.add(player6.getUserMail());
+//        players1.add(player7.getUserMail());
+//        players1.add(player8.getUserMail());
+//        players1.add(player9.getUserMail());
+//        players1.add(player10.getUserMail());
+//        players1.add(player11.getUserMail());
+//
+//        LinkedList<String> coaches1 = new LinkedList<>();
+//        coaches1.add(coach1.getUserMail());
+//
+//        LinkedList<String> managers1 = new LinkedList<>();
+//        managers1.add(manager1.getUserMail());
+//
+//        LinkedList<String> owners1 = new LinkedList<>();
+//        owners1.add(owner1.getUserMail());
+//
+//        controller.addTeam(systemManager.getUserMail(), players1, coaches1, managers1, owners1, name);
+//        systemManager.watchComplaint("C:\\Users\\shachar meretz\\Desktop\\semesterB\\arnold\\projectGit\\PreparationForFinalProject\\complaint.txt");
+//        int x = 0;
+//
+//
+//    }
 
   /*      SecurityMachine securityMachine = new SecurityMachine();
         String afterEncrtypt = securityMachine.encrypt("stamLibdok", "key");

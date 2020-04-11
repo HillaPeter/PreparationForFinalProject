@@ -260,31 +260,6 @@ public class SystemController {
     }
 
 
-    /***************************************exist function******************************************/
-
-//    public boolean existFan(String id) {
-//        return roles.get(id) instanceof Fan;
-//    }
-//
-//    public boolean existTeamName(String teamName) {
-//        if (teams.containsKey(teamName))
-//            return true;
-//        else
-//            return false;
-//    }
-//
-//    public boolean existReferee(String id) {
-//        if (roles.get(id) instanceof Referee)
-//            return true;
-//        else
-//            return false;
-//    }
-
-//    private boolean existLeague(League league) {
-//        return this.leagues.containsKey(league.getName());
-//    }
-
-
     /******************************* function for Testing!!!!! (noa) *********************************/
 
 //    /**

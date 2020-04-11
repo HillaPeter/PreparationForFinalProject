@@ -41,8 +41,6 @@ public class DB {
     public void addSeason(Season season) {
         seasons.put(season.getYear(), season);
     }
-
-
     /***************************************Getters******************************************/
 
     public HashMap<String, League> getLeagues() { return leagues; }
@@ -130,6 +128,16 @@ public class DB {
             this.roles.put(associationDelegate.getUserMail(),associationDelegate);
         }
     }
+    /*****************************************exist function****************************************/
+    public boolean existSeason(String year){
+        return this.seasons.containsKey(year);
+    }
+    public boolean existLeague(String name){
+        return this.seasons.containsKey(name);
+    }
+    public boolean existTeam(String name){
+        return this.teams.containsKey(name);
+    }
     /***************************************Guest function******************************************/
 
     /**
@@ -145,14 +153,10 @@ public class DB {
      *
      * @param fan
      */
-    public void addFan(Fan fan) throws AlreadyExistException {
-        if(existMember(fan.getUserMail()))
-            throw new AlreadyExistException();
+    public void addFan(Fan fan) {
         roles.put(fan.getUserMail(), fan);
     }
-    public Member getMember(String id) throws MemberNotExist {
-        if(! existMember(id))
-            throw new MemberNotExist();
+    public Member getMember(String id){
         if(roles.containsKey(id))
             return (Member)this.roles.get(id);
         return (Member)this.systemManagers.get(id);
