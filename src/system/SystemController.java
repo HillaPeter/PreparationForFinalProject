@@ -24,7 +24,7 @@ public class SystemController {
      */
     public SystemController(String name) {
         this.name = name;
-
+        this.initSystem("",""); // change it
         connectedUser = new Guest(dbController);
         //todo
 //        password verifications
@@ -39,6 +39,7 @@ public class SystemController {
 
     public void initSystem(String userName, String password) {
         //check if the user name and the password are connect
+        dbController = new DBController();
     }
 
     /*************************************** function for guest******************************************/
@@ -72,12 +73,13 @@ public class SystemController {
      * if the refree exist - delete it and return true
      */
     public boolean removeReferee(String systemManagerId, String refreeId) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            return systemManager.removeReferee(refreeId);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            return systemManager.removeReferee(refreeId);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
+        return false;
     }
 
     /***
@@ -86,12 +88,13 @@ public class SystemController {
      * if the refree not exist and success of adding it - add it and return true
      */
     public boolean addReferee(String systemManagerId, String refreeId, boolean ifMainRefree) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            return systemManager.addReferee(refreeId, ifMainRefree);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            return systemManager.addReferee(refreeId, ifMainRefree);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
+        return false;
     }
 
     /**
@@ -105,12 +108,13 @@ public class SystemController {
      * @throws MemberNotSystemManager
      */
     public boolean closeTeam(String systemManagerId, String teamName) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            return systemManager.closeTeam(teamName);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            return systemManager.closeTeam(teamName);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
+        return false;
     }
 
     /**
@@ -122,12 +126,13 @@ public class SystemController {
      * @throws MemberNotSystemManager
      */
     public boolean removeMember(String systemManagerId, String id) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            return systemManager.removeMember(id);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            return systemManager.removeMember(id);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
+        return false;
     }
 
     /**
@@ -138,12 +143,12 @@ public class SystemController {
      * @throws MemberNotSystemManager
      */
     public void watchComplaint(String systemManagerId, String path) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            LinkedList<String> complaint = systemManager.watchComplaint(path);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            LinkedList<String> complaint = systemManager.watchComplaint(path);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
     }
 
     /**
@@ -156,30 +161,31 @@ public class SystemController {
      * @throws MemberNotSystemManager
      */
     public boolean responseComplaint(String systemManagerId, String path, LinkedList<Pair<String, String>> responseForComplaint) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            return systemManager.ResponseComplaint(path, responseForComplaint);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            return systemManager.ResponseComplaint(path, responseForComplaint);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
+        return false;
     }
 
     public void schedulingGames(String systemManagerId) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            //   systemManager.schedulingGames();
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            //   systemManager.schedulingGames();
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
     }
 
     public void viewSystemInformation(String systemManagerId) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            systemManager.viewSystemInformation();
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            systemManager.viewSystemInformation();
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
     }
 
     /**
@@ -197,66 +203,68 @@ public class SystemController {
      * @throws MemberNotSystemManager
      */
     public boolean addTeam(String systemManagerId, LinkedList<String> players, LinkedList<String> coachs, LinkedList<String> managers, LinkedList<String> owners, String teamName) throws MemberNotSystemManager {
-        SystemManager systemManager = systemManagers.get(systemManagerId);
-        if (null != systemManager) {
-            return systemManager.addNewTeam(players, coachs, managers, owners, teamName);
-        } else {
-            throw new MemberNotSystemManager();
-        }
+//        SystemManager systemManager = systemManagers.get(systemManagerId);
+//        if (null != systemManager) {
+//            return systemManager.addNewTeam(players, coachs, managers, owners, teamName);
+//        } else {
+//            throw new MemberNotSystemManager();
+//        }
+        return false;
     }
 
     /***************************************help function for system manager******************************************/
 
     public boolean notAllTheIdAreMembers(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner) {
-        for (int i = 0; i < idPlayers.size(); i++) {
-            if (roles.containsKey(idPlayers.get(i)) == false)
-                return true;
-        }
-        for (int i = 0; i < idCoach.size(); i++) {
-            if (roles.containsKey(idCoach.get(i)) == false)
-                return true;
-        }
-        for (int i = 0; i < idManager.size(); i++) {
-            if (roles.containsKey(idManager.get(i)) == false)
-                return true;
-        }
-        for (int i = 0; i < idOwner.size(); i++) {
-            if (roles.containsKey(idOwner.get(i)) == false)
-                return true;
-        }
+//        for (int i = 0; i < idPlayers.size(); i++) {
+//            if (roles.containsKey(idPlayers.get(i)) == false)
+//                return true;
+//        }
+//        for (int i = 0; i < idCoach.size(); i++) {
+//            if (roles.containsKey(idCoach.get(i)) == false)
+//                return true;
+//        }
+//        for (int i = 0; i < idManager.size(); i++) {
+//            if (roles.containsKey(idManager.get(i)) == false)
+//                return true;
+//        }
+//        for (int i = 0; i < idOwner.size(); i++) {
+//            if (roles.containsKey(idOwner.get(i)) == false)
+//                return true;
+//        }
         return false;
     }
 
     public boolean alreadyIncludeThisTeamName(String teamName) {
-        if (teams == null) {
-            return false;
-        }
-        for (String name : teams.keySet()
-        ) {
-            if (name.equals(teamName))
-                return true;
-        }
+//        if (teams == null) {
+//            return false;
+//        }
+//        for (String name : teams.keySet()
+//        ) {
+//            if (name.equals(teamName))
+//                return true;
+//        }
         return false;
     }
 
     public LinkedList<Member> returnFromSystemTheExactUsers(LinkedList<String> id) {
-        LinkedList<Member> toReturn = new LinkedList<>();
-        for (int i = 0; i < id.size(); i++) {
-            toReturn.add((Member) roles.get(id.get(i)));
-        }
-        return toReturn;
+//        LinkedList<Member> toReturn = new LinkedList<>();
+//        for (int i = 0; i < id.size(); i++) {
+//            toReturn.add((Member) roles.get(id.get(i)));
+//        }
+//        return toReturn;
+        return null;
     }
 
     public void makeTheRoleAReferee(String id, boolean mainReferee) {
         //if the referee is main referee the boolean filed wil be true
         //change the role from fan to referee
-        Fan fan = (Fan) roles.get(id);
-        Referee referee;
-        if (mainReferee)
-            referee = new MainReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
-        else
-            referee = new SecondaryReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
-        roles.put(fan.getUserMail(), referee);
+//        Fan fan = (Fan) roles.get(id);
+//        Referee referee;
+//        if (mainReferee)
+//            referee = new MainReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
+//        else
+//            referee = new SecondaryReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
+//        roles.put(fan.getUserMail(), referee);
     }
 
 
@@ -588,11 +596,11 @@ public class SystemController {
         }
     }
 
-    public void setLeagueByYear(String specificLeague, String year) throws IncorrectInputException, AlreadyExistException {
+    public void setLeagueByYear(String specificLeague, String year) throws ObjectNotExist, AlreadyExistException {
         try {
             ((AssociationDelegate) connectedUser).setLeagueByYear(specificLeague, year);
-        } catch (IncorrectInputException incorrectInput) {
-            throw new IncorrectInputException(incorrectInput.getMessage());
+        } catch (ObjectNotExist incorrectInput) {
+            throw new ObjectNotExist(incorrectInput.getMessage());
         } catch (AlreadyExistException alreadyExist) {
             throw new AlreadyExistException();
         }
@@ -601,6 +609,5 @@ public class SystemController {
     public HashMap<String, League> getLeagues() {
         return dbController.getLeagues();
     }
-
 
 }

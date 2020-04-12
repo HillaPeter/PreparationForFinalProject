@@ -104,21 +104,21 @@ public class DBController {
     }
 
     /***************************************remove function******************************************/
-    public void removeLeague(String leagueName) throws LeagueNotExist{
+    public void removeLeague(String leagueName) throws ObjectNotExist{
         if(! db.existLeague(leagueName))
-            throw new LeagueNotExist();
+            throw new ObjectNotExist("");
         db.removeLeague(leagueName);
     }
 
-    public void removeSeason(String year)  throws SeasonNotExist{
+    public void removeSeason(String year)  throws ObjectNotExist{
         if(! db.existSeason(year))
-            throw new SeasonNotExist();
+            throw new ObjectNotExist("");
         db.removeSeason(year);
     }
 
-    public void removeTeam(String name) throws TeamNotExist{
+    public void removeTeam(String name) throws ObjectNotExist{
         if(! db.existTeam(name))
-            throw new TeamNotExist();
+            throw new ObjectNotExist("");
         db.removeTeam(name);
     }
 }

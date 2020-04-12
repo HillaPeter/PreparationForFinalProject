@@ -1080,7 +1080,7 @@ public class Main {
                     String year = scanInput.nextLine();
                     try {
                         controller.setLeagueByYear(specificLeague, year);
-                    } catch (IncorrectInputException incorrectInput) {
+                    } catch (ObjectNotExist incorrectInput) {
                         System.out.println(incorrectInput.getMessage());
 
                     } catch (AlreadyExistException alreadyExist) {

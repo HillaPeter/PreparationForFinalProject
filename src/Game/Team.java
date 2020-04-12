@@ -80,7 +80,7 @@ public class Team {
         return name;
     }
 
-    public void deleteTheData() throws TeamNotExist {
+    public void deleteTheData() throws ObjectNotExist {
         for (Player player : players
         ) {
             player.removeTheTeamFromMyList(this.name);

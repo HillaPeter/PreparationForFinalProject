@@ -18,10 +18,10 @@ public class Guest extends Role{
      * @return String array - details[mail,name,password]
      */
     public Member signIn(String userMail, String userName, String password) throws AlreadyExistException, IncorrectPasswordInputException, IncorrectInputException{
-        if (!checkMailInput(userMail)) {
+        if (! checkMailInput(userMail)) {
             throw new IncorrectInputException("incorrect mail input");
         }
-        if (!checkPasswordValue(password)) {
+        if (! checkPasswordValue(password)) {
             throw new IncorrectPasswordInputException();
         }
         Fan newMember = new Fan(userName, userMail, password);
@@ -35,7 +35,8 @@ public class Guest extends Role{
      * @return String array  - details[name,password]
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
-        Member existingMember =(Member) dbController.getMember(userMail);
+        Member existingMember;
+        existingMember = (Member) dbController.getMember(userMail);
         checkValidationPassword(existingMember, userPassword);
         return existingMember;
     }

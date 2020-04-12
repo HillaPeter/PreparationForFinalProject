@@ -30,7 +30,7 @@ public class Owner extends Member {
         dbController.addTeam(team);
     }
 
-    public void removeTheTeamFromMyList(String name) throws TeamNotExist {
+    public void removeTheTeamFromMyList(String name) throws ObjectNotExist {
         dbController.removeTeam(name);
     }
 

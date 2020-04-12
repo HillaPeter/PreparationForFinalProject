@@ -36,11 +36,11 @@ public class AssociationDelegate extends Member {
     //todo
 }
 
-    public void setLeagueByYear(String specificLeague, String year) throws IncorrectInputException, AlreadyExistException {
+    public void setLeagueByYear(String specificLeague, String year) throws ObjectNotExist, AlreadyExistException{
         HashMap<String, League> leagues = dbController.getLeagues();
         League league = leagues.get(specificLeague);
         if(league == null){
-            throw new IncorrectInputException("There is no league called "+ specificLeague);
+            throw new ObjectNotExist("There is no league called "+ specificLeague);
         }
 
         Season season = new Season(year);

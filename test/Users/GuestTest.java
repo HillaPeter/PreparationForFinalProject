@@ -12,67 +12,60 @@ import static org.junit.Assert.*;
 
 public class GuestTest {
     SystemController controller = new SystemController("test controller");
-    @Test
-    public void getName() {
-        Guest guest = new Guest();
-        assertEquals("guest",guest.getName());
-        assertNotEquals("n",guest.getName());
-    }
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
     @Test
-    public void signInWithException() throws MemberAlreadyExistException {
-        thrown.expect(MemberAlreadyExistException.class);
+    public void signInWithException() throws IncorrectInputException, AlreadyExistException {
+        thrown.expect(AlreadyExistException.class);
+        controller.signIn("noa","noa@gmail.com","123");
 
         /*try to sign in but he is a member now*/
-        Player player = new Player("noa","noa@gmail.com","123",null,"");
-        controller.addPlayer(player);
-        controller.signIn("noa", "noa@gmail.com", "11123");
+        controller.signIn("noa", "noa@gmail.com", "123");
     }
     @Test
-    public void signIn() {
-        boolean notThrown = true;
-        Player player = new Player("noa","noa@gmail.com","123",null,"");
-        controller.addPlayer(player);
+    public void signIn() throws IncorrectInputException, AlreadyExistException {
+//        int sizeBefore = controller.getRoles().size();
+
         /*try to sign in with correct inputs  - result should be correct*/
-        try {
-            Member newMember = controller.signIn("noa", "noa2@gmail.com", "123");
-            assertTrue(notThrown);
-            assertNotNull(newMember);
-            assertThat(newMember, instanceOf(Fan.class));
-            assertTrue(controller.existFan(newMember.getUserMail()));
-        } catch (MemberAlreadyExistException e) {
-            notThrown = false;
-        }
-        assertTrue(notThrown);
+        Member newMember = controller.signIn("noa", "noa2@gmail.com", "123");
+        assertNotNull(newMember);
+        assertThat(newMember, instanceOf(Fan.class));
+//        assertEquals(sizeBefore+1 , controller.getRoles().size());
+
     }
     @Test
-    public void logInWithException() throws MemberNotExist, PasswordDontMatchException {
+    public void logInWithException() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
         thrown.expect(MemberNotExist.class);
-        controller.addPlayer(new Player("n","noa@gmail.com",null,""));
+//        int sizeBefore = controller.getRoles().size();
+
+        controller.signIn("n","noa@gmail.com","123");
 
         /*try to log in with not exist member - result should be negative*/
-        Member member = controller.logIn("notExist@gmail.com","1223");
+        Member member = controller.logIn("notExist@gmail.com","123");
         assertNull(member);
+//        assertEquals(sizeBefore , controller.getRoles().size());
+
     }
     @Test
-    public void logInIncorrectPassword() throws MemberNotExist, PasswordDontMatchException {
+    public void logInIncorrectPassword() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
         thrown.expect(PasswordDontMatchException.class);
-        Player player = new Player("noa","noa@gmail.com","123",null,"");
-        controller.addPlayer(player);
+        controller.signIn("noa","noa@gmail.com","123");
+//        int sizeBefore = controller.getRoles().size();
 
         /*try to log in with different password - result should be negative*/
-        controller.logIn("noa@gmail.com","1223");
+        Member member = controller.logIn("noa@gmail.com","1223");
+        assertNull(member);
+//        assertEquals(sizeBefore , controller.getRoles().size());
+
     }
     @Test
-    public void logIn() throws MemberNotExist, PasswordDontMatchException {
-        Player player = new Player("noa","noa@gmail.com","123",null,"");
-        controller.addPlayer(player);
-        assertTrue(controller.ifMemberExistTesting("noa@gmail.com"));
+    public void logIn() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
+        Fan fan = (Fan)controller.signIn("noa","noa@gmail.com","123");
 
         /*try to log in with correct details - result should be positive*/
         Member member = controller.logIn("noa@gmail.com","123");
         assertNotNull(member);
-        assertThat(player, instanceOf(Player.class));
+        assertEquals("noa",member.getName());
+        assertThat(fan, instanceOf(Fan.class));
     }
 }
