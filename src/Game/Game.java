@@ -33,4 +33,8 @@ public class Game {
         referees.remove(referee);
         //put new referee after the delete
     }
+
+    public boolean isRefereeInTheGame(Referee referee){
+        return referees.contains(referee);
+    }
 }

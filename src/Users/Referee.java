@@ -14,9 +14,12 @@ public abstract class Referee extends Member{
         this.training = training;
     }
 
-    public void printGameSchedule(){
-        //todo
-        System.out.println("Hilla the queen");
+    public void addGame(Game game){
+        games.add(game);
+    }
+
+    public HashSet printGameSchedule(){
+        return games;
     }
 
     public void updateDetails(){
