@@ -19,6 +19,7 @@ public class GuestTest {
         thrown.expect(AlreadyExistException.class);
         controller.signIn("noa","noa@gmail.com","123");
 
+
         /*try to sign in but he is a member now*/
         controller.signIn("noa", "noa@gmail.com", "123");
     }
