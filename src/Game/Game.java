@@ -37,4 +37,8 @@ public class Game {
     public boolean isRefereeInTheGame(Referee referee){
         return referees.contains(referee);
     }
+
+    public void addEvent (Event event){
+        this.eventLog.addEvent(event);
+    }
 }

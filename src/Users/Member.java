@@ -31,4 +31,8 @@ public abstract class Member extends Role {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setName (String name){
+        super.setName(name);
+    }
 }

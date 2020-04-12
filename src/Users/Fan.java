@@ -1,5 +1,7 @@
 package Users;
 
+import Exception.IncorrectInputException;
+
 public class Fan extends Member {
 
 
@@ -24,8 +26,16 @@ public class Fan extends Member {
         //todo
     }
 
-    public void updatePersonalDetails(){
-        //todo
+    public void updatePersonalDetails(String newName, String newPassword) throws Exception {
+        if (newName == null || newPassword == null){
+            throw new IncorrectInputException();
+        }
+        if(newName != ""){
+            super.setName(newName);
+        }
+        if(newPassword != ""){
+            super.setPassword(newPassword);
+        }
     }
 
     public void sendComplaint(){

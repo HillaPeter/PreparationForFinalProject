@@ -10,4 +10,8 @@ public class EventLog {
         this.game=game;
     }
 
+    public void addEvent (Event event){
+        events.add(event);
+    }
+
 }
