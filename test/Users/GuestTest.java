@@ -5,6 +5,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import Exception.*;
 import org.junit.rules.ExpectedException;
+import system.DBController;
 import system.SystemController;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -15,7 +16,7 @@ public class GuestTest {
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
     @Test
-    public void signInWithException() throws IncorrectInputException, AlreadyExistException {
+    public void signInWithException() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
         thrown.expect(AlreadyExistException.class);
         controller.signIn("noa","noa@gmail.com","123");
 
@@ -24,7 +25,7 @@ public class GuestTest {
         controller.signIn("noa", "noa@gmail.com", "123");
     }
     @Test
-    public void signIn() throws IncorrectInputException, AlreadyExistException {
+    public void signIn() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
 //        int sizeBefore = controller.getRoles().size();
 
         /*try to sign in with correct inputs  - result should be correct*/
@@ -35,7 +36,7 @@ public class GuestTest {
 
     }
     @Test
-    public void logInWithException() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
+    public void logInWithException() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException, DontHavePermissionException {
         thrown.expect(MemberNotExist.class);
 //        int sizeBefore = controller.getRoles().size();
 
@@ -48,10 +49,10 @@ public class GuestTest {
 
     }
     @Test
-    public void logInIncorrectPassword() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
+    public void logInIncorrectPassword() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException, DontHavePermissionException {
         thrown.expect(PasswordDontMatchException.class);
         controller.signIn("noa","noa@gmail.com","123");
-//        int sizeBefore = controller.getRoles().size();
+   //     int sizeBefore = controller.getRoles().size();
 
         /*try to log in with different password - result should be negative*/
         Member member = controller.logIn("noa@gmail.com","1223");
@@ -60,7 +61,7 @@ public class GuestTest {
 
     }
     @Test
-    public void logIn() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
+    public void logIn() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException, DontHavePermissionException {
         Fan fan = (Fan)controller.signIn("noa","noa@gmail.com","123");
 
         /*try to log in with correct details - result should be positive*/

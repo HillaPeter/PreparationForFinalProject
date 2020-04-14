@@ -63,6 +63,8 @@ public class Main {
                             showMenu(member);
                         } catch (AlreadyExistException e) {
                             System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
+                        } catch (DontHavePermissionException e) {
+                            System.out.println("not have permission to signIn");
                         }
 
                     } catch (IncorrectPasswordInputException e) {
@@ -150,7 +152,7 @@ public class Main {
                                 String id = scanInput.nextLine();
                                 try {
                                     boolean success = controller.removeReferee(member.getUserMail(), id);
-                                } catch (MemberNotSystemManager e) {
+                                } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
                             }
@@ -168,7 +170,7 @@ public class Main {
                                 }
                                 try {
                                     boolean success = controller.addReferee(member.getUserMail(), id, mainReferee);
-                                } catch (MemberNotSystemManager e) {
+                                } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
                             }
@@ -224,7 +226,7 @@ public class Main {
                                 }
                                 try {
                                     boolean success = controller.addTeam(member.getUserMail(), players, coaches, managers, owners, teamName);
-                                } catch (MemberNotSystemManager e) {
+                                } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
                             }
@@ -233,7 +235,7 @@ public class Main {
                                 String TeamName = scanInput.nextLine();
                                 try {
                                     boolean success = controller.closeTeam(member.getUserMail(), TeamName);
-                                } catch (MemberNotSystemManager e) {
+                                } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
                             }
@@ -245,7 +247,7 @@ public class Main {
                     String id = scanInput.nextLine();
                     try {
                         boolean success = controller.removeMember(member.getUserMail(), id);
-                    } catch (MemberNotSystemManager e) {
+                    } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
                 }
@@ -264,7 +266,7 @@ public class Main {
                             case "1": {
                                 try {
                                     controller.watchComplaint(member.getUserMail(), path);
-                                } catch (MemberNotSystemManager e) {
+                                } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
                             }
@@ -272,7 +274,7 @@ public class Main {
                                 try {
                                     LinkedList<Pair<String, String>> responseForComplaint = new LinkedList<>();
                                     boolean success = controller.responseComplaint(member.getUserMail(), path, responseForComplaint);
-                                } catch (MemberNotSystemManager e) {
+                                } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
                             }
@@ -282,14 +284,14 @@ public class Main {
                 case "5": {
                     try {
                         controller.schedulingGames(member.getUserMail());
-                    } catch (MemberNotSystemManager e) {
+                    } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
                 }
                 case "6": {
                     try {
                         controller.viewSystemInformation(member.getUserMail());
-                    } catch (MemberNotSystemManager e) {
+                    } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
                 }
@@ -406,9 +408,9 @@ public class Main {
                         String teamName = scanInput.nextLine();
                         try {
                             controller.addNewOwner(teamName, mailId);
-                        } catch (TeamNotExist exception) {
+                        } catch (ObjectNotExist exception) {
 
-                        } catch (OwnerNotExist ownerNotExist) {
+                        } catch (MemberNotExist ownerNotExist) {
                             ownerNotExist.printStackTrace();
                         }
 
@@ -488,7 +490,7 @@ public class Main {
     /**
      * Private functions for Owner main-don't delete!
      **/
-    private static void addTeamManager() {
+    private static void addTeamManager() throws DontHavePermissionException {
         System.out.println("Choose role by mail to make him manager");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -514,7 +516,7 @@ public class Main {
 
     }
 
-    private static void addTeamCoach() {
+    private static void addTeamCoach() throws DontHavePermissionException {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -540,7 +542,7 @@ public class Main {
 
     }
 
-    private static void addTeamPlayer() throws IncorrectInputException, TeamNotExist, ManagerNotExist, MemberNotExist, AlreadyExistException {
+    private static void addTeamPlayer() throws IncorrectInputException, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -572,7 +574,7 @@ public class Main {
 
     }
 
-    private static void addTeamField() throws IncorrectInputException, TeamNotExist, ManagerNotExist {
+    private static void addTeamField() throws IncorrectInputException, ObjectNotExist, MemberNotExist, DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to add new field");
         for (String teamName : teams.keySet()) {
@@ -655,7 +657,7 @@ public class Main {
         }
     }
 
-    private static void removeTeamField() throws IncorrectInputException, TeamNotExist, OwnerNotExist {
+    private static void removeTeamField() throws IncorrectInputException, ObjectNotExist, MemberNotExist, DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to add remove field");
         for (String teamName : teams.keySet()) {
@@ -840,7 +842,7 @@ public class Main {
      * checking owner- please don't delete it! (Hilla P)
      */
 
-    private static void hillaPeterFunctionForTesting() {
+    private static void hillaPeterFunctionForTesting() throws DontHavePermissionException {
 
         DBController dbController = new DBController();
 
@@ -1071,23 +1073,28 @@ public class Main {
 
                 case "2":
                     System.out.println("Please choose a specific league (only letters)");
-                    HashMap<String, League> leagues = controller.getLeagues();
-                    for (String league : leagues.keySet()) {
-                        System.out.println("League: " + league);
-                    }
-                    String specificLeague = scanInput.nextLine();
-                    System.out.println("Please write the year of this league");
-                    String year = scanInput.nextLine();
                     try {
-                        controller.setLeagueByYear(specificLeague, year);
-                    } catch (ObjectNotExist incorrectInput) {
-                        System.out.println(incorrectInput.getMessage());
+                        HashMap<String, League> leagues = controller.getLeagues();
+                        for (String league : leagues.keySet()) {
+                            System.out.println("League: " + league);
+                        }
+                        String specificLeague = scanInput.nextLine();
+                        System.out.println("Please write the year of this league");
+                        String year = scanInput.nextLine();
+                        try {
+                            controller.setLeagueByYear(specificLeague, year);
+                        } catch (ObjectNotExist incorrectInput) {
+                            System.out.println(incorrectInput.getMessage());
 
-                    } catch (AlreadyExistException alreadyExist) {
-                        System.out.println("This season is already exist in this league");
-                    } catch (Exception e) {
-                        System.out.println("You can't do this functionality");
+                        } catch (AlreadyExistException alreadyExist) {
+                            System.out.println("This season is already exist in this league");
+                        } catch (Exception e) {
+                            System.out.println("You can't do this functionality");
+                        }
+                    }catch (DontHavePermissionException e){
+                        System.out.println("you dont have permission to this action");
                     }
+
                     break;
 
                 case "3":

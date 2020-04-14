@@ -17,7 +17,7 @@ public class Guest extends Role{
      * This function fill the signIn-form with user mail, user name and user password
      * @return String array - details[mail,name,password]
      */
-    public Member signIn(String userMail, String userName, String password) throws AlreadyExistException, IncorrectPasswordInputException, IncorrectInputException{
+    public Member signIn(String userMail, String userName, String password) throws AlreadyExistException, IncorrectPasswordInputException, IncorrectInputException, DontHavePermissionException {
         if (! checkMailInput(userMail)) {
             throw new IncorrectInputException("incorrect mail input");
         }
@@ -25,7 +25,7 @@ public class Guest extends Role{
             throw new IncorrectPasswordInputException();
         }
         Fan newMember = new Fan(userName, userMail, password);
-        dbController.addFan(newMember);
+        dbController.addFan(this,newMember);
         return newMember;
     }
 

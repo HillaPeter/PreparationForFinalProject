@@ -23,15 +23,19 @@ public class DBController {
 
 
     /***************************************Getters******************************************/
-    public HashMap<String, Role> getRoles() {
-        return db.getRoles();
+    public HashMap<String, Role> getRoles(Role role) throws DontHavePermissionException{
+        if(role instanceof SystemManager)
+            return db.getRoles();
+        throw new DontHavePermissionException();
     }
 
-    public HashMap<String, Team> getTeams() {
-        return db.getTeams();
+    public HashMap<String, Team> getTeams(Role role)throws DontHavePermissionException {
+        if(role instanceof SystemManager)
+            return db.getTeams();
+        throw new DontHavePermissionException();
     }
 
-    public HashMap<String, League> getLeagues() {
+    public HashMap<String, League> getLeagues(Role role)throws DontHavePermissionException {
         return db.getLeagues();
     }
 
@@ -42,14 +46,20 @@ public class DBController {
     }
     /***************************************delete function function******************************************/
 
-    public void deleteRole(String id) throws MemberNotExist{
-        if(! db.existMember(id))
-            throw new MemberNotExist();
-        db.removeRole(id);
+    public void deleteRole(Role role, String id) throws MemberNotExist , DontHavePermissionException{
+        if(role instanceof SystemManager || role instanceof Owner || role instanceof AssociationDelegate){
+            if(! db.existMember(id))
+                throw new MemberNotExist();
+            db.removeRole(id);
+        }
+        throw new DontHavePermissionException();
     }
 
     /***************************************add function******************************************/
-    public void addFan(Fan fan) throws AlreadyExistException {
+    public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
+        if(! (role instanceof Guest) ){
+            throw new DontHavePermissionException();
+        }
         if(db.existMember(fan.getUserMail()))
             throw new AlreadyExistException();
         db.addFan(fan);

@@ -17,8 +17,8 @@ public class AssociationDelegate extends Member {
         dbController = new DBController();
     }
 
-    public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException {
-        HashMap<String, League> leagues = dbController.getLeagues();
+    public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException, DontHavePermissionException {
+        HashMap<String, League> leagues = dbController.getLeagues(this);
         League league;
         if (Pattern.matches("[a-zA-Z]+", leagueName)) { //checks that the name contains only letters(true=just letters)
             if(!leagues.containsKey(leagueName)){
@@ -36,8 +36,8 @@ public class AssociationDelegate extends Member {
     //todo
 }
 
-    public void setLeagueByYear(String specificLeague, String year) throws ObjectNotExist, AlreadyExistException{
-        HashMap<String, League> leagues = dbController.getLeagues();
+    public void setLeagueByYear(String specificLeague, String year) throws ObjectNotExist, AlreadyExistException, DontHavePermissionException {
+        HashMap<String, League> leagues = dbController.getLeagues(this);
         League league = leagues.get(specificLeague);
         if(league == null){
             throw new ObjectNotExist("There is no league called "+ specificLeague);

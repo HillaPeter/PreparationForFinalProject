@@ -13,7 +13,7 @@ public class AssociationDelegateTest {
     AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123");
 
     @Before
-    public void init() throws IncorrectInputException, AlreadyExistException {
+    public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
         controller.signIn(a_s_Test.getName(),a_s_Test.getUserMail(),a_s_Test.getPassword());
     }
     @Test
