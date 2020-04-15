@@ -24,7 +24,7 @@ public class SystemController {
      */
     public SystemController(String name) {
         this.name = name;
-        this.initSystem("", ""); // change it
+        this.initSystem("","", ""); // change it
         connectedUser = new Guest(dbController);
         //todo
 //        password verifications
@@ -37,9 +37,10 @@ public class SystemController {
         //member = user; (argument in the constructor-Member user- Fan, Owner, AD, Referee...)
     }
 
-    public void initSystem(String userName, String password) {
+    public void initSystem(String name , String userName, String password) {
         //check if the user name and the password are connect
         dbController = new DBController();
+        SystemManager systemManager=new SystemManager(name , userName,password,dbController);
     }
 
     /*************************************** function for guest******************************************/
