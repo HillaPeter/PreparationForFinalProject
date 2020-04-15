@@ -17,6 +17,8 @@ public class DBController {
 
     public DBController() {
         this.db = new DB();
+        SystemManager systemManager=new SystemManager("admin" , "admin@gmail.com","123",this);
+        db.addSystemManager(systemManager);
     }
 
 
@@ -25,13 +27,13 @@ public class DBController {
 
     /***************************************Getters******************************************/
     public HashMap<String, Role> getRoles(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager)
+        if (role instanceof SystemManager || role instanceof Owner)
             return db.getRoles();
         throw new DontHavePermissionException();
     }
 
     public HashMap<String, Team> getTeams(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager)
+        if (role instanceof SystemManager || role instanceof Owner)
             return db.getTeams();
         throw new DontHavePermissionException();
     }
@@ -40,15 +42,10 @@ public class DBController {
         return db.getLeagues();
     }
 
-    public Role getMember(String id) {
-        try {
-            if (!db.existMember(id))
-                throw new MemberNotExist();
-            return db.getMember(id);
-        } catch (Exception MemberNotExist) {
-
-        }
-        return null;
+    public Role getMember(String id) throws MemberNotExist{
+        if (!db.existMember(id))
+            throw new MemberNotExist();
+        return db.getMember(id);
     }
     public Team getTeam(String teamName) {
         return db.getTeam(teamName);

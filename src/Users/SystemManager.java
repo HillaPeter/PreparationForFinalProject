@@ -13,6 +13,7 @@ import system.DBController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -134,13 +135,14 @@ public class SystemManager extends Member {
     /**
      * this function return true if the team added and false if there were problem with the data
      */
-    public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner, String teamName) {
+    public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager,
+                              LinkedList<String> idOwner, String teamName) {
         try {
             if (idPlayers.size() < 11) {
                 throw new IncorrectInputException();
             } else if (alreadyIncludeThisTeamName(teamName) == true) {
                 throw new ObjectAlreadyExist();
-            } else if (notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
+            } else if (!notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
                 throw new MemberNotExist();
             } else {
                 LinkedList<Coach> coaches = makeCoachList(dbController.getMembers(idCoach));
@@ -285,5 +287,11 @@ public class SystemManager extends Member {
         }
         return list;
     }
-
+    /************************************** get function (noa) ************************************/
+    public HashMap<String, Role> getRoles() throws DontHavePermissionException {
+        return this.dbController.getRoles(this);
+    }
+    public HashMap<String, Team> getTeams() throws DontHavePermissionException {
+        return this.dbController.getTeams(this);
+    }
 }

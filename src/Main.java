@@ -582,7 +582,7 @@ public class Main {
 
     }
 
-    private static void removeTeamManager() {
+    private static void removeTeamManager() throws DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to remove manager");
         for (String teamName : teams.keySet()) {
@@ -605,7 +605,7 @@ public class Main {
         }
     }
 
-    private static void removeTeamCoach() {
+    private static void removeTeamCoach() throws DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to remove coach");
         for (String teamName : teams.keySet()) {
@@ -628,7 +628,7 @@ public class Main {
         }
     }
 
-    private static void removeTeamPlayer() {
+    private static void removeTeamPlayer() throws DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to remove coach");
         for (String teamName : teams.keySet()) {

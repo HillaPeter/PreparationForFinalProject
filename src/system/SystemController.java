@@ -40,7 +40,6 @@ public class SystemController {
     public void initSystem(String name , String userName, String password) {
         //check if the user name and the password are connect
         dbController = new DBController();
-        SystemManager systemManager=new SystemManager(name , userName,password,dbController);
     }
 
     /*************************************** function for guest******************************************/
@@ -56,7 +55,6 @@ public class SystemController {
         return ((Guest) connectedUser).signIn(userMail, userName, password);
 
     }
-
     /**
      * this function makes a guest into an existing member.
      * if the member doesnt exist - return null
@@ -65,10 +63,10 @@ public class SystemController {
      * @return
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
-        return ((Guest) connectedUser).logIn(userMail, userPassword);
+        this.connectedUser = ((Guest) connectedUser).logIn(userMail, userPassword);
+        return (Member)this.connectedUser;
     }
     /*************************************** function for system manager******************************************/
-
     /***
      * this function get id of the refree to remove and the id of the system manager that take care of this function
      * if the refree didnt exist - return false
@@ -82,7 +80,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     /***
      * this function get id of the member to make refree and the id of the system manager that take care of this function
      * if the refree already exist - return false
@@ -96,7 +93,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     /**
      * this function get the team name and the id of the system manager that take care of this function
      * if the team name already exist - close the team and return true
@@ -129,14 +125,12 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     /**
      * this function get the path to the complaint file and the id of the system manager that take care of this function
      *
      * @param path
      * @throws DontHavePermissionException
      */
-
     public void watchComplaint(String path) throws DontHavePermissionException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
@@ -145,7 +139,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     /**
      * this function get the path to the complaint file , the response for the complaint and the id of the system manager that take care of this function
      *
@@ -162,7 +155,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
@@ -171,7 +163,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     public void viewSystemInformation() throws DontHavePermissionException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
@@ -180,7 +171,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     /**
      * this function get the team name and all the team member and the id of the system manager that take care of this function
      * if the team name not exist - open the team and return true
@@ -202,8 +192,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
-
     /******************************* function for Testing!!!!! (noa) *********************************/
 
 //    /**
@@ -494,13 +482,25 @@ public class SystemController {
     }
 
 
-    /********Getters for Owner********/
+    /********Getters for Owner & System manager********/
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
-        return ((Owner) connectedUser).getRoles();
+        if (connectedUser instanceof Owner){
+            return ((Owner) connectedUser).getRoles();
+        }
+        if (connectedUser instanceof SystemManager){
+            return ((SystemManager)connectedUser).getRoles();
+        }
+        throw new DontHavePermissionException();
     }
 
-    public HashMap<String, Team> getTeams() {
-        return ((Owner) connectedUser).getTeams();
+    public HashMap<String, Team> getTeams() throws DontHavePermissionException {
+        if (connectedUser instanceof Owner){
+            return ((Owner) connectedUser).getTeams();
+        }
+        if (connectedUser instanceof SystemManager){
+            return ((SystemManager)connectedUser).getTeams();
+        }
+        throw new DontHavePermissionException();
     }
 
 
