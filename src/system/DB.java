@@ -128,6 +128,10 @@ public class DB {
             this.roles.put(associationDelegate.getUserMail(),associationDelegate);
         }
     }
+
+    public void addReferee(Referee referee) {
+        roles.put(referee.getUserMail(),referee);
+    }
     /*****************************************exist function****************************************/
     public boolean existSeason(String year){
         return this.seasons.containsKey(year);
@@ -161,4 +165,23 @@ public class DB {
             return (Member)this.roles.get(id);
         return (Member)this.systemManagers.get(id);
     }
+
+    /***************************************Exist function*****************************/
+    public boolean existRefree(String refreeId) {
+        if(roles.containsKey(refreeId)==true && roles.get(refreeId) instanceof  Referee)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean existFan(String fanId) {
+        if(roles.containsKey(fanId)==true && roles.get(fanId) instanceof  Fan)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
 }

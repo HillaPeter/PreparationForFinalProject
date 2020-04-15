@@ -9,8 +9,6 @@ import Users.*;
 import javafx.util.Pair;
 import system.DBController;
 import system.SystemController;
-
-import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -22,15 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
 /****************************************************menu******************************************************/
-        path = "";
-        //SystemController controller =
-
-//        /**********for my test - shacahr********/
-//        Main main = new Main();
-//        main.shacharFunctionForTesting();
-//        /***************************************/
-//
-//        startMenu();
+       startMenu();
 
 
         /**** Hilla Peter Tests!!****/
@@ -151,7 +141,7 @@ public class Main {
                                 System.out.println("please enter the Id of the referee");
                                 String id = scanInput.nextLine();
                                 try {
-                                    boolean success = controller.removeReferee(member.getUserMail(), id);
+                                    boolean success = controller.removeReferee(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -169,7 +159,7 @@ public class Main {
                                     mainReferee = false;
                                 }
                                 try {
-                                    boolean success = controller.addReferee(member.getUserMail(), id, mainReferee);
+                                    boolean success = controller.addReferee(id, mainReferee);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -225,7 +215,7 @@ public class Main {
                                         owners.add(id);
                                 }
                                 try {
-                                    boolean success = controller.addTeam(member.getUserMail(), players, coaches, managers, owners, teamName);
+                                    boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -234,7 +224,7 @@ public class Main {
                                 System.out.println("please enter the team name you want to close");
                                 String TeamName = scanInput.nextLine();
                                 try {
-                                    boolean success = controller.closeTeam(member.getUserMail(), TeamName);
+                                    boolean success = controller.closeTeam(TeamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -246,7 +236,7 @@ public class Main {
                     System.out.println("please enter the Id of the member you want to remove");
                     String id = scanInput.nextLine();
                     try {
-                        boolean success = controller.removeMember(member.getUserMail(), id);
+                        boolean success = controller.removeMember(id);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
@@ -265,7 +255,7 @@ public class Main {
                         switch (input) {
                             case "1": {
                                 try {
-                                    controller.watchComplaint(member.getUserMail(), path);
+                                    controller.watchComplaint(path);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -273,7 +263,7 @@ public class Main {
                             case "2": {
                                 try {
                                     LinkedList<Pair<String, String>> responseForComplaint = new LinkedList<>();
-                                    boolean success = controller.responseComplaint(member.getUserMail(), path, responseForComplaint);
+                                    boolean success = controller.responseComplaint( path, responseForComplaint);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -283,14 +273,18 @@ public class Main {
                 }
                 case "5": {
                     try {
-                        controller.schedulingGames(member.getUserMail());
+                        System.out.println("please enter the id of the season");
+                        String seasonId = scanInput.nextLine();
+                        System.out.println("please enter the id of the season");
+                        String leagueId = scanInput.nextLine();
+                        controller.schedulingGames(seasonId , leagueId);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
                 }
                 case "6": {
                     try {
-                        controller.viewSystemInformation(member.getUserMail());
+                        controller.viewSystemInformation();
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }

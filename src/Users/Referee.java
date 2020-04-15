@@ -3,7 +3,6 @@ package Users;
 import Game.Game;
 import Exception.IncorrectInputException;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Referee extends Member{
@@ -13,7 +12,9 @@ public abstract class Referee extends Member{
     public Referee(String name, String userMail, String password, String training) {
         super(name, userMail, password);
         this.training = training;
+        games=new HashSet<Game>();
     }
+
 
     public void addGame(Game game){
         games.add(game);
