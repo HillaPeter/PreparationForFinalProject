@@ -1115,22 +1115,22 @@ public class Main {
                         for(String nameOfReferee : referees.keySet()){  //display all referees who doesn't exist in this league and season
                             System.out.println("Referee- " + nameOfReferee);
                         }
-                        System.out.println("Please write the referee name you would like to add ");
+                        System.out.println("Please write the referee's name you would like to add ");
                         boolean validName = false;
                         int counterTries = 0;
-                        String refereeToAdd = scanInput.nextLine();
-                        while(!validName || counterTries == 4){ //give 3 tries to write valid name of referee
-                            if(referees.containsKey(refereeToAdd)){
+                        String refereeNameToAdd = "";
+                        while((!validName) || counterTries == 3){ //give 3 tries to write valid name of referee
+                            refereeNameToAdd = scanInput.nextLine();
+                            if(referees.containsKey(refereeNameToAdd)){
                                 validName=true;
                             }
                             else{
-                                System.out.println(""+ refereeToAdd + " is not exist, write valid name of referee");
-                                refereeToAdd = scanInput.nextLine();
+                                System.out.println(""+ refereeNameToAdd + " is not exist, write valid name of referee");
+                                counterTries++;
                             }
-                            counterTries++;
                         }
                         if(validName){
-                            controller.addRefereeToLeagueInSeason(league, season, refereeToAdd, referees.get(refereeToAdd));
+                            controller.addRefereeToLeagueInSeason(league, season, refereeNameToAdd, referees.get(refereeNameToAdd));
                         }
                         else{
                            break;
