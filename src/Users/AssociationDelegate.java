@@ -110,12 +110,15 @@ public class AssociationDelegate extends Member {
      * @param refereeName - name of the referee we would like to add
      * @param referee - the object of the referee we would like to add
      */
-    public void addRefereeToLeagueInSeason(String league, String season, String refereeName, Referee referee) {
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeName, Referee referee) throws ObjectNotExist, ObjectAlreadyExist {
+
         League leagueObj = dbController.getLeague(league);
         Season seasonObj = dbController.getSeason(season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
-        leagueInSeason.addReferee(refereeName, referee);
-
+        if(!leagueInSeason.getReferees().containsKey(refereeName))
+            leagueInSeason.addReferee(refereeName, referee);
+        else
+            throw new ObjectAlreadyExist();
     }
 
 

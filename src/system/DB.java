@@ -51,9 +51,20 @@ public class DB {
 
     public HashMap<String, Team> getTeams() { return teams; }
 
-    public League getLeague(String leagueId) { return leagues.get(leagueId); }
+    public League getLeague(String leagueId) throws ObjectNotExist {
+        if(leagues.containsKey(leagueId))
+            return leagues.get(leagueId);
+        else
+            throw new ObjectNotExist(leagueId);
+    }
 
-    public Season getSeason(String seasonId) { return seasons.get(seasonId); }
+    public Season getSeason(String seasonId) throws ObjectNotExist {
+        if(seasons.containsKey(seasonId))
+            return seasons.get(seasonId);
+        else
+            throw new ObjectNotExist(seasonId);
+    }
+
 
     public Team getTeam(String teamName) { return teams.get(teamName); }
 

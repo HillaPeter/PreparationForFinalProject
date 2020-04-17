@@ -1,6 +1,7 @@
 package League;
 
 import java.util.HashMap;
+import Exception.*;
 
 public class League {
     private String name;
@@ -11,9 +12,11 @@ public class League {
         leagueInSeasons=new HashMap<>();
     }
 
-    public LeagueInSeason getLeagueInSeason(Season season)
-    {
-        return leagueInSeasons.get(season);
+    public LeagueInSeason getLeagueInSeason(Season season) throws ObjectNotExist {
+        if(leagueInSeasons.containsKey(season))
+             return leagueInSeasons.get(season);
+        else
+            throw new ObjectNotExist(season.getYear());
     }
 
     public String getName() {

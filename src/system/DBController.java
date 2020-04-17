@@ -52,7 +52,8 @@ public class DBController {
     public Team getTeam(String teamName) {
         return db.getTeam(teamName);
     }
-    public League getLeague(String leagueId) {
+    public League getLeague(String leagueId) throws ObjectNotExist {
+
         return db.getLeague(leagueId);
     }
     public Season getSeason(String seasonId) {

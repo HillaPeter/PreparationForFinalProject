@@ -567,7 +567,13 @@ public class SystemController {
     }
 
     public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd, Referee referee) {
-        ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd, referee);
+        try{
+            ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd, referee);
+        }
+        catch(Exception e){
+
+        }
+
     }
 
     public HashMap<String, Season> getSeasons() throws DontHavePermissionException {
