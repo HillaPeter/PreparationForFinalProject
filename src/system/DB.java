@@ -17,6 +17,7 @@ public class DB {
     private HashMap<String, SystemManager> systemManagers;
     private HashMap<String, Role> roles; // hash map <mail,role> - maybe users instead roles??
     private HashMap<String, Team> teams;
+    private HashMap<String, Referee> referees;
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -26,6 +27,7 @@ public class DB {
         this.systemManagers = new HashMap<>();
         this.roles = new HashMap<>();
         this.teams = new HashMap<>();
+        this.referees = new HashMap<>();
     }
 
     /********************************Association Delegate Functions********************************/
@@ -68,6 +70,8 @@ public class DB {
     public Fan getFan(String id){ return (Fan)roles.get(id); }
 
     public SystemManager getSystemManager(String id){ return systemManagers.get(id); }
+
+    public HashMap<String, Referee> getReferees() { return referees; }
 
     /***************************************delete function******************************************/
 
@@ -184,4 +188,7 @@ public class DB {
     }
 
 
+    public HashMap<String,Season> getSeasons() {
+        return seasons;
+    }
 }

@@ -39,7 +39,9 @@ public class DBController {
     }
 
     public HashMap<String, League> getLeagues(Role role) throws DontHavePermissionException {
-        return db.getLeagues();
+        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+            return db.getLeagues();
+        throw new DontHavePermissionException();
     }
 
     public Role getMember(String id) throws MemberNotExist{
@@ -66,6 +68,12 @@ public class DBController {
         return list;
     }
 
+    public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
+            if (role instanceof AssociationDelegate || role instanceof SystemManager)
+                return db.getReferees();
+            throw new DontHavePermissionException();
+    }
+
     /***************************************delete function function******************************************/
 
     public void deleteRole(Role role, String id) throws MemberNotExist, DontHavePermissionException {
@@ -84,7 +92,7 @@ public class DBController {
     public void deleteFan(String id) {
         db.removeRole(id);
     }
-    public void deleteMembet(String id) {
+    public void deleteMember(String id) {
         db.removeRole(id);
     }
     /***************************************add function******************************************/
@@ -169,8 +177,8 @@ public class DBController {
     }
 
     /********************************************exist function***********************************/
-    public boolean existRefree(String refreeId) {
-        return db.existRefree(refreeId);
+    public boolean existReferee(String refereeId) {
+        return db.existRefree(refereeId);
     }
 
 
@@ -189,5 +197,7 @@ public class DBController {
     }
 
 
-
+    public HashMap<String,Season> getSeasons(Role role) {
+        return db.getSeasons();
+    }
 }

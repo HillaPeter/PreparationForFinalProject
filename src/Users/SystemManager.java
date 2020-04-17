@@ -48,7 +48,7 @@ public class SystemManager extends Member {
 
     public boolean removeReferee(String id) {
         try {
-            if (dbController.existRefree(id)) {
+            if (dbController.existReferee(id)) {
                 if (inputAreLegal(id)) {
                     Referee referee = (Referee) dbController.getMember(id);
                     referee.deleteTheGames();
@@ -67,14 +67,14 @@ public class SystemManager extends Member {
         return false;
     }
 
-    public boolean addReferee(String id, boolean ifMainRefree) {
+    public boolean addReferee(String id, boolean ifMainReferee) {
         try {
             if (inputAreLegal(id)) {
-                if (!dbController.existRefree(id)) {
+                if (!dbController.existReferee(id)) {
                     if (dbController.existFan(id)) {
                         Fan fan = (Fan) dbController.getMember(id);
                         Referee referee = null;
-                        if (ifMainRefree) {
+                        if (ifMainReferee) {
                             referee = new MainReferee(fan);
                         } else {
                             referee = new SecondaryReferee(fan);
@@ -118,7 +118,7 @@ public class SystemManager extends Member {
         try {
             if (inputAreLegal(id)) {
                 if (dbController.existMember(id)) {
-                    dbController.deleteMembet(id);
+                    dbController.deleteMember(id);
                     return true;
                 } else {
                     throw new MemberNotExist();

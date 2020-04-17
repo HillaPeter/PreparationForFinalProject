@@ -4,7 +4,7 @@ import Exception.*;
 import Game.Account;
 import Game.Team;
 import Game.Transaction;
-import League.League;
+import League.*;
 import Users.*;
 import javafx.util.Pair;
 import system.DBController;
@@ -1058,10 +1058,13 @@ public class Main {
                         controller.setLeague(leagueName);
                     } catch (IncorrectInputException incorrectInput) {
                         System.out.println("The name of league must contains only letters");
+                        break;
                     } catch (AlreadyExistException alreadyExist) {
                         System.out.println("This name is already exists");
+                        break;
                     } catch (Exception e) {
                         System.out.println("You can't define a league");
+                        break;
                     }
                     break;
 
@@ -1079,21 +1082,65 @@ public class Main {
                             controller.setLeagueByYear(specificLeague, year);
                         } catch (ObjectNotExist incorrectInput) {
                             System.out.println(incorrectInput.getMessage());
-
+                            break;
                         } catch (AlreadyExistException alreadyExist) {
                             System.out.println("This season is already exist in this league");
+                            break;
                         } catch (Exception e) {
                             System.out.println("You can't do this functionality");
+                            break;
                         }
                     }catch (DontHavePermissionException e){
-                        System.out.println("you dont have permission to this action");
+                        System.out.println("You don't have permission to this action");
+                        break;
                     }
-
                     break;
 
                 case "3":
-
-
+                    try {
+                        System.out.println("Please write a league ");
+                        String league = scanInput.nextLine();
+                        HashMap<String, League> leagues = controller.getLeagues();
+                        if(!leagues.containsKey(league)){
+                            break;
+                        }
+                        System.out.println("Please write a specific season of this league ");
+                        String season = scanInput.nextLine();
+                        HashMap<String, Season> seasons = controller.getSeasons();
+                        if(!seasons.containsKey(season)){
+                            break;
+                        }
+                        HashMap<String, Referee> referees = controller.getRefereesDoesntExistInTheLeagueAndSeason(league, season);
+                        System.out.println("Those all referees you can add to league- "+ league + " in season- " + season);
+                        for(String nameOfReferee : referees.keySet()){  //display all referees who doesn't exist in this league and season
+                            System.out.println("Referee- " + nameOfReferee);
+                        }
+                        System.out.println("Please write the referee name you would like to add ");
+                        boolean validName = false;
+                        int counterTries = 0;
+                        String refereeToAdd = scanInput.nextLine();
+                        while(!validName || counterTries == 4){ //give 3 tries to write valid name of referee
+                            if(referees.containsKey(refereeToAdd)){
+                                validName=true;
+                            }
+                            else{
+                                System.out.println(""+ refereeToAdd + " is not exist, write valid name of referee");
+                                refereeToAdd = scanInput.nextLine();
+                            }
+                            counterTries++;
+                        }
+                        if(validName){
+                            controller.addRefereeToLeagueInSeason(league, season, refereeToAdd, referees.get(refereeToAdd));
+                        }
+                        else{
+                           break;
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println("You don't have permission to this action");
+                        break;
+                    }
+                    break;
                 case "4":
 
                 case "5":

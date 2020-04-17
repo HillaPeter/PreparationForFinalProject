@@ -6,6 +6,7 @@ import Exception.*;
 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
 public class AssociationDelegate extends Member {
@@ -28,7 +29,6 @@ public class AssociationDelegate extends Member {
             else{
                 throw new AlreadyExistException();
             }
-
         }
         else {
             throw new IncorrectInputException(leagueName);
@@ -61,6 +61,7 @@ public class AssociationDelegate extends Member {
 
 
     public void signRefereeToSeason() {
+
         //todo
     }
 
@@ -73,5 +74,49 @@ public class AssociationDelegate extends Member {
     public void changeScorePolicy() {
         //todo
     }
+
+    /**
+     * This function returns all the referees that each referee doesn't exist in the league in season that
+     * we get in the parameters
+     * @param league - name of league
+     * @param season - name of season
+     * @return list of referees
+     * @throws DontHavePermissionException
+     */
+    public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league,String season) throws DontHavePermissionException {
+        HashMap<String, Referee> referees = new HashMap<>();
+       try{
+           HashMap<String, Referee> allRefereesInTheSystem = dbController.getReferees(this);
+           League leagueObj = dbController.getLeague(league);
+           Season seasonObj = dbController.getSeason(season);
+           LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+           HashMap<String, Referee> refereesInLeagueInSeason = leagueInSeason.getReferees();
+           for(String nameOfReferee : allRefereesInTheSystem.keySet()){
+
+               if(!refereesInLeagueInSeason.containsKey(nameOfReferee)){
+                   referees.put(nameOfReferee,allRefereesInTheSystem.get(nameOfReferee));
+               }
+           }
+       }catch(Exception e){
+            throw new DontHavePermissionException();
+       }
+       return referees;
+    }
+
+    /**
+     *
+     * @param league - name of league to add the referee
+     * @param season - name of season to add the referee
+     * @param refereeName - name of the referee we would like to add
+     * @param referee - the object of the referee we would like to add
+     */
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeName, Referee referee) {
+        League leagueObj = dbController.getLeague(league);
+        Season seasonObj = dbController.getSeason(season);
+        LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+        leagueInSeason.addReferee(refereeName, referee);
+
+    }
+
 
 }
