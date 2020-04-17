@@ -84,6 +84,78 @@ public class DB {
 
     public HashMap<String, Referee> getReferees() { return referees; }
 
+    public HashMap<String, Fan> getFans() {
+        HashMap<String,Fan> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Fan)
+            {
+                toReturn.put(role,(Fan)roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        HashMap<String,Player> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Player)
+            {
+                toReturn.put(role,(Player) roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Owner> getOwners() {
+        HashMap<String,Owner> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Owner)
+            {
+                toReturn.put(role,(Owner) roles.get(role));
+            }
+        }
+        return toReturn;
+
+    }
+
+    public HashMap<String, Manager> getManagers() {
+        HashMap<String,Manager> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Manager)
+            {
+                toReturn.put(role,(Manager) roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Coach> getCoachs() {
+        HashMap<String,Coach> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Coach)
+            {
+                toReturn.put(role,(Coach)roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String , Member> getMembers() {
+        HashMap<String,Member> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Member)
+            {
+                toReturn.put(role,(Member)roles.get(role));
+            }
+        }
+        return toReturn;
+    }
     /***************************************delete function******************************************/
 
     public void removeRole(String id) { roles.remove(id); }

@@ -17,16 +17,21 @@ public class Main {
     static SystemController controller = new SystemController("System Controller");
     static Member member;
     static String path;
+    static DBController dbController;//just for my test - you can delete
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException {
 /****************************************************menu******************************************************/
-       startMenu();
-
+       //startMenu();
+        /****shachar tests******/
+        //must write the path in the main
+        dbController=new DBController();
+        shacharFunctionForTesting();
+        SystemManagerMenu();
 
         /**** Hilla Peter Tests!!****/
       //  Main main = new Main();
        // main.hillaPeterFunctionForTesting();
-        startMenu();
+        //startMenu();
     }
 
 
@@ -92,7 +97,7 @@ public class Main {
 
 
         if (member instanceof SystemManager) {
-            SystemManagerMenu((Member) member);
+            SystemManagerMenu();
         } else if (member instanceof MainReferee) {
 
         } else if (member instanceof SecondaryReferee) {
@@ -107,9 +112,9 @@ public class Main {
     }
 
     /*********************************************System Manager**********************************************/
-    private static void SystemManagerMenu(Member member) {
+    private static void SystemManagerMenu() {
         String input = "";
-        while (!input.equals("Exit")) {
+        while (!input.equals("ExitAll")) {
             System.out.println("choose one of the following options:\n");
             System.out.println("write \"1\" for handle with refree");
             System.out.println("write \"2\" for handle with team");
@@ -117,7 +122,7 @@ public class Main {
             System.out.println("write \"4\" for handle with complaints");
             System.out.println("write \"5\" for handle with games");
             System.out.println("write \"6\" for view System Information");
-            System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+            System.out.println("\nwrite \"ExitAll\" if you want to finish. \n");
             input = "";
             while (input.equals("")) {
                 input = scanInput.nextLine();
@@ -130,7 +135,6 @@ public class Main {
                         System.out.println("choose one of the following options:\n");
                         System.out.println("write \"1\" to remove referee");
                         System.out.println("write \"2\" to add referee");
-                        System.out.println("write \"3\" to update referee details");
                         System.out.println("\nwrite \"Exit\" if you want to finish. \n");
                         input = "";
                         while (input.equals("")) {
@@ -139,17 +143,19 @@ public class Main {
                         switch (input) {
                             case "1": {
                                 System.out.println("please enter the Id of the referee");
-                                String id = scanInput.nextLine();
+                                String id = removeRefree();// scanInput.nextLine();
                                 try {
                                     boolean success = controller.removeReferee(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
+                                    //    input="Exit";
                                 }
+                                break;
                             }
 
                             case "2": {
-                                System.out.println("please enter the Id of the refree");
-                                String id = scanInput.nextLine();
+                                //System.out.println("please enter the Id of the refree");
+                                String id = addRefree();//scanInput.nextLine();
                                 System.out.println("would you like this refree will be main refree ? yes/no");
                                 String bool = scanInput.nextLine();
                                 boolean mainReferee;
@@ -163,12 +169,11 @@ public class Main {
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
-                            }
-                            case "3": {
-                                //  controller.updateReferee();
+                                break;
                             }
                         }
                     }
+                    break;
                 }
                 case "2": {
                     while (!input.equals("Exit")) {
@@ -182,13 +187,15 @@ public class Main {
                         }
                         switch (input) {
                             case "1": {
-                                LinkedList<String> players = new LinkedList<>();
-                                LinkedList<String> coaches = new LinkedList<>();
-                                LinkedList<String> managers = new LinkedList<>();
-                                LinkedList<String> owners = new LinkedList<>();
                                 String teamName = "";
                                 System.out.println("please enter the name of the new team");
                                 teamName = scanInput.nextLine();
+                                LinkedList<String> players = addTeamPlayers();// new LinkedList<>();
+                                LinkedList<String> coaches = addTeamCoachs();//new LinkedList<>();
+                                LinkedList<String> managers = addTeamManagers();//new LinkedList<>();
+                                LinkedList<String> owners = addTeamOwners();//new LinkedList<>();
+
+                                /*
                                 String id = "";
                                 while (!id.equals("0")) {
                                     System.out.println("please enter the id of the players in the team \n when you finish press 0");
@@ -214,35 +221,39 @@ public class Main {
                                     if (!id.equals(0))
                                         owners.add(id);
                                 }
+                                */
                                 try {
                                     boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
+                                break;
                             }
                             case "2": {
-                                System.out.println("please enter the team name you want to close");
-                                String TeamName = scanInput.nextLine();
+                                //  System.out.println("please enter the team name you want to close");
+                                String TeamName = removeTeam();// scanInput.nextLine();
                                 try {
                                     boolean success = controller.closeTeam(TeamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
+                                break;
                             }
                         }
                     }
+                    break;
                 }
                 case "3": {
-                    System.out.println("please enter the Id of the member you want to remove");
-                    String id = scanInput.nextLine();
+                    //  System.out.println("please enter the Id of the member you want to remove");
+                    String id = removeMember();// scanInput.nextLine();
                     try {
                         boolean success = controller.removeMember(id);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
+                    break;
                 }
                 case "4": {
-
                     while (!input.equals("Exit")) {
                         System.out.println("choose one of the following options:\n");
                         System.out.println("write \"1\" to watch the complaints");
@@ -259,6 +270,7 @@ public class Main {
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
+                                break;
                             }
                             case "2": {
                                 try {
@@ -267,20 +279,26 @@ public class Main {
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
+                                break;
                             }
                         }
                     }
+                    break;
                 }
                 case "5": {
                     try {
-                        System.out.println("please enter the id of the season");
-                        String seasonId = scanInput.nextLine();
-                        System.out.println("please enter the id of the season");
-                        String leagueId = scanInput.nextLine();
+                        //System.out.println("please enter the id of the season");
+                        String seasonId = chooseSeason();//scanInput.nextLine();
+                        //System.out.println("please enter the id of the season");
+                        String leagueId =chooseLeague();// scanInput.nextLine();
                         controller.schedulingGames(seasonId , leagueId);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
+                    catch (ObjectNotExist e) {
+                        System.out.println("the season or the league you choose doesnt exist");
+                    }
+                    break;
                 }
                 case "6": {
                     try {
@@ -288,6 +306,7 @@ public class Main {
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
+                    break;
                 }
             }
 
@@ -295,6 +314,135 @@ public class Main {
         }
     }
 
+    private static String chooseSeason() {
+        HashMap<String, Season> season = controller.getSeasons();
+        System.out.println("Choose team name to remove team");
+        for (String seasonId : season.keySet()) {
+            System.out.println(seasonId);
+        }
+        String seasonToreturn = scanInput.nextLine();
+        return seasonToreturn;
+    }
+
+    private static String chooseLeague() {
+        HashMap<String, League> leagues = controller.getLeagues();
+        System.out.println("Choose team name to remove team");
+        for (String leagueId : leagues.keySet()) {
+            System.out.println(leagueId);
+        }
+        String leagueToReturn = scanInput.nextLine();
+        return leagueToReturn;
+    }
+
+    private static String removeRefree() {
+        HashMap<String, Referee> refrees = controller.getReferees();
+        System.out.println("Choose id to remove referee");
+        for (String refere : refrees.keySet()) {
+            System.out.println(refere);
+        }
+
+        String refereeToRemove = scanInput.nextLine();
+        return refereeToRemove;
+    }
+
+    private static String addRefree() {
+        HashMap<String, Fan> fans = controller.getFans();
+        System.out.println("Choose id to add referee");
+        for (String Fan : fans.keySet()) {
+            System.out.println(Fan);
+        }
+        String refreeToAdd = scanInput.nextLine();
+        return refreeToAdd;
+    }
+
+    private static String removeTeam() {
+        HashMap<String, Team> team = controller.getTeams();
+        System.out.println("Choose team name to remove team");
+        for (String teamName : team.keySet()) {
+            System.out.println(teamName);
+        }
+        String teamToRemove = scanInput.nextLine();
+        return teamToRemove;
+    }
+
+    private static LinkedList<String> addTeamPlayers() {
+        LinkedList<String> players=new LinkedList<>();
+        HashMap<String, Player> team = controller.getPlayers();
+        System.out.println("Choose id players to add the team");
+        for (String teamName : team.keySet()) {
+            System.out.println(teamName);
+        }
+        String id = "";
+        while (!id.equals("0")) {
+            System.out.println("please enter the id of the players in the team \n when you finish press 0");
+            id = scanInput.nextLine();
+            if (!id.equals(0))
+                players.add(id);
+        }
+        return players;
+    }
+
+    private static LinkedList<String> addTeamOwners() {
+        LinkedList<String> owners=new LinkedList<>();
+        HashMap<String, Owner> team = controller.getOwners();
+        System.out.println("Choose id owners to add the team");
+        for (String teamName : team.keySet()) {
+            System.out.println(teamName);
+        }
+        String id = "";
+        while (!id.equals("0")) {
+            System.out.println("please enter the id of the owners in the team \n when you finish press 0");
+            id = scanInput.nextLine();
+            if (!id.equals(0))
+                owners.add(id);
+        }
+        return owners;
+    }
+
+    private static LinkedList<String> addTeamManagers() {
+        LinkedList<String> managers=new LinkedList<>();
+        HashMap<String, Manager> team = controller.getManagers();
+        System.out.println("Choose id manager to add the team");
+        for (String teamName : team.keySet()) {
+            System.out.println(teamName);
+        }
+        String id = "";
+        while (!id.equals("0")) {
+            System.out.println("please enter the id of the managers in the team \n when you finish press 0");
+            id = scanInput.nextLine();
+            if (!id.equals(0))
+                managers.add(id);
+        }
+        return managers;
+    }
+
+    private static LinkedList<String> addTeamCoachs() {
+        LinkedList<String> coachs=new LinkedList<>();
+        HashMap<String, Coach> team = controller.getCoach();
+        System.out.println("Choose id coach to add the team");
+        for (String teamName : team.keySet()) {
+            System.out.println(teamName);
+        }
+        String id = "";
+        while (!id.equals("0")) {
+            System.out.println("please enter the id of the coachs in the team \n when you finish press 0");
+            id = scanInput.nextLine();
+            if (!id.equals(0))
+                coachs.add(id);
+        }
+        return coachs;
+    }
+
+    private static String removeMember() {
+        HashMap<String, Member> members = controller.getMembers();
+        System.out.println("Choose id to remove member");
+        for (String member : members.keySet()) {
+            System.out.println(member);
+        }
+
+        String memberToRemove = scanInput.nextLine();
+        return memberToRemove;
+    }
 
     /*********************************************Owner**********************************************/
     private static void OwnerMenu() {
@@ -667,109 +815,107 @@ public class Main {
 
     /***************************************************tests********************************************************/
 
-//    private static void shacharFunctionForTesting() throws MemberNotSystemManager {
-//
-//        Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
-//        Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
-//        Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1995, 1, 1), "player");
-//        Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1995, 1, 1), "player");
-//        Player player3 = new Player("hilla", "hilla@gmail.com", "hilla", new Date(1995, 1, 1), "player");
-//        Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1995, 1, 1), "player");
-//        Player player5 = new Player("liat", "liat@gmail.com", "liat", new Date(1995, 1, 1), "player");
-//        Player player6 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
-//        Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1995, 1, 1), "player");
-//        Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
-//        Player player9 = new Player("or", "or@gmail.com", "or", new Date(1995, 1, 1), "player");
-//        Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
-//        Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
-//        Player player12 = new Player("michelle", "michelle@gmail.com", "michelle", new Date(1995, 1, 1), "player");
-//        Player player13 = new Player("gabi", "gabi@gmail.com", "gabi", new Date(1995, 1, 1), "player");
-//        Player player14 = new Player("almog", "almog@gmail.com", "almog", new Date(1995, 1, 1), "player");
-//        Player player15 = new Player("shani", "shani@gmail.com", "shani", new Date(1995, 1, 1), "player");
-//        Player player16 = new Player("ifat", "ifat@gmail.com", "ifat", new Date(1995, 1, 1), "player");
-//        Player player17 = new Player("inbal", "inbal@gmail.com", "dor", new Date(1995, 1, 1), "player");
-//        Player player18 = new Player("oscar", "oscar@gmail.com", "oscar", new Date(1995, 1, 1), "player");
-//        Player player19 = new Player("roman", "roman@gmail.com", "roman", new Date(1995, 1, 1), "player");
-//        Player player20 = new Player("omer", "omer@gmail.com", "omer", new Date(1995, 1, 1), "player");
-//        Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1995, 1, 1), "player");
-//        Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1995, 1, 1), "player");
-//
-//        controller.addPlayer(player1);
-//        controller.addPlayer(player2);
-//        controller.addPlayer(player3);
-//        controller.addPlayer(player4);
-//        controller.addPlayer(player5);
-//        controller.addPlayer(player6);
-//        controller.addPlayer(player7);
-//        controller.addPlayer(player8);
-//        controller.addPlayer(player9);
-//        controller.addPlayer(player10);
-//        controller.addPlayer(player11);
-//        controller.addPlayer(player12);
-//        controller.addPlayer(player13);
-//        controller.addPlayer(player14);
-//        controller.addPlayer(player15);
-//        controller.addPlayer(player16);
-//        controller.addPlayer(player17);
-//        controller.addPlayer(player18);
-//        controller.addPlayer(player19);
-//        controller.addPlayer(player20);
-//        controller.addPlayer(player21);
-//        controller.addPlayer(player22);
-//
-//
-//        Coach coach1 = new Coach("yosi oren", "yosi@gmaill.com", "123", "Coach");
-//        Coach coach2 = new Coach("arnold strum", "arnold@gmaill.com", "124", "Coach");
-//        controller.addCoach(coach1);
-//        controller.addCoach(coach2);
-//        Manager manager1 = new Manager("oren tzur", "oren@gmaill.com", "125");
-//        Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
-//        controller.addManager(manager1);
-//        controller.addManager(manager2);
-//        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127", controller);
-//        Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", controller);
-//        controller.addOwner(owner1);
-//        controller.addOwner(owner2);
-//        SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller);
-//        controller.addSystemManager(systemManager);
-//        controller.addFan(fan1);
-//        //  controller.addReferee(systemManager.getUserMail(), fan1.getUserMail(), true);
-//        //   controller.removeReferee(systemManager.getUserMail(), fan1.getUserMail());
-//        // controller.removeMember(systemManager.getUserMail(), coach1.getUserMail());
-//        //  controller.removeMember(systemManager.getUserMail(), manager1.getUserMail());
-//        //   controller.removeMember(systemManager.getUserMail(), owner1.getUserMail());
-//        //   controller.removeMember(systemManager.getUserMail(), player1.getUserMail());
-//        //   controller.removeMember(systemManager.getUserMail(), fan2.getUserMail());
-//
-//        String name = "macabi";
-//        LinkedList<String> players1 = new LinkedList<>();
-//        players1.add(player1.getUserMail());
-//        players1.add(player2.getUserMail());
-//        players1.add(player3.getUserMail());
-//        players1.add(player4.getUserMail());
-//        players1.add(player5.getUserMail());
-//        players1.add(player6.getUserMail());
-//        players1.add(player7.getUserMail());
-//        players1.add(player8.getUserMail());
-//        players1.add(player9.getUserMail());
-//        players1.add(player10.getUserMail());
-//        players1.add(player11.getUserMail());
-//
-//        LinkedList<String> coaches1 = new LinkedList<>();
-//        coaches1.add(coach1.getUserMail());
-//
-//        LinkedList<String> managers1 = new LinkedList<>();
-//        managers1.add(manager1.getUserMail());
-//
-//        LinkedList<String> owners1 = new LinkedList<>();
-//        owners1.add(owner1.getUserMail());
-//
-//        controller.addTeam(systemManager.getUserMail(), players1, coaches1, managers1, owners1, name);
-//        systemManager.watchComplaint("C:\\Users\\shachar meretz\\Desktop\\semesterB\\arnold\\projectGit\\PreparationForFinalProject\\complaint.txt");
-//        int x = 0;
-//
-//
-//    }
+    private static void shacharFunctionForTesting() throws AlreadyExistException, DontHavePermissionException {
+
+        Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
+        Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
+        Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1995, 1, 1), "player");
+        Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1995, 1, 1), "player");
+        Player player3 = new Player("hilla", "hilla@gmail.com", "hilla", new Date(1995, 1, 1), "player");
+        Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1995, 1, 1), "player");
+        Player player5 = new Player("liat", "liat@gmail.com", "liat", new Date(1995, 1, 1), "player");
+        Player player6 = new Player("flanktin", "flanktin@gmail.com", "neta", new Date(1995, 1, 1), "player");
+        Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1995, 1, 1), "player");
+        Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
+        Player player9 = new Player("or", "or@gmail.com", "or", new Date(1995, 1, 1), "player");
+        Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
+        Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
+        Player player12 = new Player("michelle", "michelle@gmail.com", "michelle", new Date(1995, 1, 1), "player");
+        Player player13 = new Player("gabi", "gabi@gmail.com", "gabi", new Date(1995, 1, 1), "player");
+        Player player14 = new Player("almog", "almog@gmail.com", "almog", new Date(1995, 1, 1), "player");
+        Player player15 = new Player("shani", "shani@gmail.com", "shani", new Date(1995, 1, 1), "player");
+        Player player16 = new Player("ifat", "ifat@gmail.com", "ifat", new Date(1995, 1, 1), "player");
+        Player player17 = new Player("inbal", "inbal@gmail.com", "dor", new Date(1995, 1, 1), "player");
+        Player player18 = new Player("oscar", "oscar@gmail.com", "oscar", new Date(1995, 1, 1), "player");
+        Player player19 = new Player("roman", "roman@gmail.com", "roman", new Date(1995, 1, 1), "player");
+        Player player20 = new Player("omer", "omer@gmail.com", "omer", new Date(1995, 1, 1), "player");
+        Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1995, 1, 1), "player");
+        Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1995, 1, 1), "player");
+
+        controller.addPlayer(player1);
+        controller.addPlayer(player2);
+        controller.addPlayer(player3);
+        controller.addPlayer(player4);
+        controller.addPlayer(player5);
+        controller.addPlayer(player6);
+        controller.addPlayer(player7);
+        controller.addPlayer(player8);
+        controller.addPlayer(player9);
+        controller.addPlayer(player10);
+        controller.addPlayer(player11);
+        controller.addPlayer(player12);
+        controller.addPlayer(player13);
+        controller.addPlayer(player14);
+        controller.addPlayer(player15);
+        controller.addPlayer(player16);
+        controller.addPlayer(player17);
+        controller.addPlayer(player18);
+        controller.addPlayer(player19);
+        controller.addPlayer(player20);
+        controller.addPlayer(player21);
+        controller.addPlayer(player22);
+
+
+        Coach coach1 = new Coach("yosi oren", "yosi@gmaill.com", "123", "Coach");
+        Coach coach2 = new Coach("arnold strum", "arnold@gmaill.com", "124", "Coach");
+        controller.addCoach(coach1);
+        controller.addCoach(coach2);
+        Manager manager1 = new Manager("oren tzur", "oren@gmaill.com", "125");
+        Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
+        controller.addManager(manager1);
+        controller.addManager(manager2);
+        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127" , dbController);
+        Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", dbController);
+        controller.addOwner(owner1);
+        controller.addOwner(owner2);
+        SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", dbController);
+        controller.addSystemManager(systemManager);
+        controller.addFan(fan1);
+        //  controller.addReferee(systemManager.getUserMail(), fan1.getUserMail(), true);
+        //   controller.removeReferee(systemManager.getUserMail(), fan1.getUserMail());
+        // controller.removeMember(systemManager.getUserMail(), coach1.getUserMail());
+        //  controller.removeMember(systemManager.getUserMail(), manager1.getUserMail());
+        //   controller.removeMember(systemManager.getUserMail(), owner1.getUserMail());
+        //   controller.removeMember(systemManager.getUserMail(), player1.getUserMail());
+        //   controller.removeMember(systemManager.getUserMail(), fan2.getUserMail());
+
+        String name = "macabi";
+        LinkedList<String> players1 = new LinkedList<>();
+        players1.add(player1.getUserMail());
+        players1.add(player2.getUserMail());
+        players1.add(player3.getUserMail());
+        players1.add(player4.getUserMail());
+        players1.add(player5.getUserMail());
+        players1.add(player6.getUserMail());
+        players1.add(player7.getUserMail());
+        players1.add(player8.getUserMail());
+        players1.add(player9.getUserMail());
+        players1.add(player10.getUserMail());
+        players1.add(player11.getUserMail());
+
+        LinkedList<String> coaches1 = new LinkedList<>();
+        coaches1.add(coach1.getUserMail());
+
+        LinkedList<String> managers1 = new LinkedList<>();
+        managers1.add(manager1.getUserMail());
+
+        LinkedList<String> owners1 = new LinkedList<>();
+        owners1.add(owner1.getUserMail());
+
+      //  controller.addTeam(players1, coaches1, managers1, owners1, name);
+
+
+    }
 
   /*      SecurityMachine securityMachine = new SecurityMachine();
         String afterEncrtypt = securityMachine.encrypt("stamLibdok", "key");
@@ -1090,7 +1236,7 @@ public class Main {
                             System.out.println("You can't do this functionality");
                             break;
                         }
-                    }catch (DontHavePermissionException e){
+                    }catch (Exception e){
                         System.out.println("You don't have permission to this action");
                         break;
                     }

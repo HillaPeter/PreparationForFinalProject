@@ -56,7 +56,7 @@ public class DBController {
 
         return db.getLeague(leagueId);
     }
-    public Season getSeason(String seasonId) {
+    public Season getSeason(String seasonId) throws ObjectNotExist {
         return db.getSeason(seasonId);
     }
     public LinkedList<Member> getMembers(LinkedList<String> idMember) {
@@ -69,10 +69,39 @@ public class DBController {
         return list;
     }
 
+
     public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
             if (role instanceof AssociationDelegate || role instanceof SystemManager)
                 return db.getReferees();
             throw new DontHavePermissionException();
+    }
+
+    public HashMap<String, Fan> getFans() {
+        return db.getFans();
+    }
+
+    public HashMap<String, Referee> getReferees() {
+        return db.getReferees();
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        return db.getPlayers();
+    }
+
+    public HashMap<String, Owner> getOwners() {
+        return db.getOwners();
+    }
+
+    public HashMap<String, Manager> getManagers() {
+        return db.getManagers();
+    }
+
+    public HashMap<String, Coach> getCoachs() {
+        return db.getCoachs();
+    }
+
+    public HashMap<String,Member> getMembers() {
+        return db.getMembers();
     }
 
     /***************************************delete function function******************************************/
@@ -156,6 +185,11 @@ public class DBController {
 
     public void addReferee(Referee referee) {
         db.addReferee(referee);
+    }
+
+    public void addFan(Fan fan)
+    {
+        db.addFan(fan);
     }
 
     /***************************************remove function******************************************/

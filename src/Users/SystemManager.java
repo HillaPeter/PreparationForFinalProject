@@ -40,7 +40,7 @@ public class SystemManager extends Member {
         //todo
     }
 
-    public void schedulingGames(String seasonId, String leagueId) {
+    public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist {
         League league = dbController.getLeague(leagueId);
         Season season = dbController.getSeason(seasonId);
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
@@ -67,14 +67,14 @@ public class SystemManager extends Member {
         return false;
     }
 
-    public boolean addReferee(String id, boolean ifMainReferee) {
+    public boolean addReferee(String id, boolean ifMainRefree) {
         try {
             if (inputAreLegal(id)) {
                 if (!dbController.existReferee(id)) {
                     if (dbController.existFan(id)) {
                         Fan fan = (Fan) dbController.getMember(id);
                         Referee referee = null;
-                        if (ifMainReferee) {
+                        if (ifMainRefree) {
                             referee = new MainReferee(fan);
                         } else {
                             referee = new SecondaryReferee(fan);
@@ -135,14 +135,13 @@ public class SystemManager extends Member {
     /**
      * this function return true if the team added and false if there were problem with the data
      */
-    public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager,
-                              LinkedList<String> idOwner, String teamName) {
+    public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner, String teamName) {
         try {
             if (idPlayers.size() < 11) {
                 throw new IncorrectInputException();
             } else if (alreadyIncludeThisTeamName(teamName) == true) {
                 throw new ObjectAlreadyExist();
-            } else if (!notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
+            } else if (notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
                 throw new MemberNotExist();
             } else {
                 LinkedList<Coach> coaches = makeCoachList(dbController.getMembers(idCoach));
@@ -160,7 +159,7 @@ public class SystemManager extends Member {
         return false;
     }
 
-    /*************************************** help function for addNewTeam******************************************/
+    /************* help function for addNewTeam****************/
 
     private boolean notAllTheIdAreMembers(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner) {
         boolean check=allTheListAreMember(idPlayers);
@@ -234,14 +233,14 @@ public class SystemManager extends Member {
         return newList;
     }
 
-    /*****************************************all the complaint function**************************************************/
+    /**************all the complaint function*****************/
 
     public LinkedList<String> watchComplaint(String path) {
         LinkedList<String> complaintList = readLineByLine(path);
         return complaintList;
     }
 
-    /***
+    /*
      *
      * @param path
      * @param response this hashMap represent - the number of the complaint and the response for the complain
@@ -287,7 +286,8 @@ public class SystemManager extends Member {
         }
         return list;
     }
-    /************************************** get function (noa) ************************************/
+
+    /************* get function (noa) *************/
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
         return this.dbController.getRoles(this);
     }

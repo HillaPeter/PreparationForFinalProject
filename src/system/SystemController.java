@@ -1,5 +1,8 @@
 package system;
 
+import Asset.Coach;
+import Asset.Manager;
+import Asset.Player;
 import Game.Team;
 import League.*;
 import Users.*;
@@ -68,6 +71,7 @@ public class SystemController {
         this.connectedUser = ((Guest) connectedUser).logIn(userMail, userPassword);
         return (Member) this.connectedUser;
     }
+
     /*************************************** function for system manager******************************************/
     /***
      * this function get id of the refree to remove and the id of the system manager that take care of this function
@@ -75,13 +79,14 @@ public class SystemController {
      * if the referee exist - delete it and return true
      */
     public boolean removeReferee(String refereeId) throws DontHavePermissionException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.removeReferee(refereeId);
-        } else {
-            throw new DontHavePermissionException();
+            if (connectedUser instanceof SystemManager) {
+                SystemManager systemManager = (SystemManager) connectedUser;
+                return systemManager.removeReferee(refereeId);
+            } else {
+                throw new DontHavePermissionException();
+            }
         }
-    }
+
 
     /***
      * this function get id of the member to make referee and the id of the system manager that take care of this function
@@ -163,13 +168,16 @@ public class SystemController {
         }
     }
 
-    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            systemManager.schedulingGames(seasonId, leagueId);
-        } else {
-            throw new DontHavePermissionException();
-        }
+    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist {
+
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               systemManager.schedulingGames(seasonId, leagueId);
+           } else {
+               throw new DontHavePermissionException();
+           }
+
+
     }
 
     public void viewSystemInformation() throws DontHavePermissionException {
@@ -503,14 +511,21 @@ public class SystemController {
         throw new DontHavePermissionException();
     }
 
-    public HashMap<String, Team> getTeams() throws DontHavePermissionException {
-        if (connectedUser instanceof Owner) {
-            return ((Owner) connectedUser).getTeams();
+    public HashMap<String, Team> getTeams() {
+        try {
+            if (connectedUser instanceof Owner) {
+                return ((Owner) connectedUser).getTeams();
+            }
+            if (connectedUser instanceof SystemManager) {
+                return ((SystemManager) connectedUser).getTeams();
+            }
+            throw new DontHavePermissionException();
         }
-        if (connectedUser instanceof SystemManager) {
-            return ((SystemManager) connectedUser).getTeams();
+        catch (Exception e)
+        {
+
         }
-        throw new DontHavePermissionException();
+        return new HashMap<>();
     }
 
 
@@ -545,12 +560,13 @@ public class SystemController {
         }
     }
 
-    public HashMap<String, League> getLeagues() throws DontHavePermissionException {
-        HashMap<String, League> leagues;
+    public HashMap<String, League> getLeagues() {
+        HashMap<String, League> leagues=new HashMap<String, League>();
         try{
             leagues = dbController.getLeagues(this.connectedUser);
-        }catch(Exception e){
             throw new DontHavePermissionException();
+        }
+        catch(Exception e){
         }
         return leagues;
     }
@@ -576,13 +592,68 @@ public class SystemController {
 
     }
 
-    public HashMap<String, Season> getSeasons() throws DontHavePermissionException {
-        HashMap<String, Season> seasons;
+    public HashMap<String, Season> getSeasons() {
+        HashMap<String, Season> seasons=new HashMap<String, Season>();
         try{
             seasons = dbController.getSeasons(this.connectedUser);
-        }catch(Exception e){
             throw new DontHavePermissionException();
+        }catch(Exception e){
+
         }
         return seasons;
+    }
+
+    public HashMap<String, Fan> getFans() {
+        return dbController.getFans();
+    }
+
+    public HashMap<String, Referee> getReferees() {
+        return dbController.getReferees();
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        return dbController.getPlayers();
+    }
+
+    public HashMap<String, Owner> getOwners() {
+        return dbController.getOwners();
+    }
+
+    public HashMap<String, Manager> getManagers() {
+        return dbController.getManagers();
+    }
+
+    public HashMap<String, Coach> getCoach() {
+        return dbController.getCoachs();
+    }
+
+    public HashMap<String,Member> getMembers() {
+        return dbController.getMembers();
+    }
+
+
+    /**********shachar test*************/
+    public void addPlayer(Player player1) throws AlreadyExistException {
+        dbController.addPlayer(player1);
+    }
+
+    public void addCoach(Coach coach1) throws AlreadyExistException {
+        dbController.addCoach(coach1);
+    }
+
+    public void addManager(Manager manager1) throws AlreadyExistException {
+        dbController.addManager(manager1);
+    }
+
+    public void addOwner(Owner owner1) throws AlreadyExistException {
+        dbController.addOwner(owner1);
+    }
+
+    public void addSystemManager(SystemManager systemManager) throws AlreadyExistException {
+        dbController.addSystemManager(systemManager);
+    }
+
+    public void addFan(Fan fan1) {
+        dbController.addFan(fan1);
     }
 }
