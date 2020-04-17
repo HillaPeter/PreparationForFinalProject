@@ -36,14 +36,23 @@ public class SystemManager extends Member {
         return false;
     }
 
-    public void viewSystemInformation() {
-        //todo
+    public void viewSystemInformation(String path) {
+        print(readLineByLine(path));
+    }
+
+    private void print(LinkedList<String> readLineByLine) {
+        for(int i=0; i<readLineByLine.size(); i++)
+        {
+            System.out.println(readLineByLine.get(i));
+        }
     }
 
     public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist {
         League league = dbController.getLeague(leagueId);
         Season season = dbController.getSeason(seasonId);
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
+        LinkedList<Team> teams=leagueInSeason.getTeams();
+        //sceduling game for teams
     }
 
     public boolean removeReferee(String id) {

@@ -249,7 +249,7 @@ public class Main {
                     try {
                         boolean success = controller.removeMember(id);
                     } catch (DontHavePermissionException e) {
-                        System.out.println("you don't have the permission to remove referee");
+                        System.out.println("you don't have the permission to remove member");
                     }
                     break;
                 }
@@ -268,7 +268,7 @@ public class Main {
                                 try {
                                     controller.watchComplaint(path);
                                 } catch (DontHavePermissionException e) {
-                                    System.out.println("you don't have the permission to remove referee");
+                                    System.out.println("you don't have the permission to watch complaints");
                                 }
                                 break;
                             }
@@ -277,7 +277,7 @@ public class Main {
                                     LinkedList<Pair<String, String>> responseForComplaint = new LinkedList<>();
                                     boolean success = controller.responseComplaint( path, responseForComplaint);
                                 } catch (DontHavePermissionException e) {
-                                    System.out.println("you don't have the permission to remove referee");
+                                    System.out.println("you don't have the permission to response on the complaint");
                                 }
                                 break;
                             }
@@ -302,7 +302,7 @@ public class Main {
                 }
                 case "6": {
                     try {
-                        controller.viewSystemInformation();
+                        controller.viewSystemInformation(path+"\\info.txt");
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }

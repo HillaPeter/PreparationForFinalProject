@@ -180,10 +180,10 @@ public class SystemController {
 
     }
 
-    public void viewSystemInformation() throws DontHavePermissionException {
+    public void viewSystemInformation(String path) throws DontHavePermissionException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
-            systemManager.viewSystemInformation();
+            systemManager.viewSystemInformation(path);
         } else {
             throw new DontHavePermissionException();
         }

@@ -1,9 +1,10 @@
 package League;
 import Game.Game;
 import Users.Referee;
-
+import Game.Team;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class LeagueInSeason {
     private HashSet<Game> games;
@@ -12,6 +13,7 @@ public class LeagueInSeason {
     private SchedulingPolicy schedulingPolicies;
     private ScorePolicy scorePolicies;
     private HashMap<String, Referee> referees;
+    private LinkedList<Team> teams;
 
     public LeagueInSeason(League league,Season season) {
         this.league = league;
@@ -21,6 +23,7 @@ public class LeagueInSeason {
 //        , SchedulingPolicy schedulingPolicies,ScorePolicy scorePolicies
         games=new HashSet<>();
         referees=new HashMap<>();
+        teams=new LinkedList<Team>();
     }
 
     /*
@@ -32,6 +35,10 @@ public class LeagueInSeason {
 
      */
 
+    public LinkedList<Team> getTeams()
+    {
+        return teams;
+    }
     public Season getSeason(){
         return season;
     }
