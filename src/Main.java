@@ -457,15 +457,14 @@ public class Main {
             while (!input.equals("Exit")) {
                 System.out.println("choose one of the following options:\n");
                 System.out.println("write \"1\" Add Asset");
-                System.out.println("write \"2\" Update Asset");
-                System.out.println("write \"3\" Remove Asset");
-                System.out.println("write \"4\" Add New Manager");
-                System.out.println("write \"5\" Add New Owner");
-                System.out.println("write \"6\" Remove Manager");
-                System.out.println("write \"7\" Temporary Team Closing");
-                System.out.println("write \"8\" Reopen Closed Team");
-                System.out.println("write \"9\" Add Outcome");
-                System.out.println("write \"10\" Add Income");
+                System.out.println("write \"2\" Remove Asset");
+                System.out.println("write \"3\" Add New Manager");
+                System.out.println("write \"4\" Add New Owner");
+                System.out.println("write \"5\" Remove Manager");
+                System.out.println("write \"6\" Temporary Team Closing");
+                System.out.println("write \"7\" Reopen Closed Team");
+                System.out.println("write \"8\" Add Outcome");
+                System.out.println("write \"9\" Add Income");
                 System.out.println("\nwrite \"Exit\" if you want to finish. \n");
                 input = "";
                 while (input.equals("")) {
@@ -500,10 +499,6 @@ public class Main {
                         }
                     }//case 1- add asset
                     case "2": {
-                        System.out.println("not implement!!!!!!!!!!!!!"); //todo!!!!!
-                        break;
-                    }
-                    case "3": {
                         System.out.println("What asset do you want to remove? choose by index");
                         System.out.println("Press \"1.\" for Team manager");
                         System.out.println("Press \"2.\" for Coach");
@@ -530,11 +525,11 @@ public class Main {
                             }
                         }
                     }//removeAsset
-                    case "4": {
+                    case "3": {
                         addTeamManager();
                         break;
                     }
-                    case "5": {
+                    case "4": {
                         System.out.println("Choose role by mail to make him owner");
                         HashMap<String, Role> allRoles = controller.getRoles();
                         //moving on all the roles in system
@@ -564,11 +559,11 @@ public class Main {
                         break;
 
                     }
-                    case "6": {
+                    case "5": {
                         removeTeamManager();
                         break;
                     }
-                    case "7": {
+                    case "6": {
                         HashMap<String, Team> teams = controller.getTeams();
                         System.out.println("Choose a team you want to close temporary");
                         for (String teamName : teams.keySet()) {
@@ -582,7 +577,7 @@ public class Main {
                         controller.temporaryTeamClosing(teamName);
                         break;
                     }
-                    case "8": {
+                    case "7": {
                         HashMap<String, Team> teams = controller.getTeams();
                         System.out.println("Choose a team you want to reopen temporary");
                         for (String teamName : teams.keySet()) {
@@ -596,7 +591,7 @@ public class Main {
                         controller.reopenClosedTeam(teamName);
                         break;
                     }
-                    case "9": {
+                    case "8": {
                         HashMap<String, Team> teams = controller.getTeams();
                         System.out.println("Choose team name to update outcome");
                         for (String teamName : teams.keySet()) {
@@ -610,7 +605,7 @@ public class Main {
                         controller.addOutCome(teamName, description, amount);
                         break;
                     }
-                    case "10": {
+                    case "9": {
                         HashMap<String, Team> teams = controller.getTeams();
                         System.out.println("Choose team name to update income");
                         for (String teamName : teams.keySet()) {
