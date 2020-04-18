@@ -9,9 +9,7 @@ import Users.*;
 import Exception.*;
 import javafx.util.Pair;
 
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 public class SystemController {
@@ -582,9 +580,9 @@ public class SystemController {
         return referees;
     }
 
-    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd, Referee referee) {
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd) {
         try{
-            ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd, referee);
+            ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd);
         }
         catch(Exception e){
 
@@ -601,6 +599,18 @@ public class SystemController {
 
         }
         return seasons;
+    }
+
+    public void changeScorePolicy(String league, String season, String sWinning, String sDraw, String sLosing) throws ObjectNotExist, IncorrectInputException {
+        ((AssociationDelegate)connectedUser).changeScorePolicy(league, season, sWinning, sDraw, sLosing);
+    }
+
+    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException{
+       return ((AssociationDelegate)connectedUser).getSchedulingPolicies();
+    }
+
+    public void addSchedulingPolicy(String policyName) throws IncorrectInputException, DontHavePermissionException {
+        ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
 
     public HashMap<String, Fan> getFans() {
@@ -624,7 +634,7 @@ public class SystemController {
     }
 
     public HashMap<String, Coach> getCoach() {
-        return dbController.getCoachs();
+        return dbController.getCoaches();
     }
 
     public HashMap<String,Member> getMembers() {
@@ -655,5 +665,9 @@ public class SystemController {
 
     public void addFan(Fan fan1) {
         dbController.addFan(fan1);
+    }
+
+    public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist {
+        ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
     }
 }

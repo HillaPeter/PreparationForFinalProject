@@ -9,6 +9,7 @@ import Users.*;
 import Exception.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class DBController {
@@ -96,12 +97,21 @@ public class DBController {
         return db.getManagers();
     }
 
-    public HashMap<String, Coach> getCoachs() {
-        return db.getCoachs();
+    public HashMap<String, Coach> getCoaches() {
+        return db.getCoaches();
     }
 
     public HashMap<String,Member> getMembers() {
         return db.getMembers();
+    }
+
+    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies(Role role) throws DontHavePermissionException {
+        if(role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager ){
+            return db.getSchedulingPolicies();
+        }
+        else{
+            throw new DontHavePermissionException();
+        }
     }
 
     /***************************************delete function function******************************************/
@@ -192,6 +202,14 @@ public class DBController {
         db.addFan(fan);
     }
 
+    public void addSchedulingPolicies(Role role, ISchedulingPolicy policy) throws DontHavePermissionException {
+        if(role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager ){
+             db.addSchedulingPolicies(policy);
+        }
+        else{
+            throw new DontHavePermissionException();
+        }
+    }
     /***************************************remove function******************************************/
     public void removeLeague(String leagueName) throws ObjectNotExist {
         if (!db.existLeague(leagueName))

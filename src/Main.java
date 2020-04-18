@@ -7,8 +7,10 @@ import Game.Transaction;
 import League.*;
 import Users.*;
 import javafx.util.Pair;
+import jdk.nashorn.internal.runtime.ECMAException;
 import system.DBController;
 import system.SystemController;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -21,16 +23,16 @@ public class Main {
 
     public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException {
 /****************************************************menu******************************************************/
-       //startMenu();
+        //startMenu();
         /****shachar tests******/
         //must write the path in the main
-        dbController=new DBController();
+        dbController = new DBController();
         shacharFunctionForTesting();
         SystemManagerMenu();
 
         /**** Hilla Peter Tests!!****/
-      //  Main main = new Main();
-       // main.hillaPeterFunctionForTesting();
+        //  Main main = new Main();
+        // main.hillaPeterFunctionForTesting();
         //startMenu();
     }
 
@@ -79,6 +81,10 @@ public class Main {
                         System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail.");
                     } catch (PasswordDontMatchException e) {
                         System.out.println("You entered incorrect password.\nlog in with the correct password.");
+                    } catch (IncorrectInputException e) {
+                        break;
+                    } catch (DontHavePermissionException e) {
+                        break;
                     }
                 }
                 break;
@@ -88,7 +94,7 @@ public class Main {
         }
     }
 
-    private static void showMenu(Role member) {
+    private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
         //just for testing
         //    member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
 
@@ -275,7 +281,7 @@ public class Main {
                             case "2": {
                                 try {
                                     LinkedList<Pair<String, String>> responseForComplaint = new LinkedList<>();
-                                    boolean success = controller.responseComplaint( path, responseForComplaint);
+                                    boolean success = controller.responseComplaint(path, responseForComplaint);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to response on the complaint");
                                 }
@@ -290,19 +296,18 @@ public class Main {
                         //System.out.println("please enter the id of the season");
                         String seasonId = chooseSeason();//scanInput.nextLine();
                         //System.out.println("please enter the id of the season");
-                        String leagueId =chooseLeague();// scanInput.nextLine();
-                        controller.schedulingGames(seasonId , leagueId);
+                        String leagueId = chooseLeague();// scanInput.nextLine();
+                        controller.schedulingGames(seasonId, leagueId);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
-                    }
-                    catch (ObjectNotExist e) {
+                    } catch (ObjectNotExist e) {
                         System.out.println("the season or the league you choose doesnt exist");
                     }
                     break;
                 }
                 case "6": {
                     try {
-                        controller.viewSystemInformation(path+"\\info.txt");
+                        controller.viewSystemInformation(path + "\\info.txt");
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     }
@@ -366,7 +371,7 @@ public class Main {
     }
 
     private static LinkedList<String> addTeamPlayers() {
-        LinkedList<String> players=new LinkedList<>();
+        LinkedList<String> players = new LinkedList<>();
         HashMap<String, Player> team = controller.getPlayers();
         System.out.println("Choose id players to add the team");
         for (String teamName : team.keySet()) {
@@ -383,7 +388,7 @@ public class Main {
     }
 
     private static LinkedList<String> addTeamOwners() {
-        LinkedList<String> owners=new LinkedList<>();
+        LinkedList<String> owners = new LinkedList<>();
         HashMap<String, Owner> team = controller.getOwners();
         System.out.println("Choose id owners to add the team");
         for (String teamName : team.keySet()) {
@@ -400,7 +405,7 @@ public class Main {
     }
 
     private static LinkedList<String> addTeamManagers() {
-        LinkedList<String> managers=new LinkedList<>();
+        LinkedList<String> managers = new LinkedList<>();
         HashMap<String, Manager> team = controller.getManagers();
         System.out.println("Choose id manager to add the team");
         for (String teamName : team.keySet()) {
@@ -417,7 +422,7 @@ public class Main {
     }
 
     private static LinkedList<String> addTeamCoachs() {
-        LinkedList<String> coachs=new LinkedList<>();
+        LinkedList<String> coachs = new LinkedList<>();
         HashMap<String, Coach> team = controller.getCoach();
         System.out.println("Choose id coach to add the team");
         for (String teamName : team.keySet()) {
@@ -874,7 +879,7 @@ public class Main {
         Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
         controller.addManager(manager1);
         controller.addManager(manager2);
-        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127" , dbController);
+        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127", dbController);
         Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", dbController);
         controller.addOwner(owner1);
         controller.addOwner(owner2);
@@ -912,7 +917,7 @@ public class Main {
         LinkedList<String> owners1 = new LinkedList<>();
         owners1.add(owner1.getUserMail());
 
-      //  controller.addTeam(players1, coaches1, managers1, owners1, name);
+        //  controller.addTeam(players1, coaches1, managers1, owners1, name);
 
 
     }
@@ -1182,7 +1187,7 @@ public class Main {
 
     /***********************************************AssociationDelegate**************************************************/
 
-    private static void AssociationDelegateMenu(Member member) {
+    private static void AssociationDelegateMenu(Member member) throws IncorrectInputException, DontHavePermissionException {
         String input = "";
         while (!input.equals("Exit")) {
             System.out.println("choose one of the following options:\n");
@@ -1225,19 +1230,38 @@ public class Main {
                         System.out.println("Please write the year of this league");
                         String year = scanInput.nextLine();
                         try {
+                            //score policy
                             controller.setLeagueByYear(specificLeague, year);
-                        } catch (ObjectNotExist incorrectInput) {
-                            System.out.println(incorrectInput.getMessage());
-                            break;
-                        } catch (AlreadyExistException alreadyExist) {
-                            System.out.println("This season is already exist in this league");
-                            break;
-                        } catch (Exception e) {
-                            System.out.println("You can't do this functionality");
-                            break;
+                            System.out.println("Please write the points for a winning team");
+                            String sWinning = scanInput.nextLine();
+                            System.out.println("Please write the points for a draw game");
+                            String sDraw = scanInput.nextLine();
+                            System.out.println("Please write the points for a losing team");
+                            String sLosing = scanInput.nextLine();
+                            controller.changeScorePolicy(specificLeague, year, sWinning, sDraw, sLosing);
+                            System.out.println("The score policy has been changed successfully");
+                            //scheduling policy
+                            HashMap<String, ISchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
+                            System.out.println("These the scheduling policies in the system: ");
+                            for (String policyName : schedulingPolicies.keySet()) {
+                                System.out.println("policy- " + policyName);
+                            }
+                            System.out.println("Please write the name of policy");
+                            String policy = scanInput.nextLine();
+                            controller.setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
+                        } catch (DontHavePermissionException e) {
+                            System.out.println("You don't have permission to this action");
+                        } catch (IncorrectInputException e) {
+                            System.out.println("There isn't this policy");
                         }
-                    }catch (Exception e){
-                        System.out.println("You don't have permission to this action");
+                    } catch (ObjectNotExist incorrectInput) {
+                        System.out.println(incorrectInput.getMessage());
+                        break;
+                    } catch (AlreadyExistException alreadyExist) {
+                        System.out.println("This season is already exist in this league");
+                        break;
+                    } catch (Exception e) {
+                        System.out.println("You can't do this functionality");
                         break;
                     }
                     break;
@@ -1247,49 +1271,84 @@ public class Main {
                         System.out.println("Please write a league ");
                         String league = scanInput.nextLine();
                         HashMap<String, League> leagues = controller.getLeagues();
-                        if(!leagues.containsKey(league)){
+                        if (!leagues.containsKey(league)) {
                             break;
                         }
                         System.out.println("Please write a specific season of this league ");
                         String season = scanInput.nextLine();
                         HashMap<String, Season> seasons = controller.getSeasons();
-                        if(!seasons.containsKey(season)){
+                        if (!seasons.containsKey(season)) {
                             break;
                         }
                         HashMap<String, Referee> referees = controller.getRefereesDoesntExistInTheLeagueAndSeason(league, season);
-                        System.out.println("Those all referees you can add to league- "+ league + " in season- " + season);
-                        for(String nameOfReferee : referees.keySet()){  //display all referees who doesn't exist in this league and season
+                        System.out.println("These all referees you can add to league- " + league + " in season- " + season);
+                        for (String nameOfReferee : referees.keySet()) {  //display all referees who doesn't exist in this league and season
                             System.out.println("Referee- " + nameOfReferee);
                         }
                         System.out.println("Please write the referee's name you would like to add ");
                         boolean validName = false;
                         int counterTries = 0;
                         String refereeNameToAdd = "";
-                        while((!validName) || counterTries == 3){ //give 3 tries to write valid name of referee
+                        while ((!validName) || counterTries == 3) { //give 3 tries to write valid name of referee
                             refereeNameToAdd = scanInput.nextLine();
-                            if(referees.containsKey(refereeNameToAdd)){
-                                validName=true;
-                            }
-                            else{
-                                System.out.println(""+ refereeNameToAdd + " is not exist, write valid name of referee");
+                            if (referees.containsKey(refereeNameToAdd)) {
+                                validName = true;
+                            } else {
+                                System.out.println("" + refereeNameToAdd + " is not exist, write valid name of referee");
                                 counterTries++;
                             }
                         }
-                        if(validName){
-                            controller.addRefereeToLeagueInSeason(league, season, refereeNameToAdd, referees.get(refereeNameToAdd));
+                        if (validName) {
+                            controller.addRefereeToLeagueInSeason(league, season, refereeNameToAdd);
+                        } else {
+                            break;
                         }
-                        else{
-                           break;
-                        }
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println("You don't have permission to this action");
                         break;
                     }
                     break;
+
                 case "4":
+                    HashMap<String, Season> seasons = controller.getSeasons();
+                    System.out.println("These are the seasons: ");
+                    for (String key : seasons.keySet()) {
+                        System.out.println("Season- " + key);
+                    }
+                    System.out.println("Please write season");
+                    String seasonName = scanInput.nextLine();
+                    if (!seasons.containsKey(seasonName)) {
+                        break;
+                    }
+                    HashMap<League, LeagueInSeason> leaguesInSpecificSeason = seasons.get(seasonName).getLeagues();
+                    System.out.println("These are the leagues in season " + seasonName);
+                    for (League leagueObj : leaguesInSpecificSeason.keySet()) {
+                        System.out.println("League- " + leagueObj.getName());
+                    }
+                    System.out.println("Please write a league");
+                    String sLeague = scanInput.nextLine();
+                    if (!leaguesInSpecificSeason.containsKey(sLeague)) {
+                        break;
+                    }
+                    System.out.println("Please write the points for a winning team");
+                    String sWinning = scanInput.nextLine();
+                    System.out.println("Please write the points for a draw game");
+                    String sDraw = scanInput.nextLine();
+                    System.out.println("Please write the points for a losing team");
+                    String sLosing = scanInput.nextLine();
+                    try {
+                        controller.changeScorePolicy(sLeague, seasonName, sWinning, sDraw, sLosing);
+                        System.out.println("The score policy has been changed successfully");
+                    } catch (IncorrectInputException incorrectInputException) {
+                        System.out.println("Incorrect input");
+                        break;
+                    } catch (Exception e) {
+                        break;
+                    }
+                    break;
 
                 case "5":
+
 
                 case "Exit":
 

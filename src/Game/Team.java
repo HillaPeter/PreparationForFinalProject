@@ -18,6 +18,7 @@ public class Team {
     private Field homeField;
     private HashSet<Field> trainingFields; // list of all fields that the group training at
     private Boolean status; //true=> team is open , false=>team is closed
+    private double points; //points of this team
 
     public Team(String name, Account account, Field homeField) {
         this.name = name;

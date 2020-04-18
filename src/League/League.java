@@ -28,4 +28,8 @@ public class League {
             leagueInSeasons.put(leagueInSeason.getSeason(), leagueInSeason);
         }
     }
+
+    public HashMap<Season,LeagueInSeason> getSeasons(){
+        return leagueInSeasons;
+    }
 }
