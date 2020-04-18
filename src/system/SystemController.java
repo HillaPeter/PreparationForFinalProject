@@ -1,5 +1,8 @@
 package system;
 
+import Asset.Coach;
+import Asset.Manager;
+import Asset.Player;
 import Game.Team;
 import League.*;
 import Users.*;
@@ -8,6 +11,7 @@ import javafx.util.Pair;
 
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class SystemController {
@@ -24,7 +28,7 @@ public class SystemController {
      */
     public SystemController(String name) {
         this.name = name;
-        this.initSystem("",""); // change it
+        this.initSystem("", "", ""); // change it
         connectedUser = new Guest(dbController);
         //todo
 //        password verifications
@@ -37,7 +41,7 @@ public class SystemController {
         //member = user; (argument in the constructor-Member user- Fan, Owner, AD, Referee...)
     }
 
-    public void initSystem(String userName, String password) {
+    public void initSystem(String name, String userName, String password) {
         //check if the user name and the password are connect
         dbController = new DBController();
     }
@@ -52,9 +56,10 @@ public class SystemController {
      * @return true = success or false = failed to sign
      */
     public Member signIn(String userName, String userMail, String password) throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
-        return ((Guest)connectedUser).signIn(userMail,userName,password);
+        return ((Guest) connectedUser).signIn(userMail, userName, password);
 
     }
+
     /**
      * this function makes a guest into an existing member.
      * if the member doesnt exist - return null
@@ -63,38 +68,38 @@ public class SystemController {
      * @return
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
-        return ((Guest)connectedUser).logIn(userMail,userPassword);
+        this.connectedUser = ((Guest) connectedUser).logIn(userMail, userPassword);
+        return (Member) this.connectedUser;
     }
-    /*************************************** function for system manager******************************************/
 
+    /*************************************** function for system manager******************************************/
     /***
      * this function get id of the refree to remove and the id of the system manager that take care of this function
-     * if the refree didnt exist - return false
-     * if the refree exist - delete it and return true
+     * if the referee didnt exist - return false
+     * if the referee exist - delete it and return true
      */
-    public boolean removeReferee(String systemManagerId, String refreeId) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            return systemManager.removeReferee(refreeId);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
-        return false;
-    }
+    public boolean removeReferee(String refereeId) throws DontHavePermissionException {
+            if (connectedUser instanceof SystemManager) {
+                SystemManager systemManager = (SystemManager) connectedUser;
+                return systemManager.removeReferee(refereeId);
+            } else {
+                throw new DontHavePermissionException();
+            }
+        }
+
 
     /***
-     * this function get id of the member to make refree and the id of the system manager that take care of this function
-     * if the refree already exist - return false
-     * if the refree not exist and success of adding it - add it and return true
+     * this function get id of the member to make referee and the id of the system manager that take care of this function
+     * if the referee already exist - return false
+     * if the referee not exist and success of adding it - add it and return true
      */
-    public boolean addReferee(String systemManagerId, String refreeId, boolean ifMainRefree) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            return systemManager.addReferee(refreeId, ifMainRefree);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
-        return false;
+    public boolean addReferee(String refereeId, boolean ifMainReferee) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.addReferee(refereeId, ifMainReferee);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /**
@@ -102,90 +107,86 @@ public class SystemController {
      * if the team name already exist - close the team and return true
      * if the team dont exist return false
      *
-     * @param systemManagerId
      * @param teamName
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean closeTeam(String systemManagerId, String teamName) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            return systemManager.closeTeam(teamName);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
-        return false;
+    public boolean closeTeam(String teamName) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.closeTeam(teamName);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /**
      * this function get the id of the member we want to delete and the id of the system manager that take care of this function
      *
-     * @param systemManagerId
      * @param id
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean removeMember(String systemManagerId, String id) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            return systemManager.removeMember(id);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
-        return false;
+    public boolean removeMember(String id) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.removeMember(id);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /**
      * this function get the path to the complaint file and the id of the system manager that take care of this function
      *
-     * @param systemManagerId
      * @param path
      * @throws DontHavePermissionException
      */
-    public void watchComplaint(String systemManagerId, String path) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            LinkedList<String> complaint = systemManager.watchComplaint(path);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
+    public void watchComplaint(String path) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            LinkedList<String> complaint = systemManager.watchComplaint(path);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /**
      * this function get the path to the complaint file , the response for the complaint and the id of the system manager that take care of this function
      *
-     * @param systemManagerId
      * @param path
      * @param responseForComplaint
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean responseComplaint(String systemManagerId, String path, LinkedList<Pair<String, String>> responseForComplaint) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            return systemManager.ResponseComplaint(path, responseForComplaint);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
-        return false;
+    public boolean responseComplaint(String path, LinkedList<Pair<String, String>> responseForComplaint) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.ResponseComplaint(path, responseForComplaint);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
-    public void schedulingGames(String systemManagerId) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            //   systemManager.schedulingGames();
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
+    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist {
+
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               systemManager.schedulingGames(seasonId, leagueId);
+           } else {
+               throw new DontHavePermissionException();
+           }
+
+
     }
 
-    public void viewSystemInformation(String systemManagerId) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            systemManager.viewSystemInformation();
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
+    public void viewSystemInformation(String path) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            systemManager.viewSystemInformation(path);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /**
@@ -193,7 +194,6 @@ public class SystemController {
      * if the team name not exist - open the team and return true
      * if the team exist return false
      *
-     * @param systemManagerId
      * @param players
      * @param coachs
      * @param managers
@@ -202,72 +202,14 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean addTeam(String systemManagerId, LinkedList<String> players, LinkedList<String> coachs, LinkedList<String> managers, LinkedList<String> owners, String teamName) throws DontHavePermissionException {
-//        SystemManager systemManager = systemManagers.get(systemManagerId);
-//        if (null != systemManager) {
-//            return systemManager.addNewTeam(players, coachs, managers, owners, teamName);
-//        } else {
-//            throw new MemberNotSystemManager();
-//        }
-        return false;
+    public boolean addTeam(LinkedList<String> players, LinkedList<String> coachs, LinkedList<String> managers, LinkedList<String> owners, String teamName) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.addNewTeam(players, coachs, managers, owners, teamName);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
-
-    /***************************************help function for system manager******************************************/
-
-    public boolean notAllTheIdAreMembers(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner) {
-//        for (int i = 0; i < idPlayers.size(); i++) {
-//            if (roles.containsKey(idPlayers.get(i)) == false)
-//                return true;
-//        }
-//        for (int i = 0; i < idCoach.size(); i++) {
-//            if (roles.containsKey(idCoach.get(i)) == false)
-//                return true;
-//        }
-//        for (int i = 0; i < idManager.size(); i++) {
-//            if (roles.containsKey(idManager.get(i)) == false)
-//                return true;
-//        }
-//        for (int i = 0; i < idOwner.size(); i++) {
-//            if (roles.containsKey(idOwner.get(i)) == false)
-//                return true;
-//        }
-        return false;
-    }
-
-    public boolean alreadyIncludeThisTeamName(String teamName) {
-//        if (teams == null) {
-//            return false;
-//        }
-//        for (String name : teams.keySet()
-//        ) {
-//            if (name.equals(teamName))
-//                return true;
-//        }
-        return false;
-    }
-
-    public LinkedList<Member> returnFromSystemTheExactUsers(LinkedList<String> id) {
-//        LinkedList<Member> toReturn = new LinkedList<>();
-//        for (int i = 0; i < id.size(); i++) {
-//            toReturn.add((Member) roles.get(id.get(i)));
-//        }
-//        return toReturn;
-        return null;
-    }
-
-    public void makeTheRoleAReferee(String id, boolean mainReferee) {
-        //if the referee is main referee the boolean filed wil be true
-        //change the role from fan to referee
-//        Fan fan = (Fan) roles.get(id);
-//        Referee referee;
-//        if (mainReferee)
-//            referee = new MainReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
-//        else
-//            referee = new SecondaryReferee(fan.getName(), fan.getUserMail(), fan.getPassword(), "");
-//        roles.put(fan.getUserMail(), referee);
-    }
-
-
     /******************************* function for Testing!!!!! (noa) *********************************/
 
 //    /**
@@ -347,7 +289,7 @@ public class SystemController {
      * @param teamName
      * @param fieldName
      */
-    public void addField(String teamName, String fieldName) throws DontHavePermissionException , ObjectNotExist, IncorrectInputException {
+    public void addField(String teamName, String fieldName) throws DontHavePermissionException, ObjectNotExist, IncorrectInputException {
         if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
             throw new ObjectNotExist("team not exist");
         if (!dbController.getTeams(this.connectedUser).get(teamName).getTrainingFields().contains(fieldName))
@@ -441,7 +383,7 @@ public class SystemController {
      * @param teamName
      * @param fieldName
      */
-    public void removeField(String teamName, String fieldName) throws ObjectNotExist,DontHavePermissionException ,MemberNotExist , IncorrectInputException {
+    public void removeField(String teamName, String fieldName) throws ObjectNotExist, DontHavePermissionException, MemberNotExist, IncorrectInputException {
         if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
             throw new ObjectNotExist("team not exist");
         if (!(dbController.getRoles(this.connectedUser).containsKey(connectedUser.getName())))
@@ -558,13 +500,32 @@ public class SystemController {
     }
 
 
-    /********Getters for Owner********/
+    /********Getters for Owner & System manager********/
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
-        return ((Owner) connectedUser).getRoles();
+        if (connectedUser instanceof Owner) {
+            return ((Owner) connectedUser).getRoles();
+        }
+        if (connectedUser instanceof SystemManager) {
+            return ((SystemManager) connectedUser).getRoles();
+        }
+        throw new DontHavePermissionException();
     }
 
     public HashMap<String, Team> getTeams() {
-        return ((Owner) connectedUser).getTeams();
+        try {
+            if (connectedUser instanceof Owner) {
+                return ((Owner) connectedUser).getTeams();
+            }
+            if (connectedUser instanceof SystemManager) {
+                return ((SystemManager) connectedUser).getTeams();
+            }
+            throw new DontHavePermissionException();
+        }
+        catch (Exception e)
+        {
+
+        }
+        return new HashMap<>();
     }
 
 
@@ -599,8 +560,100 @@ public class SystemController {
         }
     }
 
-    public HashMap<String, League> getLeagues() throws DontHavePermissionException {
-        return dbController.getLeagues(this.connectedUser);
+    public HashMap<String, League> getLeagues() {
+        HashMap<String, League> leagues=new HashMap<String, League>();
+        try{
+            leagues = dbController.getLeagues(this.connectedUser);
+            throw new DontHavePermissionException();
+        }
+        catch(Exception e){
+        }
+        return leagues;
     }
 
+    public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league, String season) throws DontHavePermissionException {
+        HashMap<String, Referee> referees = new HashMap<>();
+        try {
+            referees = ((AssociationDelegate) connectedUser).getRefereesDoesntExistInTheLeagueAndSeason(league, season);
+
+        } catch (Exception e) {
+            throw new DontHavePermissionException();
+        }
+        return referees;
+    }
+
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd, Referee referee) {
+        try{
+            ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd, referee);
+        }
+        catch(Exception e){
+
+        }
+
+    }
+
+    public HashMap<String, Season> getSeasons() {
+        HashMap<String, Season> seasons=new HashMap<String, Season>();
+        try{
+            seasons = dbController.getSeasons(this.connectedUser);
+            throw new DontHavePermissionException();
+        }catch(Exception e){
+
+        }
+        return seasons;
+    }
+
+    public HashMap<String, Fan> getFans() {
+        return dbController.getFans();
+    }
+
+    public HashMap<String, Referee> getReferees() {
+        return dbController.getReferees();
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        return dbController.getPlayers();
+    }
+
+    public HashMap<String, Owner> getOwners() {
+        return dbController.getOwners();
+    }
+
+    public HashMap<String, Manager> getManagers() {
+        return dbController.getManagers();
+    }
+
+    public HashMap<String, Coach> getCoach() {
+        return dbController.getCoachs();
+    }
+
+    public HashMap<String,Member> getMembers() {
+        return dbController.getMembers();
+    }
+
+
+    /**********shachar test*************/
+    public void addPlayer(Player player1) throws AlreadyExistException {
+        dbController.addPlayer(player1);
+    }
+
+    public void addCoach(Coach coach1) throws AlreadyExistException {
+        dbController.addCoach(coach1);
+    }
+
+    public void addManager(Manager manager1) throws AlreadyExistException {
+        dbController.addManager(manager1);
+    }
+
+    public void addOwner(Owner owner1) throws AlreadyExistException {
+        dbController.addOwner(owner1);
+    }
+
+    public void addSystemManager(SystemManager systemManager) throws AlreadyExistException {
+        dbController.addSystemManager(systemManager);
+    }
+
+    public void addFan(Fan fan1) {
+        dbController.addFan(fan1);
+    }
 }

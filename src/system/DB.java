@@ -17,6 +17,7 @@ public class DB {
     private HashMap<String, SystemManager> systemManagers;
     private HashMap<String, Role> roles; // hash map <mail,role> - maybe users instead roles??
     private HashMap<String, Team> teams;
+    private HashMap<String, Referee> referees;
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -26,6 +27,7 @@ public class DB {
         this.systemManagers = new HashMap<>();
         this.roles = new HashMap<>();
         this.teams = new HashMap<>();
+        this.referees = new HashMap<>();
     }
 
     /********************************Association Delegate Functions********************************/
@@ -49,9 +51,20 @@ public class DB {
 
     public HashMap<String, Team> getTeams() { return teams; }
 
-    public League getLeague(String leagueId) { return leagues.get(leagueId); }
+    public League getLeague(String leagueId) throws ObjectNotExist {
+        if(leagues.containsKey(leagueId))
+            return leagues.get(leagueId);
+        else
+            throw new ObjectNotExist(leagueId);
+    }
 
-    public Season getSeason(String seasonId) { return seasons.get(seasonId); }
+    public Season getSeason(String seasonId) throws ObjectNotExist {
+        if(seasons.containsKey(seasonId))
+            return seasons.get(seasonId);
+        else
+            throw new ObjectNotExist(seasonId);
+    }
+
 
     public Team getTeam(String teamName) { return teams.get(teamName); }
 
@@ -69,6 +82,80 @@ public class DB {
 
     public SystemManager getSystemManager(String id){ return systemManagers.get(id); }
 
+    public HashMap<String, Referee> getReferees() { return referees; }
+
+    public HashMap<String, Fan> getFans() {
+        HashMap<String,Fan> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Fan)
+            {
+                toReturn.put(role,(Fan)roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        HashMap<String,Player> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Player)
+            {
+                toReturn.put(role,(Player) roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Owner> getOwners() {
+        HashMap<String,Owner> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Owner)
+            {
+                toReturn.put(role,(Owner) roles.get(role));
+            }
+        }
+        return toReturn;
+
+    }
+
+    public HashMap<String, Manager> getManagers() {
+        HashMap<String,Manager> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Manager)
+            {
+                toReturn.put(role,(Manager) roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Coach> getCoachs() {
+        HashMap<String,Coach> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Coach)
+            {
+                toReturn.put(role,(Coach)roles.get(role));
+            }
+        }
+        return toReturn;
+    }
+
+    public HashMap<String , Member> getMembers() {
+        HashMap<String,Member> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Member)
+            {
+                toReturn.put(role,(Member)roles.get(role));
+            }
+        }
+        return toReturn;
+    }
     /***************************************delete function******************************************/
 
     public void removeRole(String id) { roles.remove(id); }
@@ -128,6 +215,10 @@ public class DB {
             this.roles.put(associationDelegate.getUserMail(),associationDelegate);
         }
     }
+
+    public void addReferee(Referee referee) {
+        roles.put(referee.getUserMail(),referee);
+    }
     /*****************************************exist function****************************************/
     public boolean existSeason(String year){
         return this.seasons.containsKey(year);
@@ -160,5 +251,27 @@ public class DB {
         if(roles.containsKey(id))
             return (Member)this.roles.get(id);
         return (Member)this.systemManagers.get(id);
+    }
+
+    /***************************************Exist function*****************************/
+    public boolean existRefree(String refreeId) {
+        if(roles.containsKey(refreeId)==true && roles.get(refreeId) instanceof  Referee)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean existFan(String fanId) {
+        if(roles.containsKey(fanId)==true && roles.get(fanId) instanceof  Fan)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    public HashMap<String,Season> getSeasons() {
+        return seasons;
     }
 }

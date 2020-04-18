@@ -1,8 +1,10 @@
 package League;
 import Game.Game;
 import Users.Referee;
-
+import Game.Team;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class LeagueInSeason {
     private HashSet<Game> games;
@@ -10,7 +12,8 @@ public class LeagueInSeason {
     private Season season;
     private SchedulingPolicy schedulingPolicies;
     private ScorePolicy scorePolicies;
-    //private Referee referee; UC21 ?
+    private HashMap<String, Referee> referees;
+    private LinkedList<Team> teams;
 
     public LeagueInSeason(League league,Season season) {
         this.league = league;
@@ -19,7 +22,8 @@ public class LeagueInSeason {
 //        this.scorePolicies = scorePolicies;
 //        , SchedulingPolicy schedulingPolicies,ScorePolicy scorePolicies
         games=new HashSet<>();
-        //referee=null;
+        referees=new HashMap<>();
+        teams=new LinkedList<Team>();
     }
 
     /*
@@ -31,10 +35,24 @@ public class LeagueInSeason {
 
      */
 
+    public LinkedList<Team> getTeams()
+    {
+        return teams;
+    }
     public Season getSeason(){
         return season;
     }
     public League getLeague(){
         return league;
+    }
+
+    public HashMap<String, Referee> getReferees() {
+        return referees;
+    }
+
+    public void addReferee(String refereeName, Referee referee) {
+        if(!referees.containsKey(refereeName)){
+            referees.put(refereeName, referee);
+        }
     }
 }
