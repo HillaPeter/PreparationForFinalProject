@@ -582,9 +582,9 @@ public class SystemController {
         return referees;
     }
 
-    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd, Referee referee) {
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd) {
         try{
-            ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd, referee);
+            ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd);
         }
         catch(Exception e){
 
@@ -603,7 +603,14 @@ public class SystemController {
         return seasons;
     }
 
-    public HashMap<String, Fan> getFans() {
+    public void changeScorePolicy(String league, String season, String sWinning, String sDraw, String sLosing) throws ObjectNotExist, IncorrectInputException {
+        ((AssociationDelegate)connectedUser).changeScorePolicy(league, season, sWinning, sDraw, sLosing);
+    }
+
+
+
+
+        public HashMap<String, Fan> getFans() {
         return dbController.getFans();
     }
 

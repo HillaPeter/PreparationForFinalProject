@@ -21,4 +21,8 @@ public class Season {
     public String getYear() {
         return year;
     }
+
+    public HashMap<League,LeagueInSeason> getLeagues (){
+        return leagueInSeasons;
+    }
 }

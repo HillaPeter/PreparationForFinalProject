@@ -1,5 +1,7 @@
 package League;
 
-public interface SchedulingPolicy {
+public class SchedulingPolicy implements ISchedulingPolicy {
+
+
 
 }
