@@ -9,6 +9,7 @@ import Users.*;
 import Exception.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class DB {
 
@@ -18,6 +19,7 @@ public class DB {
     private HashMap<String, Role> roles; // hash map <mail,role> - maybe users instead roles??
     private HashMap<String, Team> teams;
     private HashMap<String, Referee> referees;
+    private HashMap<String, ISchedulingPolicy> schedulingPolicies;
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -28,6 +30,7 @@ public class DB {
         this.roles = new HashMap<>();
         this.teams = new HashMap<>();
         this.referees = new HashMap<>();
+        schedulingPolicies = new HashMap<>();
     }
 
     /********************************Association Delegate Functions********************************/
@@ -133,7 +136,7 @@ public class DB {
         return toReturn;
     }
 
-    public HashMap<String, Coach> getCoachs() {
+    public HashMap<String, Coach> getCoaches() {
         HashMap<String,Coach> toReturn=new HashMap<>();
         for(String role:roles.keySet())
         {
@@ -273,5 +276,13 @@ public class DB {
 
     public HashMap<String,Season> getSeasons() {
         return seasons;
+    }
+
+    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies(){
+        return schedulingPolicies;
+    }
+
+    public void addSchedulingPolicies(ISchedulingPolicy policy) {
+        schedulingPolicies.put(policy.getNameOfPolicy(), policy);
     }
 }

@@ -60,7 +60,8 @@ public class LeagueInSeason {
         scorePolicy = policy;
     }
 
-    public void setShedulingPolicy(ISchedulingPolicy policy) {
+    public void setSchedulingPolicy(ISchedulingPolicy policy) {
         schedulingPolicy = policy;
     }
+
 }

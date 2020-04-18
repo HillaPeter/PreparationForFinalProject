@@ -7,6 +7,7 @@ import Game.Transaction;
 import League.*;
 import Users.*;
 import javafx.util.Pair;
+import jdk.nashorn.internal.runtime.ECMAException;
 import system.DBController;
 import system.SystemController;
 
@@ -82,6 +83,8 @@ public class Main {
                         System.out.println("You entered incorrect password.\nlog in with the correct password.");
                     } catch (IncorrectInputException e) {
                         break;
+                    } catch (DontHavePermissionException e) {
+                        break;
                     }
                 }
                 break;
@@ -91,7 +94,7 @@ public class Main {
         }
     }
 
-    private static void showMenu(Role member) throws IncorrectInputException {
+    private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
         //just for testing
         //    member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
 
@@ -1184,7 +1187,7 @@ public class Main {
 
     /***********************************************AssociationDelegate**************************************************/
 
-    private static void AssociationDelegateMenu(Member member) throws IncorrectInputException {
+    private static void AssociationDelegateMenu(Member member) throws IncorrectInputException, DontHavePermissionException {
         String input = "";
         while (!input.equals("Exit")) {
             System.out.println("choose one of the following options:\n");
@@ -1227,19 +1230,38 @@ public class Main {
                         System.out.println("Please write the year of this league");
                         String year = scanInput.nextLine();
                         try {
+                            //score policy
                             controller.setLeagueByYear(specificLeague, year);
-                        } catch (ObjectNotExist incorrectInput) {
-                            System.out.println(incorrectInput.getMessage());
-                            break;
-                        } catch (AlreadyExistException alreadyExist) {
-                            System.out.println("This season is already exist in this league");
-                            break;
-                        } catch (Exception e) {
-                            System.out.println("You can't do this functionality");
-                            break;
+                            System.out.println("Please write the points for a winning team");
+                            String sWinning = scanInput.nextLine();
+                            System.out.println("Please write the points for a draw game");
+                            String sDraw = scanInput.nextLine();
+                            System.out.println("Please write the points for a losing team");
+                            String sLosing = scanInput.nextLine();
+                            controller.changeScorePolicy(specificLeague, year, sWinning, sDraw, sLosing);
+                            System.out.println("The score policy has been changed successfully");
+                            //scheduling policy
+                            HashMap<String, ISchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
+                            System.out.println("These the scheduling policies in the system: ");
+                            for (String policyName : schedulingPolicies.keySet()) {
+                                System.out.println("policy- " + policyName);
+                            }
+                            System.out.println("Please write the name of policy");
+                            String policy = scanInput.nextLine();
+                            controller.setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
+                        } catch (DontHavePermissionException e) {
+                            System.out.println("You don't have permission to this action");
+                        } catch (IncorrectInputException e) {
+                            System.out.println("There isn't this policy");
                         }
+                    } catch (ObjectNotExist incorrectInput) {
+                        System.out.println(incorrectInput.getMessage());
+                        break;
+                    } catch (AlreadyExistException alreadyExist) {
+                        System.out.println("This season is already exist in this league");
+                        break;
                     } catch (Exception e) {
-                        System.out.println("You don't have permission to this action");
+                        System.out.println("You can't do this functionality");
                         break;
                     }
                     break;
@@ -1320,12 +1342,13 @@ public class Main {
                     } catch (IncorrectInputException incorrectInputException) {
                         System.out.println("Incorrect input");
                         break;
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         break;
                     }
                     break;
 
                 case "5":
+
 
                 case "Exit":
 

@@ -46,8 +46,6 @@ public class AssociationDelegate extends Member {
             throw new AlreadyExistException();
         }
         LeagueInSeason leagueInSeason = new LeagueInSeason(league, season);
-        //do the scheduling policy
-        //do the score policy
         league.addLeagueInSeason(leagueInSeason);
         season.addLeagueInSeason(leagueInSeason);
         dbController.removeLeague(league.getName());
@@ -58,13 +56,19 @@ public class AssociationDelegate extends Member {
     }
 
 
-    public void insertSchedulingPolicy() {
+    public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist {
+        SchedulingPolicy policy = new SchedulingPolicy();
+        League leagueObj = dbController.getLeague(league);
+        Season seasonObj = dbController.getSeason(season);
+        LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+        leagueInSeason.setSchedulingPolicy(policy);
+
         //todo
     }
 
 
     public void changeScorePolicy(String league, String season, String sWinning, String sDraw, String sLosing) throws IncorrectInputException {
-        try{
+        try {
             double winning = Double.parseDouble(sWinning);
             double draw = Double.parseDouble(sDraw);
             double losing = Double.parseDouble(sLosing);
@@ -73,8 +77,7 @@ public class AssociationDelegate extends Member {
             Season seasonObj = dbController.getSeason(season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
             leagueInSeason.setScorePolicy(policy);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new IncorrectInputException();
         }
     }
@@ -126,5 +129,27 @@ public class AssociationDelegate extends Member {
             throw new ObjectAlreadyExist();
     }
 
+    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException {
+        return dbController.getSchedulingPolicies(this);
+    }
 
+    //we dont let the user to creat a new scheduling policy
+    public void addSchedulingPolicy(String policyName) throws IncorrectInputException, DontHavePermissionException {
+    }
+
+
+    public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policyName) throws ObjectNotExist, IncorrectInputException {
+        ISchedulingPolicy policy;
+        if (policyName.equals("All teams play each other twice")) {
+            policy = new SchedulingPolicy();
+            League leagueObj = dbController.getLeague(specificLeague);
+            Season seasonObj = dbController.getSeason(year);
+            LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+            leagueInSeason.setSchedulingPolicy(policy);
+        } else {
+            throw new IncorrectInputException();
+        }
+    }
 }
+
+
