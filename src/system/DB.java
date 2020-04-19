@@ -240,7 +240,7 @@ public class DB {
      * @return
      */
     public boolean existMember(String id) {
-        return (this.roles.containsKey(id)|| this.systemManagers.containsKey(id));
+        return (this.roles.containsKey(id) || this.systemManagers.containsKey(id));
     }
     /**
      * this function add fan to the roles list
@@ -284,5 +284,11 @@ public class DB {
 
     public void addSchedulingPolicies(ISchedulingPolicy policy) {
         schedulingPolicies.put(policy.getNameOfPolicy(), policy);
+    }
+
+    public boolean existSystemManager(String id) {
+        if(this.systemManagers.containsKey(id))
+            return true;
+        return false;
     }
 }

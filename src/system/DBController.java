@@ -46,9 +46,12 @@ public class DBController {
     }
 
     public Role getMember(String id) throws MemberNotExist{
-        if (!db.existMember(id))
-            throw new MemberNotExist();
-        return db.getMember(id);
+        if (db.existMember(id)){
+            if(db.existSystemManager(id))
+                return db.getSystemManager(id);
+            return db.getMember(id);
+        }
+        throw new MemberNotExist();
     }
     public Team getTeam(String teamName) {
         return db.getTeam(teamName);
@@ -121,6 +124,7 @@ public class DBController {
             if (!db.existMember(id))
                 throw new MemberNotExist();
             db.removeRole(id);
+            return;
         }
         throw new DontHavePermissionException();
     }
@@ -136,6 +140,15 @@ public class DBController {
         db.removeRole(id);
     }
     /***************************************add function******************************************/
+    public void addAssociationDelegate(Role role, AssociationDelegate associationDelegate) throws DontHavePermissionException, AlreadyExistException {
+        if(role instanceof SystemManager){
+            if (db.existMember(associationDelegate.getUserMail()))
+                throw new AlreadyExistException();
+            db.addAssociationDelegate(associationDelegate);
+            return;
+        }
+        throw new DontHavePermissionException();
+    }
     public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
         if (!(role instanceof Guest)) {
             throw new DontHavePermissionException();
@@ -253,4 +266,6 @@ public class DBController {
     public HashMap<String,Season> getSeasons(Role role) {
         return db.getSeasons();
     }
+
+
 }

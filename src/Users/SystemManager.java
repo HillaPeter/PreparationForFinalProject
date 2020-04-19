@@ -303,4 +303,12 @@ public class SystemManager extends Member {
     public HashMap<String, Team> getTeams() throws DontHavePermissionException {
         return this.dbController.getTeams(this);
     }
+    public void addAssociationDelegate(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
+       if( this.dbController.getFans().containsKey(id)){
+           Member member = (Member)this.dbController.getMember(id);
+           AssociationDelegate newA_D = new AssociationDelegate(member.getName(),member.getUserMail(),member.getPassword());
+           this.dbController.deleteRole(this,id);
+           this.dbController.addAssociationDelegate(this,newA_D);
+       }
+    }
 }

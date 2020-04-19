@@ -16,6 +16,7 @@ public class SystemController {
     private String name;
     private Role connectedUser;
     private DBController dbController;
+    private Guest guest;
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -28,6 +29,7 @@ public class SystemController {
         this.name = name;
         this.initSystem("", "", ""); // change it
         connectedUser = new Guest(dbController);
+        guest = new Guest(dbController);
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -57,7 +59,10 @@ public class SystemController {
         return ((Guest) connectedUser).signIn(userMail, userName, password);
 
     }
-
+    public Role logOut(){
+        this.connectedUser = new Guest(this.dbController);
+        return this.connectedUser;
+    }
     /**
      * this function makes a guest into an existing member.
      * if the member doesnt exist - return null
@@ -66,7 +71,7 @@ public class SystemController {
      * @return
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
-        this.connectedUser = ((Guest) connectedUser).logIn(userMail, userPassword);
+        this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
         return (Member) this.connectedUser;
     }
 
@@ -207,6 +212,14 @@ public class SystemController {
         } else {
             throw new DontHavePermissionException();
         }
+    }
+
+    public void addAssociationDelegate(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist {
+        if(connectedUser instanceof SystemManager){
+            ((SystemManager)connectedUser).addAssociationDelegate(id);
+            return;
+        }
+        throw new DontHavePermissionException();
     }
     /******************************* function for Testing!!!!! (noa) *********************************/
 
@@ -670,4 +683,6 @@ public class SystemController {
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist {
         ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
     }
+
+
 }
