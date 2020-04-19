@@ -3,6 +3,7 @@ package Users;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Game.Game;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import Exception.*;
 import org.junit.rules.ExpectedException;
 import system.SystemController;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -33,39 +35,15 @@ public class SystemManagerTest {
         controller.signIn("coach","coach@gmail.com","1");
         controller.signIn("manager","manager@gmail.com","1");
         controller.signIn("owner","owner@gmail.com","1");
-
     }
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
-    @Test
-    public void getUserMail() {
-    }
-
-    @Test
-    public void getPassword() {
-    }
-
-    @Test
-    public void setUserMail() {
-    }
-
-    @Test
-    public void setPassword() {
-    }
-
-    @Test
-    public void getName() {
-    }
-
-    @Test
-    public void viewSystemInformation() {
-    }
-
+    /*******************************************************************************/
     @Test
     public void schedulingGames() {
         //todo - UC4 noa
     }
-
+    /*******************************************************************************/
     @Test
     public void addNewTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
         controller.logIn("admin@gmail.com","123");
@@ -88,7 +66,9 @@ public class SystemManagerTest {
         LinkedList<String> idowner = new LinkedList<>();
         idowner.add("owner@gmail.com");
         int sizeBefore = this.controller.getRoles().size();
+        int sizeBeforeT= this.controller.getTeams().size();
 
+        /* try to add team - result should be positive */
         controller.addTeam(idPlayers,idcoach,idmanager,idowner,"newTeam");
         assertTrue(controller.getTeams().containsKey("newTeam"));
         assertThat(controller.getRoles().get("manager@gmail.com"), instanceOf(Manager.class));
@@ -105,7 +85,17 @@ public class SystemManagerTest {
         assertThat(controller.getRoles().get("p8@gmail.com"), instanceOf(Player.class));
         assertThat(controller.getRoles().get("p9@gmail.com"), instanceOf(Player.class));
         assertThat(controller.getRoles().get("p10@gmail.com"), instanceOf(Player.class));
+
         assertEquals(sizeBefore,controller.getRoles().size());
+        assertEquals(sizeBeforeT+1 ,controller.getTeams().size());
+
+        assertTrue(controller.getTeams().containsKey("newTeam"));
+        assertTrue(((Coach)this.controller.getRoles().get("coach0@gmail.com")).getTeam().containsKey("newTeam"));
+        assertTrue(((Manager)this.controller.getRoles().get("manager@gmail.com")).getTeam().containsKey("newTeam"));
+        assertTrue(((Owner)this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("newTeam"));
+        for (String idPlayer : idPlayers) {
+            assertTrue(((Player)this.controller.getRoles().get(idPlayer)).getTeam().containsKey("newTeam"));
+        }
     }
     @Test
     public void addNewTeamNotValidPlayers() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
@@ -246,20 +236,70 @@ public class SystemManagerTest {
         assertThat(controller.getRoles().get("p10@gmail.com"), instanceOf(Fan.class));
         assertEquals(sizeBefore,controller.getRoles().size());
     }
+    /*******************************************************************************/
     @Test
-    public void removeReferee() {
-    }
+    public void removeReferee() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException {
+        /* init */
+        controller.signIn("referee","referee@gmail.com","123");
+        controller.logOut();
+        controller.logIn("admin@gmail.com","123");
+        controller.addReferee("referee@gmail.com",false);
+        Referee referee = (Referee)controller.getRoles().get("referee@gmail.com");
+        int sizeBefore = controller.getRoles().size();
+        int sizeBeforeR = controller.getReferees().size();
 
+        HashSet<Game> games = referee.getGameSchedule();
+        boolean refereeNotInGame = true;
+
+
+        /* try to remove referee who already exist in the system - result should be positive*/
+        controller.removeReferee("referee@gmail.com");
+        assertEquals(sizeBefore-1,controller.getRoles().size());
+        assertEquals(sizeBeforeR-1,controller.getReferees().size());
+        for(Game game: games){
+            if(game.isRefereeInTheGame(referee)){
+                refereeNotInGame = false;
+            }
+        }
+        assertTrue(refereeNotInGame);
+
+    }
+    @Test
+    public void removeRefereeNotExist() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+        thrown.expect(MemberNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        int sizeBefore = controller.getRoles().size();
+        int sizeBeforeR = controller.getReferees().size();
+
+
+        /*try to remove referee who doesnt exist in the system - result should be Negative*/
+        assertFalse(controller.removeReferee("referee@gmail.com"));
+        assertEquals(sizeBefore,controller.getRoles().size());
+        assertEquals(sizeBeforeR,controller.getReferees().size());
+    }
+    @Test
+    public void removeRefereeNoPermission() throws DontHavePermissionException {
+        thrown.expect(DontHavePermissionException.class);
+        // int sizeBefore = this.controller.getRoles().size();
+
+        /* try to remove referee without login with systemManager */
+        assertFalse(controller.addReferee("refere@gmail.com",false));
+        // assertEquals(sizeBefore,controller.getRoles().size());
+    }
+    /*******************************************************************************/
     @Test
     public void addReferee() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
         controller.logIn("admin@gmail.com","123");
         int sizeBefore = controller.getRoles().size();
+        int sizeBeforeR = controller.getReferees().size();
 
         /*try to add referee who doesnt exist in the system - result should be positive*/
         assertTrue(controller.addReferee("p0@gmail.com",false));
         assertEquals(sizeBefore,controller.getRoles().size());
         assertTrue(controller.getRoles().containsKey("p0@gmail.com"));
         assertThat(controller.getRoles().get("p0@gmail.com"), instanceOf(SecondaryReferee.class));
+        assertEquals(sizeBeforeR+1,controller.getReferees().size());
 
     }
     @Test
@@ -267,10 +307,13 @@ public class SystemManagerTest {
         thrown.expect(MemberNotExist.class);
         controller.logIn("admin@gmail.com","123");
         int sizeBefore = controller.getRoles().size();
+        int sizeBeforeR = controller.getReferees().size();
+
 
         /*try to add referee who doesnt exist in the system - result should be Negative*/
         assertFalse(controller.addReferee("referee@gmail.com",false));
         assertEquals(sizeBefore,controller.getRoles().size());
+        assertEquals(sizeBeforeR,controller.getReferees().size());
     }
     @Test
     public void addRefereeNoPermission() throws DontHavePermissionException {
@@ -281,51 +324,102 @@ public class SystemManagerTest {
         assertFalse(controller.addReferee("refere@gmail.com",false));
        // assertEquals(sizeBefore,controller.getRoles().size());
     }
-
+    /*******************************************************************************/
     @Test
-    public void closeTeam()  {
+    public void closeTeam() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
+        /* init */
+        controller.logIn("admin@gmail.com","123");
 
+        LinkedList<String> idPlayers = new LinkedList<>();
+        idPlayers.add("p0@gmail.com");
+        idPlayers.add("p1@gmail.com");
+        idPlayers.add("p2@gmail.com");
+        idPlayers.add("p3@gmail.com");
+        idPlayers.add("p4@gmail.com");
+        idPlayers.add("p5@gmail.com");
+        idPlayers.add("p6@gmail.com");
+        idPlayers.add("p7@gmail.com");
+        idPlayers.add("p8@gmail.com");
+        idPlayers.add("p9@gmail.com");
+        idPlayers.add("p10@gmail.com");
+        LinkedList<String> idcoach = new LinkedList<>();
+        idcoach.add("coach0@gmail.com");
+        LinkedList<String> idmanager = new LinkedList<>();
+        idmanager.add("manager@gmail.com");
+        LinkedList<String> idowner = new LinkedList<>();
+        idowner.add("owner@gmail.com");
+        controller.addTeam(idPlayers,idcoach,idmanager,idowner,"newTeam");
+        int sizeBefore = this.controller.getTeams().size();
+
+        /* try to close team - result should be positive */
+        controller.closeTeam("newTeam");
+
+        assertEquals(sizeBefore-1,controller.getTeams().size());
+        assertFalse(controller.getTeams().containsKey("newTeam"));
+        assertFalse(((Coach)this.controller.getRoles().get("coach0@gmail.com")).getTeam().containsKey("newTeam"));
+        assertFalse(((Manager)this.controller.getRoles().get("manager@gmail.com")).getTeam().containsKey("newTeam"));
+        assertFalse(((Owner)this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("newTeam"));
+        for (String idPlayer : idPlayers) {
+            assertFalse(((Player)this.controller.getRoles().get(idPlayer)).getTeam().containsKey("newTeam"));
+        }
     }
-
     @Test
-    public void removeMember()  {
-//        /*init*/
-//        Referee refereeToRemove = new SecondaryReferee("referee","referee@gmail,com","123","");
-//        controller.addSystemManager(this.systemManager);
-//        controller.addMemberTesting(refereeToRemove);
-//        //controller.addReferee(systemManager.getUserMail(),refereeToRemove.getUserMail(),false);
-//        //todo - remove the "//" after fixing addReferee()
-//        assertTrue(controller.ifMemberExistTesting(refereeToRemove.getUserMail()));
-//        int size = controller.sizeOfMembersListTesting();
-//
-//        /*try to remove referee who exist in the system*/
-//        controller.removeReferee(systemManager.getUserMail(),refereeToRemove.getUserMail());
-//        assertFalse(controller.ifMemberExistTesting(refereeToRemove.getUserMail()));
-//        assertEquals(size-1,controller.sizeOfMembersListTesting());
-//
-//        /*try to remove referee who doesnt exist in the system*/
-//        controller.removeReferee(systemManager.getUserMail(),"ss");
-//        assertEquals(size-1,controller.sizeOfMembersListTesting());
-
+    public void closeTeamNoPermission() throws DontHavePermissionException {
+        thrown.expect(DontHavePermissionException.class);
+        /* try to close team without login  - result should be negative */
+        controller.closeTeam("newTeam");
     }
     @Test
-    public void removeMemberWithManagerException()  {
-//        thrown2.expect(MemberNotSystemManager.class);
-//
-//        /*try to remove referee with member who not systemManager  */
-//        SystemManager systemManagertest = new SystemManager("shachar","shachar@gmail.com","123",controller);
-//        Owner owner = new Owner("owner","owner@gmail.com","123", controller);
-//        controller.removeReferee(owner.getUserMail(),"id");
-    }
+    public void closeTeamNotExistingTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+        thrown.expect(ObjectNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
 
+        /* try to close team with wrong name - result should be negative */
+        controller.closeTeam("newTeam");
+    }
+    /*******************************************************************************/
+    @Test
+    public void removeMember() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException {
+        /*init*/
+        controller.signIn("member","member@gmail.com","123");
+        controller.logIn("admin@gmail.com","123");
+
+        assertTrue(controller.getRoles().containsKey("member@gmail.com"));
+        int size = controller.getRoles().size();
+
+        /* try to remove member who exist in the system - result should be positive*/
+        controller.removeMember("member@gmail.com");
+        assertFalse(controller.getRoles().containsKey("member@gmail.com"));
+        assertEquals(size-1,controller.getRoles().size());
+    }
+    @Test
+    public void removeMemberNoPermissionException() throws DontHavePermissionException {
+        thrown.expect(DontHavePermissionException.class);
+
+        /* try to remove member without login  - result should be negative */
+        controller.removeMember("member@gmail.com");
+    }
+    @Test
+    public void removeMemberNotExist() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+        thrown.expect(MemberNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        int sizeBefore = controller.getRoles().size();
+
+        /*try to remove member who not exist in the system - result should be negative*/
+        controller.removeMember("member@gmail.com");
+        assertEquals(sizeBefore,controller.getRoles().size());
+    }
+    /*******************************************************************************/
     @Test
     public void watchComplaint() {
     }
-
+    /*******************************************************************************/
     @Test
     public void responseComplaint() {
     }
-
+    /*******************************************************************************/
     @Test
     public void readLineByLine() {
     }
