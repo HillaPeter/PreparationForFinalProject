@@ -1,88 +1,172 @@
-//package Users;
+package Users;
+
+import Asset.Coach;
+import Asset.Field;
+import Asset.Manager;
+import Asset.Player;
+import Game.Account;
+import Game.Team;
+import Game.Transaction;
+import Exception.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import system.SystemController;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.*;
+
+public class OwnerTest {
+    SystemController controller = new SystemController("");
+
+    LinkedList<String> idPlayers = new LinkedList<>();
+    LinkedList<String> idcoach = new LinkedList<>();
+    LinkedList<String> idmanager = new LinkedList<>();
+    LinkedList<String> idowner = new LinkedList<>();
+    Transaction transaction = new Transaction("Transaction", 445453);
+    Account account0;
+    ArrayList<Transaction> listTransactions = new ArrayList<>();
+    Field field0 = new Field("");
+
+    @Before
+    public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
+
+        /*add Team*/
+        controller.signIn("palyer0","p0@gmail.com","1");
+        controller.signIn("palyer1","p1@gmail.com","1");
+        controller.signIn("palyer2","p2@gmail.com","1");
+        controller.signIn("palyer3","p3@gmail.com","1");
+        controller.signIn("palyer4","p4@gmail.com","1");
+        controller.signIn("palyer5","p5@gmail.com","1");
+        controller.signIn("palyer6","p6@gmail.com","1");
+        controller.signIn("palyer7","p7@gmail.com","1");
+        controller.signIn("palyer8","p8@gmail.com","1");
+        controller.signIn("palyer9","p9@gmail.com","1");
+        controller.signIn("palyer10","p10@gmail.com","1");
+        controller.signIn("coach","coach@gmail.com","1");
+        controller.signIn("manager","manager@gmail.com","1");
+        controller.signIn("owner","owner@gmail.com","1");
+
+        idPlayers.add("p0@gmail.com");
+        idPlayers.add("p1@gmail.com");
+        idPlayers.add("p2@gmail.com");
+        idPlayers.add("p3@gmail.com");
+        idPlayers.add("p4@gmail.com");
+        idPlayers.add("p5@gmail.com");
+        idPlayers.add("p6@gmail.com");
+        idPlayers.add("p7@gmail.com");
+        idPlayers.add("p8@gmail.com");
+        idPlayers.add("p9@gmail.com");
+        idPlayers.add("p10@gmail.com");
+
+        idcoach.add("coach0@gmail.com");
+        idmanager.add("manager@gmail.com");
+        idowner.add("owner@gmail.com");
+        listTransactions.add(transaction);
+    }
+
+    @Rule
+    public final ExpectedException thrown= ExpectedException.none();
+
+    @Test
+    public void addTeam() {
+    }
+
+    @Test
+    public void removeTheTeamFromMyList() {
+    }
+    /****************************************************************************************************************/
+
+    @Test
+    public void addCoach() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, IncorrectInputException {
+        /* init */
+        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+        controller.logOut();
+        controller.signIn("c","c@gmail.com","123");
+
+        /* try to add coach - with login result should be positive */
+        controller.addCoach("team","c@gmail.com");
+        assertThat(controller.getRoles().get("c@gmail.com") , instanceOf(Coach.class));
+        assertTrue(((Coach)controller.getRoles().get("c@gmail.com")).getTeam().containsKey("team"));
+        assertTrue(controller.getTeams().get("team").getCoaches().contains("c@gmail.com"));
+    }
+
+    @Test
+    public void addCoachPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException {
+        thrown.expect(DontHavePermissionException.class);
+        /* init */
+        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+        controller.logOut();
+
+        /* try to add coach - without login result should be negative */
+        controller.addCoach("team","c@gmail.com");
+    }
+    @Test
+    public void addCoachNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException {
+        thrown.expect(MemberNotExist.class);
+//        /* init */
+//        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+//        controller.logOut();
 //
-//import Asset.Field;
-//import Asset.Manager;
-//import Asset.Player;
-//import Game.Account;
-//import Game.Team;
-//import Game.Transaction;
-//import Exception.*;
-//import org.junit.Before;
-//import org.junit.Rule;
-//import org.junit.Test;
-//import org.junit.rules.ExpectedException;
-//import system.SystemController;
+//        /* try to add coach - without login result should be negative */
+//        controller.addCoach("team","c@gmail.com");
+    }
+    @Test
+    public void addCoachTeamAlreadyExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException {
+        thrown.expect(AlreadyExistException.class);
+//        /* init */
+//        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+//        controller.logOut();
 //
-//import java.util.ArrayList;
-//import java.util.Date;
-//import java.util.HashSet;
+//        /* try to add coach - without login result should be negative */
+//        controller.addCoach("team","c@gmail.com");
+    }
+    @Test
+    public void addCoachTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException {
+        thrown.expect(ObjectNotExist.class);
+//        /* init */
+//        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+//        controller.logOut();
 //
-//import static org.hamcrest.core.IsInstanceOf.instanceOf;
-//import static org.junit.Assert.*;
+//        /* try to add coach - without login result should be negative */
+//        controller.addCoach("team","c@gmail.com");
+    }
+    @Test
+    public void addCoachNotMoney() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException {
+        thrown.expect(NoEnoughMoney.class);
+//        /* init */
+//        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+//        controller.logOut();
 //
-//public class OwnerTest {
-//    SystemController controller = new SystemController("");
-//    Owner owner = new Owner("hila","hila@gmail.com","123",controller);
-//    HashSet<Player> players = new HashSet<>();
-//    Transaction transaction = new Transaction("Transaction", 445453);
-//    Account account0;
-//    ArrayList<Transaction> listTransactions = new ArrayList<>();
-//    Field field0 = new Field("");
-//
-//    @Before
-//    public void init(){
-//   //     controller.addOwner(owner);
-//        /*add Team*/
-//        controller.addPlayer("yaara@gmail.com", "team0", 1995, 1, 1,"p");
-//        controller.addPlayer("daniel@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("may@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("noa@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("inbar@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("neta@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("ziv@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("neta2@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("or@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("shoval@gmail.com", "team0", 1995, 1, 1, "p");
-//        controller.addPlayer("gal@gmail.com", "team0", 1995, 1, 1, "p");
-//
-//        listTransactions.add(transaction);
-//    }
-//
-//    @Rule
-//    public final ExpectedException thrown= ExpectedException.none();
-//
-//    @Test
-//    public void addTeam() {
-//    }
-//
-//    @Test
-//    public void removeTheTeamFromMyList() {
-//    }
-//
-//    @Test
-//    public void addAsset() {
-//    }
-//
-//    @Test
-//    public void addCoach() {
-//    }
-//
-//    @Test
-//    public void addPlayer() {
-//    }
-//
-//    @Test
-//    public void addField() {
-//    }
-//
-//    @Test
-//    public void updateAsset() {
-//    }
-//
-//    @Test
-//    public void removeAsset() {
-//    }
-//    /******************************************addNewManager******************************************/
+//        /* try to add coach - without login result should be negative */
+//        controller.addCoach("team","c@gmail.com");
+    }
+    /****************************************************************************************************************/
+
+    @Test
+    public void addPlayer() {
+    }
+    /****************************************************************************************************************/
+
+    @Test
+    public void addField() {
+    }
+    /****************************************************************************************************************/
+
+    @Test
+    public void updateAsset() {
+    }
+
+    @Test
+    public void removeAsset() {
+    }
+    /******************************************addNewManager******************************************/
 //
 //    @Test
 //    public void addNewManagerNoEnoughMoney() throws NoEnoughMoney, TeamNotExist, OwnerNotExist {
@@ -162,13 +246,13 @@
 //        assertThat(controller.getMember(exist.getUserMail()),instanceOf(Manager.class));
 //        assertFalse(team0.isManager(exist));
 //    }
-//    /******************************************addNewOwner******************************************/
-//
-//    @Test
-//    public void addNewOwner() {
-//    }
-//    /******************************************removeManager******************************************/
-//
+    /******************************************addNewOwner******************************************/
+
+    @Test
+    public void addNewOwner() {
+    }
+    /******************************************removeManager******************************************/
+
 //    @Test
 //    public void removeManagerTeamNotExist() throws OwnerNotExist, TeamNotExist, ManagerNotExist {
 //        /* init */
@@ -238,7 +322,7 @@
 //        assertEquals(sizeBeforeTeams-1 , manager.getTeam().size());
 //        assertEquals(sizeBeforeManagers-1 , team0.getManagers().size());
 //    }
-//    /******************************************temporaryTeamClosing******************************************/
+    /******************************************temporaryTeamClosing******************************************/
 //    @Test
 //    public void temporaryTeamClosingTeamNotExist1() throws UnavailableOption, TeamNotExist, OwnerNotExist {
 //        /* init */
@@ -310,8 +394,8 @@
 //        assertEquals(sizeBefore , owner.getTeams().size());
 //        assertTrue(controller.existTeamName(team0.getName()));
 //    }
-//    /******************************************reopenClosedTeam******************************************/
-//
+    /******************************************reopenClosedTeam******************************************/
+
 //    @Test
 //    public void reopenClosedTeamTeamNotExist1() throws UnavailableOption, TeamNotExist, OwnerNotExist {
 //        /* init */
@@ -377,33 +461,33 @@
 //        assertTrue(owner.getTeams().containsKey(team0.getName()));
 //        assertTrue(team0.isOwner(owner));
 //    }
-//    /******************************************addIncome******************************************/
-//
-//    @Test
-//    public void addIncome() {
-//    }
-//
-//    @Test
-//    public void addOutCome() {
-//    }
-//
-//    @Test
-//    public void setTeams() {
-//    }
-//
-//    @Test
-//    public void checkIfManagerExistsInTeam() {
-//    }
-//
-//    @Test
-//    public void checkIfCoachExistsInTeam() {
-//    }
-//
-//    @Test
-//    public void checkIfPlayerExistsInTeam() {
-//    }
-//
-//    @Test
-//    public void getTeams() {
-//    }
-//}
+    /******************************************addIncome******************************************/
+
+    @Test
+    public void addIncome() {
+    }
+
+    @Test
+    public void addOutCome() {
+    }
+
+    @Test
+    public void setTeams() {
+    }
+
+    @Test
+    public void checkIfManagerExistsInTeam() {
+    }
+
+    @Test
+    public void checkIfCoachExistsInTeam() {
+    }
+
+    @Test
+    public void checkIfPlayerExistsInTeam() {
+    }
+
+    @Test
+    public void getTeams() {
+    }
+}

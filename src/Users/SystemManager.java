@@ -303,6 +303,7 @@ public class SystemManager extends Member {
     public HashMap<String, Team> getTeams() throws DontHavePermissionException {
         return this.dbController.getTeams(this);
     }
+    /************* add function (noa) *************/
     public void addAssociationDelegate(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
        if( this.dbController.getFans().containsKey(id)){
            Member member = (Member)this.dbController.getMember(id);
@@ -310,5 +311,13 @@ public class SystemManager extends Member {
            this.dbController.deleteRole(this,id);
            this.dbController.addAssociationDelegate(this,newA_D);
        }
+    }
+    public void addOwner(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
+        if( this.dbController.getFans().containsKey(id)){
+            Member member = (Member)this.dbController.getMember(id);
+            Owner newOwner = new Owner(member.getName(),member.getUserMail(),member.getPassword(),this.dbController);
+            this.dbController.deleteRole(this,id);
+            this.dbController.addOwner(this,newOwner);
+        }
     }
 }

@@ -348,49 +348,49 @@ public class Owner extends Member {
             SystemManager systemManager = (SystemManager) role;
             owner = new Owner(systemManager.getName(), systemManager.getUserMail(), systemManager.getPassword(),dbController);
             dbController.deleteRole(this,mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this , owner);
             dbController.getTeams(this).replace(teamName,team);
             team.addOwner(owner);
         } else if (role instanceof Manager) {
             Manager manager = (Manager) role;
             owner = new Owner(manager.getName(), manager.getUserMail(), manager.getPassword(),dbController);
             dbController.deleteRole(this,mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this , owner);
             team.addOwner(owner);
             dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Player) {
             Player player = (Player) role;
             owner = new Owner(player.getName(), player.getUserMail(), player.getPassword(),dbController);
             dbController.deleteRole(this,mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this,owner);
             team.addOwner(owner);
             dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Coach) {
             Coach coach = (Coach) role;
             owner = new Owner(coach.getName(), coach.getUserMail(), coach.getPassword(),dbController);
             dbController.deleteRole(this,mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this,owner);
             team.addOwner(owner);
             dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Fan) {
             Fan fan = (Fan) role;
             owner = new Owner(fan.getName(), fan.getUserMail(), fan.getPassword(),dbController);
             dbController.deleteRole(this,mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this, owner);
             team.addOwner(owner);
             dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof AssociationDelegate) {
             AssociationDelegate associationDelegate = (AssociationDelegate) role;
             owner = new Owner(associationDelegate.getName(), associationDelegate.getUserMail(), associationDelegate.getPassword(),dbController);
             dbController.deleteRole(this, mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this,owner);
             team.addOwner(owner);
             dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Referee) {
             Referee referee = (Referee) role;
             owner = new Owner(referee.getName(), referee.getUserMail(), referee.getPassword(),dbController);
             dbController.deleteRole(this,mailId);
-            dbController.addOwner(owner);
+            dbController.addOwner(this,owner);
             team.addOwner(owner);
             dbController.getTeams(this).replace(teamName,team);
         }

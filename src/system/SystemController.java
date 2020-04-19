@@ -17,7 +17,6 @@ public class SystemController {
     private String name;
     private Role connectedUser;
     private DBController dbController;
-    private Guest guest;
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -30,7 +29,6 @@ public class SystemController {
         this.name = name;
         this.initSystem("", "", ""); // change it
         connectedUser = new Guest(dbController);
-        guest = new Guest(dbController);
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -217,6 +215,14 @@ public class SystemController {
     public void addAssociationDelegate(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist {
         if(connectedUser instanceof SystemManager){
             ((SystemManager)connectedUser).addAssociationDelegate(id);
+            return;
+        }
+        throw new DontHavePermissionException();
+    }
+
+    public void addOwner(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist {
+        if(connectedUser instanceof SystemManager){
+            ((SystemManager)connectedUser).addOwner(id);
             return;
         }
         throw new DontHavePermissionException();
@@ -655,8 +661,8 @@ public class SystemController {
         dbController.addManager(manager1);
     }
 
-    public void addOwner(Owner owner1) throws AlreadyExistException {
-        dbController.addOwner(owner1);
+    public void addOwner(Owner owner1) throws AlreadyExistException, DontHavePermissionException {
+        dbController.addOwner(connectedUser,owner1);
     }
 
     public void addSystemManager(SystemManager systemManager) throws AlreadyExistException {
@@ -670,6 +676,4 @@ public class SystemController {
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist {
         ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
     }
-
-
 }

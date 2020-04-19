@@ -21,6 +21,7 @@ public class DBController {
         if(!this.db.existSystemManager("admin@gmail.com")) {
             SystemManager systemManager=new SystemManager("admin" , "admin@gmail.com","123",this);
             db.addSystemManager(systemManager);
+            db.addSystemManager(systemManager);
         }
     }
 
@@ -190,7 +191,10 @@ public class DBController {
         db.addCoach(coach);
     }
 
-    public void addOwner(Owner owner) throws AlreadyExistException {
+    public void addOwner(Role role, Owner owner) throws AlreadyExistException, DontHavePermissionException {
+        if(!(role instanceof SystemManager || role instanceof Owner)){
+            throw new DontHavePermissionException();
+        }
         if (db.existMember(owner.getUserMail()))
             throw new AlreadyExistException();
         db.addOwner(owner);
