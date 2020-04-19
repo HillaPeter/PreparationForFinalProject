@@ -9,6 +9,7 @@ import Users.*;
 import Exception.*;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -44,6 +45,9 @@ public class SystemController {
     public void initSystem(String name, String userName, String password) {
         //check if the user name and the password are connect
         dbController = new DBController();
+        System.out.println("Init System:");
+        System.out.println("Connect to Security System");
+        //todo
     }
 
     /*************************************** function for guest******************************************/
@@ -74,7 +78,6 @@ public class SystemController {
         this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
         return (Member) this.connectedUser;
     }
-
     /*************************************** function for system manager******************************************/
     /***
      * this function get id of the refree to remove and the id of the system manager that take care of this function
@@ -89,8 +92,6 @@ public class SystemController {
                 throw new DontHavePermissionException();
             }
         }
-
-
     /***
      * this function get id of the member to make referee and the id of the system manager that take care of this function
      * if the referee already exist - return false
@@ -104,7 +105,6 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
     /**
      * this function get the team name and the id of the system manager that take care of this function
      * if the team name already exist - close the team and return true
@@ -221,34 +221,6 @@ public class SystemController {
         }
         throw new DontHavePermissionException();
     }
-    /******************************* function for Testing!!!!! (noa) *********************************/
-
-//    /**
-//     * this function is used in test - return if the member exist in the system
-//     *
-//     * @param memberMail
-//     * @return
-//     */
-//    public boolean ifMemberExistTesting(String memberMail) {
-//        if (memberMail != null) {
-//            return roles.containsKey(memberMail);
-//        }
-//        return false;
-//    }
-//
-//    public int sizeOfMembersListTesting() {
-//        return this.roles.size();
-//    }
-//
-//    public Role getMember(String id) {
-//        if (this.roles.get(id) == null)
-//            return this.systemManagers.get(id);
-//        return this.roles.get(id);
-//    }
-//
-//    public void addMemberTesting(Member member) {
-//        this.roles.put(member.getUserMail(), member);
-//    }
 
     /*************************************** function for owner******************************************/
 
@@ -625,6 +597,21 @@ public class SystemController {
     public void addSchedulingPolicy(String policyName) throws IncorrectInputException, DontHavePermissionException {
         ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
+    /*************************************** function for Referee ******************************************/
+    public void updateDetails(String id ,String newName, String newMail,String newPassword, String newTraining){
+        //todo
+    }
+    public void updateGameEvent(){
+        //todo
+    }
+    public HashMap<String,String> getGameSchedule(String refereeId){
+        //todo - return a list of date, gameDetails
+        return null;
+    }
+    public void getGameReport(){
+        //todo
+    }
+    /*************************************************************************************************************/
 
     public HashMap<String, Fan> getFans() {
         return dbController.getFans();

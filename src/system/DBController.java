@@ -18,8 +18,10 @@ public class DBController {
 
     public DBController() {
         this.db = new DB();
-        SystemManager systemManager=new SystemManager("admin" , "admin@gmail.com","123",this);
-        db.addSystemManager(systemManager);
+        if(!this.db.existSystemManager("admin@gmail.com")) {
+            SystemManager systemManager=new SystemManager("admin" , "admin@gmail.com","123",this);
+            db.addSystemManager(systemManager);
+        }
     }
 
 
