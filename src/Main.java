@@ -127,6 +127,8 @@ public class Main {
             System.out.println("write \"5\" for handle with games");
             System.out.println("write \"6\" for view System Information");
             System.out.println("write \"7\" for handle with owner");
+            System.out.println("write \"8\" for handle with Association Delegate");
+            System.out.println("write \"9\" for handle with System Manager");
             System.out.println("\nwrite \"ExitAll\" if you want to finish. \n");
             input = "";
             while (input.equals("")) {
@@ -312,10 +314,135 @@ public class Main {
                     }
                     break;
                 }
+                case "7": {
+
+                    while (!input.equals("Exit")) {
+                        System.out.println("choose one of the following options:\n");
+                        System.out.println("write \"1\" to remove owner");
+                        System.out.println("write \"2\" to add owner");
+                        System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+                        input = "";
+                        while (input.equals("")) {
+                            input = scanInput.nextLine();
+                        }
+                        switch (input) {
+                            case "1": {
+                                System.out.println("please enter the Id of the owner");
+                                String id = removeOwner();// scanInput.nextLine();
+                                try {
+                                    boolean success = controller.removeOwner(id);
+                                } catch (DontHavePermissionException e) {
+                                    System.out.println("you don't have the permission to remove owner");
+                                    //    input="Exit";
+                                }
+                                break;
+                            }
+
+                            case "2": {
+                                //System.out.println("please enter the Id of the refree");
+                                String id = addOwner();//scanInput.nextLine();
+                                try {
+                                    boolean success = controller.addOwner(id);
+                                } catch (DontHavePermissionException e) {
+                                    System.out.println("you don't have the permission to add owner");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case "8": {
+
+                    while (!input.equals("Exit")) {
+                        System.out.println("choose one of the following options:\n");
+                        System.out.println("write \"1\" to remove Association Delegate");
+                        System.out.println("write \"2\" to add Association Delegate");
+                        System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+                        input = "";
+                        while (input.equals("")) {
+                            input = scanInput.nextLine();
+                        }
+                        switch (input) {
+                            case "1": {
+                                System.out.println("please enter the Id of the referee");
+                                String id = removeAssociationDelegate();// scanInput.nextLine();
+                                try {
+                                    boolean success = controller.removeAssociationDelegate(id);
+                                } catch (DontHavePermissionException e) {
+                                    System.out.println("you don't have the permission to remove association delegate");
+                                    //    input="Exit";
+                                }
+                                break;
+                            }
+
+                            case "2": {
+                                //System.out.println("please enter the Id of the refree");
+                                String id = addAssociationDelegate();//scanInput.nextLine();
+                                try {
+                                    boolean success = controller.addAssociationDelegate(id);
+                                } catch (DontHavePermissionException e) {
+                                    System.out.println("you don't have the permission to add association delegate");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case "9": {
+
+                    while (!input.equals("Exit")) {
+                        System.out.println("choose one of the following options:\n");
+                        System.out.println("write \"1\" to remove System Manager");
+                        System.out.println("write \"2\" to add System Manager");
+                        System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+                        input = "";
+                        while (input.equals("")) {
+                            input = scanInput.nextLine();
+                        }
+                        switch (input) {
+                            case "1": {
+                                System.out.println("please enter the Id of the referee");
+                                String id = removeSystemManager();// scanInput.nextLine();
+                                try {
+                                    boolean success = controller.removeSystemManager(id);
+                                } catch (DontHavePermissionException e) {
+                                    System.out.println("you don't have the permission to remove System Manager");
+                                    //    input="Exit";
+                                }
+                                break;
+                            }
+
+                            case "2": {
+                                //System.out.println("please enter the Id of the refree");
+                                String id = addSystemManager();//scanInput.nextLine();
+                                try {
+                                    boolean success = controller.addSystemManager(id);
+                                } catch (DontHavePermissionException e) {
+                                    System.out.println("you don't have the permission to add System Manager");
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
             }
 
 
         }
+    }
+
+    private static String removeOwner() {
+        HashMap<String, Fan> owners = controller.getFans();
+        System.out.println("Choose id to remove owner");
+        for (String owner : owners.keySet()) {
+            System.out.println(owner);
+        }
+
+        String refereeToRemove = scanInput.nextLine();
+        return refereeToRemove;
     }
 
     private static String chooseSeason() {

@@ -17,4 +17,8 @@ public class Field{
     public String getNameOfField() {
         return nameOfField;
     }
+
+    public Object getName() {
+        return this.nameOfField;
+    }
 }
