@@ -1,16 +1,12 @@
 package Users;
 
-import League.League;
-import League.Season;
 import Exception.*;
+import League.Season;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import system.DBController;
 import system.SystemController;
-
-import java.util.HashSet;
 
 import static org.junit.Assert.*;
 
@@ -162,7 +158,8 @@ public class AssociationDelegateTest {
     }
     /*******************************************************************************/
     @Test
-    public void changeScorePolicy() {
+    public void changeScorePolicy() throws IncorrectInputException, ObjectNotExist {
+
     }
 
 }

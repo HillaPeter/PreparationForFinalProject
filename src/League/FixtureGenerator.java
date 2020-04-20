@@ -20,7 +20,9 @@ public class FixtureGenerator {
         if (numberOfTeams % 2 != 0) {
             ++numberOfTeams;
             ghost = true;
+
         }
+
 
         int totalRounds = numberOfTeams - 1;
         int matchesPerRound = numberOfTeams / 2;
@@ -38,7 +40,7 @@ public class FixtureGenerator {
                     away = numberOfTeams - 1;
                 }
 
-                fixtures.add(new Fixture((Team)teams.get(roundNumber), (Team)teams.get(away)));
+                fixtures.add(new Fixture(teams.get(roundNumber), teams.get(away)));
             }
 
             rounds.add(fixtures);
