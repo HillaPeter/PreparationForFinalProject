@@ -2,13 +2,16 @@ package Users;
 
 import Exception.IncorrectInputException;
 
+import java.util.Date;
+
 public class Fan extends Member {
 
 
 
-    public Fan(String name, String userId, String password) {
-        super(name, userId, password);
+    public Fan(String name, String userId, String password, Date birthDate) {
+        super(name, userId, password, birthDate);
     }
+
 
     public void logOut(){
         //todo

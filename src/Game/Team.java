@@ -31,7 +31,20 @@ public class Team {
         trainingFields=new HashSet<>();
     }
 
-    public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) throws AlreadyExistException {
+    public Team(String name, Account account,Owner owner) {
+        this.name = name;
+        this.account = account;
+        this.owners = new HashSet<>();
+        owners.add(owner);
+
+        coaches = new HashSet<>();
+        players = new HashSet<>();
+        managers = new HashSet<>();
+        trainingFields=new HashSet<>();
+
+    }
+
+    public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) throws AlreadyExistException, DontHavePermissionException {
         this.name = teamName;
         this.account = account;
         this.coaches = new HashSet<>();
@@ -70,7 +83,7 @@ public class Team {
         }
     }
 
-    private void updateTheTeamListForOwner(LinkedList<Owner> list) throws AlreadyExistException {
+    private void updateTheTeamListForOwner(LinkedList<Owner> list) throws AlreadyExistException, DontHavePermissionException {
         for (int i = 0; i < list.size(); i++) {
             Owner owner = list.get(i);
             owner.addTeam(this);
@@ -81,7 +94,7 @@ public class Team {
         return name;
     }
 
-    public void deleteTheData() throws ObjectNotExist {
+    public void deleteTheData() throws ObjectNotExist, DontHavePermissionException {
         for (Player player : players
         ) {
             player.removeTheTeamFromMyList(this.name);

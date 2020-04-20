@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import Exception.*;
 import org.junit.rules.ExpectedException;
+import system.DBController;
 import system.SystemController;
 
 import java.util.HashSet;
@@ -19,6 +20,8 @@ import static org.junit.Assert.*;
 
 public class SystemManagerTest {
     SystemController controller = new SystemController("");
+    private SystemManager systemManager=new SystemManager("for test" , "for Test" , "fortest" , new DBController());
+
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
         controller.signIn("palyer0","p0@gmail.com","1");
@@ -244,9 +247,9 @@ public class SystemManagerTest {
         controller.logOut();
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
-        Referee referee = controller.getReferees().get("referee@gmail.com");
+        Referee referee = controller.getReferees(systemManager).get("referee@gmail.com");
         int sizeBefore = controller.getRoles().size();
-        int sizeBeforeR = controller.getReferees().size();
+        int sizeBeforeR = controller.getReferees(systemManager).size();
 
         HashSet<Game> games = referee.getGameSchedule();
         boolean refereeNotInGame = true;
@@ -270,13 +273,13 @@ public class SystemManagerTest {
         /* init */
         controller.logIn("admin@gmail.com","123");
         int sizeBefore = controller.getRoles().size();
-        int sizeBeforeR = controller.getReferees().size();
+        int sizeBeforeR = controller.getReferees(systemManager).size();
 
 
         /*try to remove referee who doesnt exist in the system - result should be Negative*/
         assertFalse(controller.removeReferee("referee@gmail.com"));
         assertEquals(sizeBefore,controller.getRoles().size());
-        assertEquals(sizeBeforeR,controller.getReferees().size());
+        assertEquals(sizeBeforeR,controller.getReferees(systemManager).size());
     }
     @Test
     public void removeRefereeNoPermission() throws DontHavePermissionException {
@@ -292,14 +295,14 @@ public class SystemManagerTest {
     public void addReferee() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
         controller.logIn("admin@gmail.com","123");
         int sizeBefore = controller.getRoles().size();
-        int sizeBeforeR = controller.getReferees().size();
+        int sizeBeforeR = controller.getReferees(systemManager).size();
 
         /*try to add referee who doesnt exist in the system - result should be positive*/
         assertTrue(controller.addReferee("p0@gmail.com",false));
         assertEquals(sizeBefore,controller.getRoles().size());
         assertTrue(controller.getRoles().containsKey("p0@gmail.com"));
         assertThat(controller.getRoles().get("p0@gmail.com"), instanceOf(SecondaryReferee.class));
-        assertEquals(sizeBeforeR+1,controller.getReferees().size());
+        assertEquals(sizeBeforeR+1,controller.getReferees(systemManager).size());
 
     }
     @Test
@@ -307,13 +310,13 @@ public class SystemManagerTest {
         thrown.expect(MemberNotExist.class);
         controller.logIn("admin@gmail.com","123");
         int sizeBefore = controller.getRoles().size();
-        int sizeBeforeR = controller.getReferees().size();
+        int sizeBeforeR = controller.getReferees(systemManager).size();
 
 
         /*try to add referee who doesnt exist in the system - result should be Negative*/
         assertFalse(controller.addReferee("referee@gmail.com",false));
         assertEquals(sizeBefore,controller.getRoles().size());
-        assertEquals(sizeBeforeR,controller.getReferees().size());
+        assertEquals(sizeBeforeR,controller.getReferees(systemManager).size());
     }
     @Test
     public void addRefereeNoPermission() throws DontHavePermissionException {

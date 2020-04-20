@@ -21,4 +21,5 @@ public class Field{
     public Object getName() {
         return this.nameOfField;
     }
+
 }

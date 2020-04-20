@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import system.DBController;
 import system.SystemController;
 import Exception.*;
 
@@ -15,6 +16,7 @@ import static org.junit.Assert.*;
 
 public class RefereeTest {
     private SystemController controller = new SystemController("");
+    private SystemManager systemManager=new SystemManager("for test" , "for Test" , "fortest" , new DBController());
     /*******************************************************************************/
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
@@ -26,7 +28,7 @@ public class RefereeTest {
     public final ExpectedException thrown= ExpectedException.none();
     /*******************************************************************************/
     @Test
-    public void printGameSchedule() throws MemberNotExist, PasswordDontMatchException {
+    public void printGameSchedule() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
         /* init */
         controller.logIn("referee@gmail.com","123");
 
@@ -54,11 +56,11 @@ public class RefereeTest {
         /*try to update details after login with correct values- result should be positive */
         controller.updateDetails("referee@gmail.com","newName" , "newMail@gmail.com","1234","training");
 
-        assertNotNull(controller.getReferees().get("newMail@gmail.com"));
+        assertNotNull(controller.getReferees(systemManager).get("newMail@gmail.com"));
         assertNotNull(controller.getRoles().get("newMail@gmail.com"));
-        assertEquals("newName",controller.getReferees().get("newMail@gmail.com").getName());
-        assertEquals("newMail@gmail.com",controller.getReferees().get("newMail@gmail.com").getUserMail());
-        assertEquals("1234",controller.getReferees().get("newMail@gmail.com").getPassword());
+        assertEquals("newName",controller.getReferees(systemManager).get("newMail@gmail.com").getName());
+        assertEquals("newMail@gmail.com",controller.getReferees(systemManager).get("newMail@gmail.com").getUserMail());
+        assertEquals("1234",controller.getReferees(systemManager).get("newMail@gmail.com").getPassword());
     }
     @Test
     public void updateDetailsIncorrectName() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
@@ -69,9 +71,9 @@ public class RefereeTest {
         /*try to update details after login with incorrect values- result should be negative */
         controller.updateDetails("referee@gmail.com","12344" , "newMail@gmail.com","1234","training");
 
-        assertNotNull(controller.getReferees().get("referee@gmail.com"));
-        assertEquals("referee",controller.getReferees().get("referee@gmail.com").getName());
-        assertEquals("123",controller.getReferees().get("referee@gmail.com").getPassword());
+        assertNotNull(controller.getReferees(systemManager).get("referee@gmail.com"));
+        assertEquals("referee",controller.getReferees(systemManager).get("referee@gmail.com").getName());
+        assertEquals("123",controller.getReferees(systemManager).get("referee@gmail.com").getPassword());
     }
     @Test
     public void updateDetailsPermission() throws DontHavePermissionException {

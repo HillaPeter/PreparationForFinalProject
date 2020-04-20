@@ -3,14 +3,15 @@ package Users;
 import Game.Game;
 import Exception.IncorrectInputException;
 
+import java.util.Date;
 import java.util.HashSet;
 
 public abstract class Referee extends Member{
     private String training;
     private HashSet<Game> games;
 
-    public Referee(String name, String userMail, String password, String training) {
-        super(name, userMail, password);
+    public Referee(String name, String userMail, String password, String training , Date birthDate) {
+        super(name, userMail, password , birthDate);
         this.training = training;
         games=new HashSet<Game>();
     }

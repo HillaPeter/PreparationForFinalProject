@@ -1,19 +1,24 @@
 package Users;
 
+import java.util.Date;
+
 public abstract class Member extends Role {
     private String userMail;
     private String password;
 
-    public Member(String name, String userMail, String password) {
-        super(name);
+
+    public Member(String name, String userMail, String password , Date birthDate) {
+        super(name, birthDate);
         this.userMail = userMail;
         this.password = password;
     }
 
-    public Member(String name, String userMail) {
-        super(name);
+    public Member(String name, String userMail, Date birthDate) {
+        super(name, birthDate);
         this.userMail = userMail;
     }
+
+
 
     public String getUserMail()
     {

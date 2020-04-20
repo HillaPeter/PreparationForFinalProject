@@ -177,6 +177,23 @@ public class DB {
         }
         return toReturn;
     }
+
+    public Owner getOwnerOrFan(String idOwner) throws ObjectNotExist {
+        Role role=roles.get(idOwner);
+        if(role instanceof Owner)
+        {
+            return (Owner)role;
+        }
+        else if(role instanceof Fan)
+        {
+            Owner owner=new Owner(role.getName() ,((Fan) role).getUserMail() ,((Fan) role).getPassword() ,role.getBirthDate());
+            return owner;
+        }
+        else {
+            throw new ObjectNotExist("object not exist");
+        }
+    }
+
     /***************************************delete function******************************************/
 
     public void removeRole(String id) { roles.remove(id); }
@@ -356,6 +373,7 @@ public class DB {
     public void removeSystemManager(String id) {
         systemManagers.remove(id);
     }
+
 
 
 }

@@ -15,14 +15,14 @@ public class Player extends TeamMember{
 
 
     public Player(String name, String userMail, String password, Date birthDate, String role) {
-        super(name, userMail, password);
+        super(name, userMail, password,birthDate);
         this.birthDate = birthDate;
         this.role = role;
         events=new HashSet<>();
     }
 
     public Player(String name, String userMail, Date birthDate, String role) {
-        super(name, userMail);
+        super(name, userMail , birthDate);
         this.birthDate = birthDate;
         this.role = role;
         setPassword(null);

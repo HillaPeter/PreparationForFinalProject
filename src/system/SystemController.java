@@ -9,6 +9,7 @@ import Users.*;
 import Exception.*;
 import javafx.util.Pair;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -27,7 +28,7 @@ public class SystemController {
     public SystemController(String name) {
         this.name = name;
         //this.initSystem("", "", ""); // change it
-        connectedUser = new Guest(dbController);
+        connectedUser = new Guest(dbController ,null);
         //todo
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -56,12 +57,13 @@ public class SystemController {
      *
      * @return true = success or false = failed to sign
      */
-    public Member signIn(String userName, String userMail, String password) throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
-        return ((Guest) connectedUser).signIn(userMail, userName, password);
+    public Member signIn(String userName, String userMail, String password , Date birthDate) throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
+        return ((Guest) connectedUser).signIn(userMail, userName, password , birthDate);
 
     }
     public Role logOut(){
-        this.connectedUser = new Guest(this.dbController);
+        //todo
+        this.connectedUser = new Guest(this.dbController , null);
         return this.connectedUser;
     }
     /**
@@ -71,7 +73,7 @@ public class SystemController {
      *
      * @return
      */
-    public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
+    public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
         this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
         return (Member) this.connectedUser;
     }
@@ -239,6 +241,7 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
+    /*
     public boolean addTeam(LinkedList<String> players, LinkedList<String> coachs, LinkedList<String> managers, LinkedList<String> owners, String teamName) throws DontHavePermissionException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
@@ -247,8 +250,8 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
-
-    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException {
+*/
+    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.addNewTeam(teamName , ownerId);
@@ -674,36 +677,58 @@ public class SystemController {
     }
     /*************************************************************************************************************/
 
-    public HashMap<String, Fan> getFans() {
-        return dbController.getFans();
+    public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
+        return dbController.getFans(role);
     }
 
-    public HashMap<String, Referee> getReferees() {
-        return dbController.getReferees();
+    public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
+        return dbController.getReferees(role);
     }
 
-    public HashMap<String, Player> getPlayers() {
-        return dbController.getPlayers();
+    public HashMap<String, Player> getPlayers(Role role) throws DontHavePermissionException {
+        return dbController.getPlayers(role);
     }
 
-    public HashMap<String, Owner> getOwners() {
-        return dbController.getOwners();
+    public HashMap<String, Owner> getOwners(Role role) throws DontHavePermissionException {
+        return dbController.getOwners(role);
     }
 
-    public HashMap<String, Manager> getManagers() {
-        return dbController.getManagers();
+    public HashMap<String, Manager> getManagers(Role role) throws DontHavePermissionException {
+        return dbController.getManagers(role);
     }
 
-    public HashMap<String, Coach> getCoach() {
-        return dbController.getCoaches();
+    public HashMap<String, Coach> getCoach(Role role) throws DontHavePermissionException {
+        return dbController.getCoaches(role);
     }
 
-    public HashMap<String,Member> getMembers() {
-        return dbController.getMembers();
+    public HashMap<String,Member> getMembers(Role role) throws DontHavePermissionException {
+        return dbController.getMembers(role);
+    }
+
+    public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist, DontHavePermissionException {
+        ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
+    }
+
+    public DBController getDbController() {
+        return dbController;
+    }
+
+    public HashMap<String, SystemManager> getSystemManager(Role role) throws DontHavePermissionException {
+        return dbController.getSystemManagers(role);
+    }
+
+    public HashMap<String, AssociationDelegate> getAssociationDelegates(Role role) throws DontHavePermissionException {
+        return dbController.getAssociationDelegate(role);
+    }
+
+
+    public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
+        return dbController.getOwnersAndFans(role);
     }
 
 
     /**********shachar test*************/
+    /*
     public void addPlayer(Player player1) throws AlreadyExistException {
         dbController.addPlayer(player1);
     }
@@ -727,25 +752,6 @@ public class SystemController {
     public void addFan(Fan fan1) {
         dbController.addFan(fan1);
     }
+    */
 
-    public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist {
-        ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
-    }
-
-    public DBController getDbController() {
-        return dbController;
-    }
-
-    public HashMap<String, SystemManager> getSystemManager() {
-        return dbController.getSystemManagers();
-    }
-
-    public HashMap<String, AssociationDelegate> getAssociationDelegates() {
-        return dbController.getAssociationDelegate();
-    }
-
-
-    public HashMap<String, Role> getOwnersAndFans() {
-        return dbController.getOwnersAndFans();
-    }
 }

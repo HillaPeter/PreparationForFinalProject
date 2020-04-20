@@ -5,6 +5,7 @@ import system.DBController;
 import Exception.*;
 
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -12,8 +13,8 @@ public class AssociationDelegate extends Member {
 
     private DBController dbController;
 
-    public AssociationDelegate(String name, String userMail, String password) {
-        super(name, userMail, password);
+    public AssociationDelegate(String name, String userMail, String password, Date birthDate) {
+        super(name, userMail, password, birthDate);
         dbController = new DBController();
     }
 
@@ -23,7 +24,7 @@ public class AssociationDelegate extends Member {
         if (Pattern.matches("[a-zA-Z]+", leagueName)) { //checks that the name contains only letters(true=just letters)
             if (!leagues.containsKey(leagueName)) {
                 league = new League(leagueName);
-                dbController.addLeague(league);
+                dbController.addLeague(this , league);
             } else {
                 throw new AlreadyExistException();
             }
@@ -47,18 +48,18 @@ public class AssociationDelegate extends Member {
         LeagueInSeason leagueInSeason = new LeagueInSeason(league, season);
         league.addLeagueInSeason(leagueInSeason);
         season.addLeagueInSeason(leagueInSeason);
-        dbController.removeLeague(league.getName());
-        dbController.addLeague(league);
-        dbController.removeSeason(season.getYear());
-        dbController.addSeason(season);
+        dbController.removeLeague(this ,league.getName());
+        dbController.addLeague(this ,league);
+        dbController.removeSeason(this ,season.getYear());
+        dbController.addSeason(this ,season);
         //todo
     }
 
 
-    public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist {
+    public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist, DontHavePermissionException {
         SchedulingPolicyAllTeamsPlayTwice policy = new SchedulingPolicyAllTeamsPlayTwice();
-        League leagueObj = dbController.getLeague(league);
-        Season seasonObj = dbController.getSeason(season);
+        League leagueObj = dbController.getLeague(this ,league);
+        Season seasonObj = dbController.getSeason(this ,season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
 
@@ -72,8 +73,8 @@ public class AssociationDelegate extends Member {
             double draw = Double.parseDouble(sDraw);
             double losing = Double.parseDouble(sLosing);
             ScorePolicy policy = new ScorePolicy(winning, draw, losing);
-            League leagueObj = dbController.getLeague(league);
-            Season seasonObj = dbController.getSeason(season);
+            League leagueObj = dbController.getLeague(this,league);
+            Season seasonObj = dbController.getSeason(this , season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
             leagueInSeason.setScorePolicy(policy);
         } catch (Exception e) {
@@ -94,8 +95,8 @@ public class AssociationDelegate extends Member {
         HashMap<String, Referee> referees = new HashMap<>();
         try {
             HashMap<String, Referee> allRefereesInTheSystem = dbController.getReferees(this);
-            League leagueObj = dbController.getLeague(league);
-            Season seasonObj = dbController.getSeason(season);
+            League leagueObj = dbController.getLeague(this,league);
+            Season seasonObj = dbController.getSeason(this,season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
             HashMap<String, Referee> refereesInLeagueInSeason = leagueInSeason.getReferees();
             for (String nameOfReferee : allRefereesInTheSystem.keySet()) {
@@ -115,12 +116,12 @@ public class AssociationDelegate extends Member {
      * @param season      - name of season to add the referee
      * @param refereeName - name of the referee we would like to add
      */
-    public void addRefereeToLeagueInSeason(String league, String season, String refereeName) throws ObjectNotExist, ObjectAlreadyExist {
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeName) throws ObjectNotExist, ObjectAlreadyExist, DontHavePermissionException {
 
-        HashMap<String, Referee> referees = dbController.getReferees();
+        HashMap<String, Referee> referees = dbController.getReferees(this);
         Referee referee = referees.get(refereeName);
-        League leagueObj = dbController.getLeague(league);
-        Season seasonObj = dbController.getSeason(season);
+        League leagueObj = dbController.getLeague(this,league);
+        Season seasonObj = dbController.getSeason(this , season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         if (!leagueInSeason.getReferees().containsKey(refereeName))
             leagueInSeason.addReferee(refereeName, referee);
@@ -137,7 +138,7 @@ public class AssociationDelegate extends Member {
     }
 
 
-    public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policyName) throws ObjectNotExist, IncorrectInputException {
+    public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policyName) throws ObjectNotExist, IncorrectInputException, DontHavePermissionException {
         ASchedulingPolicy policy;
         if (policyName.equals("All teams play each other twice")) {
             policy = new SchedulingPolicyAllTeamsPlayTwice();
@@ -146,8 +147,8 @@ public class AssociationDelegate extends Member {
         } else {
             throw new IncorrectInputException();
         }
-        League leagueObj = dbController.getLeague(specificLeague);
-        Season seasonObj = dbController.getSeason(year);
+        League leagueObj = dbController.getLeague(this,specificLeague);
+        Season seasonObj = dbController.getSeason(this,year);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
 

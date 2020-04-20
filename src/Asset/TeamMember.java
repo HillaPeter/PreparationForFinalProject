@@ -4,18 +4,19 @@ import Game.Team;
 import Users.Member;
 import Users.Role;
 
+import java.util.Date;
 import java.util.HashMap;
 
 
 public class TeamMember extends Member {
     private HashMap<String, Team> team;
 
-    public TeamMember(String name, String userMail, String password) {
-        super(name, userMail, password);
+    public TeamMember(String name, String userMail, String password, Date birthDate) {
+        super(name, userMail, password, birthDate);
     }
 
-    public TeamMember(String name, String userMail) {
-        super(name, userMail);
+    public TeamMember(String name, String userMail, Date birthDate) {
+        super(name, userMail,  birthDate);
     }
 
     public void addTeam(Team teamToEnter) {

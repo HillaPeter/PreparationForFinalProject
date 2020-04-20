@@ -112,7 +112,7 @@ public class Main {
     }
 
     /*********************************************System Manager**********************************************/
-    private static void SystemManagerMenu() {
+    private static void SystemManagerMenu() throws DontHavePermissionException {
         String input = "";
         while (!input.equals("ExitAll")) {
             System.out.println("choose one of the following options:\n");
@@ -231,6 +231,12 @@ public class Main {
                                    // boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
+                                } catch (ObjectNotExist objectNotExist) {
+                                    objectNotExist.printStackTrace();
+                                } catch (ObjectAlreadyExist objectAlreadyExist) {
+                                    objectAlreadyExist.printStackTrace();
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
                                 }
                                 break;
                             }
@@ -444,8 +450,8 @@ public class Main {
         }
     }
 
-    private static String getOwnerId() {
-        HashMap<String, Role> owners = controller.getOwnersAndFans();
+    private static String getOwnerId() throws DontHavePermissionException {
+        HashMap<String, Role> owners = controller.getOwnersAndFans(member);
         System.out.println("Choose id to add owner");
         for (String owner : owners.keySet()) {
             System.out.println(owner);
@@ -455,8 +461,8 @@ public class Main {
         return ownerToAdd;
     }
 
-    private static String removeOwner() {
-        HashMap<String, Owner> owners = controller.getOwners();
+    private static String removeOwner() throws DontHavePermissionException {
+        HashMap<String, Owner> owners = controller.getOwners(member);
         System.out.println("Choose id to remove owner");
         for (String owner : owners.keySet()) {
             System.out.println(owner);
@@ -466,8 +472,8 @@ public class Main {
         return ownerToRemove;
     }
 
-    private static String addOwner() {
-        HashMap<String, Fan> owners = controller.getFans();
+    private static String addOwner() throws DontHavePermissionException {
+        HashMap<String, Fan> owners = controller.getFans(member);
         System.out.println("Choose id to add owner");
         for (String owner : owners.keySet()) {
             System.out.println(owner);
@@ -477,8 +483,8 @@ public class Main {
         return ownerToAdd;
     }
 
-    private static String removeAssociationDelegate() {
-        HashMap<String, AssociationDelegate> associationDelegates = controller.getAssociationDelegates();
+    private static String removeAssociationDelegate() throws DontHavePermissionException {
+        HashMap<String, AssociationDelegate> associationDelegates = controller.getAssociationDelegates(member);
         System.out.println("Choose id to remove associationDelegate");
         for (String associationDelegate : associationDelegates.keySet()) {
             System.out.println(associationDelegate);
@@ -488,8 +494,8 @@ public class Main {
         return associationDelegateToRemove;
     }
 
-    private static String addAssociationDelegate() {
-        HashMap<String, Fan> associationDelegate = controller.getFans();
+    private static String addAssociationDelegate() throws DontHavePermissionException {
+        HashMap<String, Fan> associationDelegate = controller.getFans(member);
         System.out.println("Choose id to add associationDelegate");
         for (String owner : associationDelegate.keySet()) {
             System.out.println(owner);
@@ -499,8 +505,8 @@ public class Main {
         return associationDelegateToAdd;
     }
 
-    private static String removeSystemManager() {
-        HashMap<String, SystemManager> systemmanagers = controller.getSystemManager();
+    private static String removeSystemManager() throws DontHavePermissionException {
+        HashMap<String, SystemManager> systemmanagers = controller.getSystemManager(member);
         System.out.println("Choose id to remove system manager");
         for (String systemmanager : systemmanagers.keySet()) {
             System.out.println(systemmanager);
@@ -510,8 +516,8 @@ public class Main {
         return systemmanagerToRemove;
     }
 
-    private static String addSystemManager() {
-        HashMap<String, Fan> systemmanagers = controller.getFans();
+    private static String addSystemManager() throws DontHavePermissionException {
+        HashMap<String, Fan> systemmanagers = controller.getFans(member);
         System.out.println("Choose id to add system manager");
         for (String systemmanager : systemmanagers.keySet()) {
             System.out.println(systemmanager);
@@ -541,8 +547,8 @@ public class Main {
         return leagueToReturn;
     }
 
-    private static String removeRefree() {
-        HashMap<String, Referee> refrees = controller.getReferees();
+    private static String removeRefree() throws DontHavePermissionException {
+        HashMap<String, Referee> refrees = controller.getReferees(member);
         System.out.println("Choose id to remove referee");
         for (String refere : refrees.keySet()) {
             System.out.println(refere);
@@ -552,8 +558,8 @@ public class Main {
         return refereeToRemove;
     }
 
-    private static String addRefree() {
-        HashMap<String, Fan> fans = controller.getFans();
+    private static String addRefree() throws DontHavePermissionException {
+        HashMap<String, Fan> fans = controller.getFans(member);
         System.out.println("Choose id to add referee");
         for (String Fan : fans.keySet()) {
             System.out.println(Fan);
@@ -572,9 +578,9 @@ public class Main {
         return teamToRemove;
     }
 
-    private static LinkedList<String> addTeamPlayers() {
+    private static LinkedList<String> addTeamPlayers() throws DontHavePermissionException {
         LinkedList<String> players = new LinkedList<>();
-        HashMap<String, Player> team = controller.getPlayers();
+        HashMap<String, Player> team = controller.getPlayers(member);
         System.out.println("Choose id players to add the team");
         for (String teamName : team.keySet()) {
             System.out.println(teamName);
@@ -589,9 +595,9 @@ public class Main {
         return players;
     }
 
-    private static LinkedList<String> addTeamOwners() {
+    private static LinkedList<String> addTeamOwners() throws DontHavePermissionException {
         LinkedList<String> owners = new LinkedList<>();
-        HashMap<String, Owner> team = controller.getOwners();
+        HashMap<String, Owner> team = controller.getOwners(member);
         System.out.println("Choose id owners to add the team");
         for (String teamName : team.keySet()) {
             System.out.println(teamName);
@@ -606,9 +612,9 @@ public class Main {
         return owners;
     }
 
-    private static LinkedList<String> addTeamManagers() {
+    private static LinkedList<String> addTeamManagers() throws DontHavePermissionException {
         LinkedList<String> managers = new LinkedList<>();
-        HashMap<String, Manager> team = controller.getManagers();
+        HashMap<String, Manager> team = controller.getManagers(member);
         System.out.println("Choose id manager to add the team");
         for (String teamName : team.keySet()) {
             System.out.println(teamName);
@@ -623,9 +629,9 @@ public class Main {
         return managers;
     }
 
-    private static LinkedList<String> addTeamCoachs() {
+    private static LinkedList<String> addTeamCoachs() throws DontHavePermissionException {
         LinkedList<String> coachs = new LinkedList<>();
-        HashMap<String, Coach> team = controller.getCoach();
+        HashMap<String, Coach> team = controller.getCoach(member);
         System.out.println("Choose id coach to add the team");
         for (String teamName : team.keySet()) {
             System.out.println(teamName);
@@ -640,8 +646,8 @@ public class Main {
         return coachs;
     }
 
-    private static String removeMember() {
-        HashMap<String, Member> members = controller.getMembers();
+    private static String removeMember() throws DontHavePermissionException {
+        HashMap<String, Member> members = controller.getMembers(member);
         System.out.println("Choose id to remove member");
         for (String member : members.keySet()) {
             System.out.println(member);
@@ -1020,7 +1026,7 @@ public class Main {
     private static void shacharFunctionForTesting() throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
 
         SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller.getDbController());
-        controller.addSystemManager(systemManager);
+      //  controller.addSystemManager(systemManager);
         controller.logIn("shachar@gmail.com","shachar");
 
 
@@ -1049,7 +1055,7 @@ public class Main {
         Player player21 = new Player("asi", "asi@gmail.com", "asi", new Date(1995, 1, 1), "player");
         Player player22 = new Player("peleg", "peleg@gmail.com", "peleg", new Date(1995, 1, 1), "player");
 
-        controller.addPlayer(player1);
+      /*  controller.addPlayer(player1);
         controller.addPlayer(player2);
         controller.addPlayer(player3);
         controller.addPlayer(player4);
@@ -1120,8 +1126,8 @@ public class Main {
         LinkedList<String> owners1 = new LinkedList<>();
         owners1.add(owner1.getUserMail());
 
-        controller.addTeam(players1, coaches1, managers1, owners1, name);
-
+      //  controller.addTeam(players1, coaches1, managers1, owners1, name);
+*/
 
     }
 

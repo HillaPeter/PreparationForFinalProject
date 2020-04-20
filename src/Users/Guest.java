@@ -1,5 +1,5 @@
 package Users;
-import java.util.Scanner;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import Exception.*;
@@ -8,8 +8,8 @@ import system.DBController;
 public class Guest extends Role{
     private DBController dbController;
 
-    public Guest(DBController dbC) {
-        super("guest");
+    public Guest(DBController dbC, Date birthDate) {
+        super("guest", birthDate);
         this.dbController = dbC;
     }
 
@@ -17,14 +17,14 @@ public class Guest extends Role{
      * This function fill the signIn-form with user mail, user name and user password
      * @return String array - details[mail,name,password]
      */
-    public Member signIn(String userMail, String userName, String password) throws AlreadyExistException, IncorrectPasswordInputException, IncorrectInputException, DontHavePermissionException {
+    public Member signIn(String userMail, String userName, String password ,  Date birthDate) throws AlreadyExistException, IncorrectPasswordInputException, IncorrectInputException, DontHavePermissionException {
         if (! checkMailInput(userMail)) {
             throw new IncorrectInputException("incorrect mail input");
         }
         if (! checkPasswordValue(password)) {
             throw new IncorrectPasswordInputException();
         }
-        Fan newMember = new Fan(userName, userMail, password);
+        Fan newMember = new Fan(userName, userMail, password, birthDate );
         dbController.addFan(this,newMember);
         return newMember;
     }
@@ -34,9 +34,9 @@ public class Guest extends Role{
      * this function fill the logIn-form : user name , user password
      * @return String array  - details[name,password]
      */
-    public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException {
+    public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
         Member existingMember;
-        existingMember = (Member) dbController.getMember(userMail);
+        existingMember = (Member) dbController.getMember(this , userMail);
         checkValidationPassword(existingMember, userPassword);
         return existingMember;
     }
