@@ -6,7 +6,6 @@ import Exception.*;
 
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.regex.Pattern;
 
 public class AssociationDelegate extends Member {
@@ -57,7 +56,7 @@ public class AssociationDelegate extends Member {
 
 
     public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist {
-        SchedulingPolicy policy = new SchedulingPolicy();
+        SchedulingPolicyAllTeamsPlayTwice policy = new SchedulingPolicyAllTeamsPlayTwice();
         League leagueObj = dbController.getLeague(league);
         Season seasonObj = dbController.getSeason(season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
@@ -141,14 +140,17 @@ public class AssociationDelegate extends Member {
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policyName) throws ObjectNotExist, IncorrectInputException {
         ISchedulingPolicy policy;
         if (policyName.equals("All teams play each other twice")) {
-            policy = new SchedulingPolicy();
-            League leagueObj = dbController.getLeague(specificLeague);
-            Season seasonObj = dbController.getSeason(year);
-            LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
-            leagueInSeason.setSchedulingPolicy(policy);
+            policy = new SchedulingPolicyAllTeamsPlayTwice();
+        }else if(policyName.equals("All teams play each other once")) {
+            policy = new SchedulingPolicyAllTeamsPlayOnce();
         } else {
             throw new IncorrectInputException();
         }
+        League leagueObj = dbController.getLeague(specificLeague);
+        Season seasonObj = dbController.getSeason(year);
+        LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+        leagueInSeason.setSchedulingPolicy(policy);
+
     }
 }
 

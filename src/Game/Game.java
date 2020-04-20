@@ -8,17 +8,17 @@ import java.util.Date;
 import java.util.HashSet;
 
 public class Game {
-    private Date date;
+    private String date; //year-month-day, example: 2000-01-01
     private Team hostTeam;
     private Team visitorTeam;
-    private Date time;
+    private String time; //hours:minutes
     private Field field;
     private String result;
     private EventLog eventLog;
     private LeagueInSeason leagueInSeason;
     private HashSet<Referee> referees;
 
-    public Game(Date date,Team hostTeam, Team visitorTeam, Date time, Field field, LeagueInSeason leagueInSeason) {
+    public Game(String date,Team hostTeam, Team visitorTeam, String time, Field field, LeagueInSeason leagueInSeason) {
         this.date = date;
         this.hostTeam = hostTeam;
         this.visitorTeam = visitorTeam;

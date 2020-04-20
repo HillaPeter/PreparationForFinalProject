@@ -1,13 +1,18 @@
 
-import Asset.*;
+import Asset.Coach;
+import Asset.Field;
+import Asset.Manager;
+import Asset.Player;
 import Exception.*;
 import Game.Account;
 import Game.Team;
 import Game.Transaction;
-import League.*;
+import League.ISchedulingPolicy;
+import League.League;
+import League.LeagueInSeason;
+import League.Season;
 import Users.*;
 import javafx.util.Pair;
-import jdk.nashorn.internal.runtime.ECMAException;
 import system.DBController;
 import system.SystemController;
 
@@ -1343,8 +1348,42 @@ public class Main {
                     break;
 
                 case "5":
-
-
+                    try {
+                        HashMap<String, Season> seasons1 = controller.getSeasons();
+                        System.out.println("These are the seasons: ");
+                        for (String key : seasons1.keySet()) {
+                            System.out.println("Season- " + key);
+                        }
+                        System.out.println("Please write season");
+                        String seasonName1 = scanInput.nextLine();
+                        if (!seasons1.containsKey(seasonName1)) {
+                            break;
+                        }
+                        HashMap<League, LeagueInSeason> leaguesInSpecificSeason1 = seasons1.get(seasonName1).getLeagues();
+                        System.out.println("These are the leagues in season " + seasonName1);
+                        for (League leagueObj : leaguesInSpecificSeason1.keySet()) {
+                            System.out.println("League- " + leagueObj.getName());
+                        }
+                        System.out.println("Please write a league");
+                        String sLeague1 = scanInput.nextLine();
+                        if (!leaguesInSpecificSeason1.containsKey(sLeague1)) {
+                            break;
+                        }
+                        HashMap<String, ISchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
+                        System.out.println("These are the scheduling policies in the system: ");
+                        for (String policyName : schedulingPolicies.keySet()) {
+                            System.out.println("policy- " + policyName);
+                        }
+                        System.out.println("Please write the name of policy");
+                        String policy = scanInput.nextLine();
+                        controller.setSchedulingPolicyToLeagueInSeason(sLeague1, seasonName1, policy);
+                    } catch (DontHavePermissionException e) {
+                        System.out.println("You don't have permission to this action");
+                    } catch (IncorrectInputException e) {
+                        System.out.println("There isn't this policy");
+                    } catch (ObjectNotExist objectNotExist) {
+                        System.out.println("The Object is not exist");
+                    }
                 case "Exit":
 
                 default:
