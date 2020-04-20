@@ -20,16 +20,16 @@ public abstract class ASchedulingPolicy {
         FixtureGenerator fixtureGenerator = new FixtureGenerator();
         List<List<Fixture>> rounds = fixtureGenerator.getFixtures(teams, isTwice);
         Calendar dateAndTime = new GregorianCalendar(year, 0, 1, 20, 30, 0);
-        Calendar time = new GregorianCalendar();
-        time.set(10, 3);
+
         for(int i = 0; i < rounds.size(); ++i) {
-            List<Fixture> round = (List)rounds.get(i);
+            List<Fixture> round = rounds.get(i);
             for(Fixture fixture: round) {
                 Game game = new Game(dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);
+                System.out.println("Date1- " + game.getDateAndTimeString());
                 games.add(game);
             }
-
-            dateAndTime.add(Calendar.DAY_OF_MONTH, 7);
+            dateAndTime = new GregorianCalendar(year, 0, 1, 20, 30, 0);
+            dateAndTime.add(Calendar.DATE, (i+1)*7);
         }
 
         for(Game gameTest : games) {

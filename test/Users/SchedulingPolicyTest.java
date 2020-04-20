@@ -14,7 +14,7 @@ public class SchedulingPolicyTest {
     @Test
     public void setGamesOfTeamsTest (){
         ASchedulingPolicy policy = new SchedulingPolicyAllTeamsPlayTwice();
-        List<Team> teams = generateTeams(6);
+        List<Team> teams = generateTeams(10);
         Season season = new Season("2000");
         League league = new League("league  A");
         LeagueInSeason leagueInSeason = new LeagueInSeason(league, season);
@@ -23,7 +23,7 @@ public class SchedulingPolicyTest {
 
 
 
-    public List<Team> generateTeams(int n){
+    private List<Team> generateTeams(int n){
         List<Team> teams = new LinkedList<>();
         for(int i = 1; i <=n ; i++){
             teams.add(generateTeam("team "+i,"field "+i));
@@ -32,7 +32,7 @@ public class SchedulingPolicyTest {
     }
 
 
-    public Team generateTeam(String name, String fieldName) {
+    private Team generateTeam(String name, String fieldName) {
         Field field = new Field(fieldName);
         return new Team(name,null,field);
     }
