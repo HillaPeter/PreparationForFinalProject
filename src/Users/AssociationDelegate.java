@@ -128,7 +128,7 @@ public class AssociationDelegate extends Member {
             throw new ObjectAlreadyExist();
     }
 
-    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException {
+    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException {
         return dbController.getSchedulingPolicies(this);
     }
 
@@ -138,7 +138,7 @@ public class AssociationDelegate extends Member {
 
 
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policyName) throws ObjectNotExist, IncorrectInputException {
-        ISchedulingPolicy policy;
+        ASchedulingPolicy policy;
         if (policyName.equals("All teams play each other twice")) {
             policy = new SchedulingPolicyAllTeamsPlayTwice();
         }else if(policyName.equals("All teams play each other once")) {

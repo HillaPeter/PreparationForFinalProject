@@ -1,29 +1,34 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package League;
 
-public class Fixture<T extends Object> {
+import Game.Team;
 
-    T homeTeam;
-    T awayTeam;
+public class Fixture {
+    Team homeTeam;
+    Team awayTeam;
 
-    public Fixture(T homeTeam, T awayTeam) {
+    public Fixture(Team homeTeam, Team awayTeam) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
     }
 
-    public T getHomeTeam() {
-        return homeTeam;
+    public Team getHomeTeam() {
+        return this.homeTeam;
     }
 
-    public void setHomeTeam(T homeTeam) {
+    public void setHomeTeam(Team homeTeam) {
         this.homeTeam = homeTeam;
     }
 
-    public T getAwayTeam() {
-        return awayTeam;
+    public Team getAwayTeam() {
+        return this.awayTeam;
     }
 
-    public void setAwayTeam(T awayTeam) {
+    public void setAwayTeam(Team awayTeam) {
         this.awayTeam = awayTeam;
     }
-
 }

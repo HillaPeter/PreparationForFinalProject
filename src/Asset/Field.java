@@ -13,4 +13,8 @@ public class Field{
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public String getNameOfField() {
+        return nameOfField;
+    }
 }
