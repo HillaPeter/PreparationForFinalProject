@@ -248,6 +248,15 @@ public class SystemController {
         }
     }
 
+    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.addNewTeam(teamName , ownerId);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
     public void addAssociationDelegate(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist {
         if(connectedUser instanceof SystemManager){
             ((SystemManager)connectedUser).addAssociationDelegate(id);
@@ -736,5 +745,7 @@ public class SystemController {
     }
 
 
-
+    public HashMap<String, Role> getOwnersAndFans() {
+        return dbController.getOwnersAndFans();
+    }
 }

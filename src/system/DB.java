@@ -165,6 +165,18 @@ public class DB {
         }
         return toReturn;
     }
+
+    public HashMap<String, Role> getOwnersAndFans() {
+        HashMap<String,Role> toReturn=new HashMap<>();
+        for(String role:roles.keySet())
+        {
+            if(roles.get(role) instanceof  Fan || roles.get(role) instanceof Owner)
+            {
+                toReturn.put(role,roles.get(role));
+            }
+        }
+        return toReturn;
+    }
     /***************************************delete function******************************************/
 
     public void removeRole(String id) { roles.remove(id); }
@@ -344,4 +356,6 @@ public class DB {
     public void removeSystemManager(String id) {
         systemManagers.remove(id);
     }
+
+
 }

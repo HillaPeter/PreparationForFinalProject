@@ -55,16 +55,20 @@ public class DBController {
         }
         throw new MemberNotExist();
     }
+
     public Team getTeam(String teamName) {
         return db.getTeam(teamName);
     }
+
     public League getLeague(String leagueId) throws ObjectNotExist {
 
         return db.getLeague(leagueId);
     }
+
     public Season getSeason(String seasonId) throws ObjectNotExist {
         return db.getSeason(seasonId);
     }
+
     public LinkedList<Member> getMembers(LinkedList<String> idMember) {
         LinkedList<Member> list=new LinkedList<>();
         for(int i=0; i<idMember.size(); i++)
@@ -74,7 +78,6 @@ public class DBController {
         }
         return list;
     }
-
 
     public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
             if (role instanceof AssociationDelegate || role instanceof SystemManager)
@@ -119,6 +122,18 @@ public class DBController {
         }
     }
 
+    public HashMap<String,Season> getSeasons(Role role) {
+        return db.getSeasons();
+    }
+
+    public HashMap<String, SystemManager> getSystemManagers() {
+        return db.getSystemManagers();
+    }
+
+    public HashMap<String, AssociationDelegate> getAssociationDelegate() {
+        return db.getAssociationDelegate();
+    }
+
     /***************************************delete function function******************************************/
 
     public void deleteRole(Role role, String id) throws MemberNotExist, DontHavePermissionException {
@@ -138,6 +153,7 @@ public class DBController {
     public void deleteFan(String id) {
         db.removeRole(id);
     }
+
     public void deleteMember(String id) {
         db.removeRole(id);
     }
@@ -151,6 +167,7 @@ public class DBController {
         }
         throw new DontHavePermissionException();
     }
+
     public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
         if (!(role instanceof Guest)) {
             throw new DontHavePermissionException();
@@ -247,61 +264,47 @@ public class DBController {
         db.removeTeam(name);
     }
 
+    public void deleteOwner(String ownerId) {
+        db.removeRole(ownerId);
+    }
+
+    public void deleteAssociationDelegate(String id) {
+        db.removeAssociationDelegate(id);
+    }
+
+    public void deleteSystemManager(String id) {
+        db.removeSystemManager(id);
+    }
     /********************************************exist function***********************************/
     public boolean existReferee(String refereeId) {
         return db.existRefree(refereeId);
     }
 
-
     public boolean existFan(String fanId) {
         return db.existFan(fanId);
     }
-
 
     public boolean existTeam(String teamName) {
         return db.existTeam(teamName);
     }
 
-
     public boolean existMember(String id) {
         return db.existMember(id);
     }
 
-
-    public HashMap<String,Season> getSeasons(Role role) {
-        return db.getSeasons();
-    }
-
-
-    public HashMap<String, SystemManager> getSystemManagers() {
-        return db.getSystemManagers();
-    }
-
-    public HashMap<String, AssociationDelegate> getAssociationDelegate() {
-        return db.getAssociationDelegate();
-    }
-
-    public boolean existOwner(String ownerId) {
-        return db.existOwner(ownerId);
-    }
-
-    public void deleteOwner(String ownerId) {
-        db.removeRole(ownerId);
-    }
-
     public boolean existAssociationDelegate(String id) {
-       return db.existAssociationDelegate(id);
-    }
-
-    public void deleteAssociationDelegate(String id) {
-       db.removeAssociationDelegate(id);
+        return db.existAssociationDelegate(id);
     }
 
     public boolean existSystemManager(String id) {
         return db.existSystemManager(id);
     }
 
-    public void deleteSystemManager(String id) {
-        db.removeSystemManager(id);
+    public boolean existOwner(String ownerId) {
+        return db.existOwner(ownerId);
+    }
+
+    public HashMap<String, Role> getOwnersAndFans() {
+        return db.getOwnersAndFans();
     }
 }

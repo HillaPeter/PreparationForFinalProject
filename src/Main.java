@@ -193,10 +193,11 @@ public class Main {
                                 String teamName = "";
                                 System.out.println("please enter the name of the new team");
                                 teamName = scanInput.nextLine();
-                                LinkedList<String> players = addTeamPlayers();// new LinkedList<>();
-                                LinkedList<String> coaches = addTeamCoachs();//new LinkedList<>();
-                                LinkedList<String> managers = addTeamManagers();//new LinkedList<>();
-                                LinkedList<String> owners = addTeamOwners();//new LinkedList<>();
+                                String ownerId=getOwnerId();
+                               // LinkedList<String> players = addTeamPlayers();// new LinkedList<>();
+                               // LinkedList<String> coaches = addTeamCoachs();//new LinkedList<>();
+                               // LinkedList<String> managers = addTeamManagers();//new LinkedList<>();
+                              //  LinkedList<String> owners = addTeamOwners();//new LinkedList<>();
 
                                 /*
                                 String id = "";
@@ -226,7 +227,8 @@ public class Main {
                                 }
                                 */
                                 try {
-                                    boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
+                                    controller.addTeam(teamName,ownerId);
+                                   // boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 }
@@ -440,6 +442,17 @@ public class Main {
 
 
         }
+    }
+
+    private static String getOwnerId() {
+        HashMap<String, Role> owners = controller.getOwnersAndFans();
+        System.out.println("Choose id to add owner");
+        for (String owner : owners.keySet()) {
+            System.out.println(owner);
+        }
+
+        String ownerToAdd = scanInput.nextLine();
+        return ownerToAdd;
     }
 
     private static String removeOwner() {

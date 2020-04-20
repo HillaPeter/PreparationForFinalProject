@@ -210,9 +210,14 @@ public class SystemManager extends Member {
         return false;
     }
 
-    /**
-     * this function return true if the team added and false if there were problem with the data
-     */
+    public boolean addNewTeam(String teamName , String idOwner) {
+        {
+
+        }
+
+        /**
+         * this function return true if the team added and false if there were problem with the data
+         */
     public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner, String teamName) {
         try {
             if (idPlayers.size() < 11) {
