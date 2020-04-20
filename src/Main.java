@@ -15,7 +15,7 @@ import Users.*;
 import javafx.util.Pair;
 import system.DBController;
 import system.SystemController;
-
+import League.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -24,16 +24,17 @@ public class Main {
     static SystemController controller = new SystemController("System Controller");
     static Member member;
     static String path;
-    static DBController dbController;//just for my test - you can delete
+    //static DBController dbController;//just for my test - you can delete
 
-    public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException {
+    public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
 /****************************************************menu******************************************************/
-        //startMenu();
+        controller.initSystem();
+        startMenu();
         /****shachar tests******/
         //must write the path in the main
-        dbController = new DBController();
-        shacharFunctionForTesting();
-        SystemManagerMenu();
+        //dbController = new DBController();
+        //shacharFunctionForTesting();
+        //SystemManagerMenu();
 
         /**** Hilla Peter Tests!!****/
         //  Main main = new Main();
@@ -100,13 +101,7 @@ public class Main {
     }
 
     private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
-        //just for testing
-        //    member = new SystemManager("shachar", "shachar@gmail.com", "shachar", controller);
-
-
         // member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
-
-
         if (member instanceof SystemManager) {
             SystemManagerMenu();
         } else if (member instanceof MainReferee) {
@@ -120,6 +115,8 @@ public class Main {
         } else if (member instanceof AssociationDelegate) {
             AssociationDelegateMenu((Member) member);
         }
+
+        startMenu();
     }
 
     /*********************************************System Manager**********************************************/
@@ -133,6 +130,7 @@ public class Main {
             System.out.println("write \"4\" for handle with complaints");
             System.out.println("write \"5\" for handle with games");
             System.out.println("write \"6\" for view System Information");
+            System.out.println("write \"7\" for handle with owner");
             System.out.println("\nwrite \"ExitAll\" if you want to finish. \n");
             input = "";
             while (input.equals("")) {
@@ -820,7 +818,12 @@ public class Main {
 
     /***************************************************tests********************************************************/
 
-    private static void shacharFunctionForTesting() throws AlreadyExistException, DontHavePermissionException {
+    private static void shacharFunctionForTesting() throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+
+        SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller.getDbController());
+        controller.addSystemManager(systemManager);
+        controller.logIn("shachar@gmail.com","shachar");
+
 
         Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
         Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
@@ -879,13 +882,14 @@ public class Main {
         Manager manager2 = new Manager("guy shani", "guy@gmaill.com", "126");
         controller.addManager(manager1);
         controller.addManager(manager2);
-        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127", dbController);
-        Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", dbController);
+        Owner owner1 = new Owner("ariel pelner", "ariel@gmail.com", "127", controller.getDbController());
+        Owner owner2 = new Owner("dor atzmon", "dor@gmail.com", "128", controller.getDbController());
         controller.addOwner(owner1);
         controller.addOwner(owner2);
-        SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", dbController);
-        controller.addSystemManager(systemManager);
+
         controller.addFan(fan1);
+
+
         //  controller.addReferee(systemManager.getUserMail(), fan1.getUserMail(), true);
         //   controller.removeReferee(systemManager.getUserMail(), fan1.getUserMail());
         // controller.removeMember(systemManager.getUserMail(), coach1.getUserMail());
@@ -917,7 +921,7 @@ public class Main {
         LinkedList<String> owners1 = new LinkedList<>();
         owners1.add(owner1.getUserMail());
 
-        //  controller.addTeam(players1, coaches1, managers1, owners1, name);
+        controller.addTeam(players1, coaches1, managers1, owners1, name);
 
 
     }
@@ -987,109 +991,6 @@ public class Main {
      * checking owner- please don't delete it! (Hilla P)
      */
 
-    private static void hillaPeterFunctionForTesting() throws DontHavePermissionException {
-
-        DBController dbController = new DBController();
-
-        Owner ownerHilla = new Owner("hilla", "hilla@gmail.com", "h1", dbController);
-        Owner ownerLiat = new Owner("liat", "liat@gmail.com", "l1", dbController);
-        Manager manager1 = new Manager("oren tzur", "oren@gmail.com", "125");
-        Manager manager2 = new Manager("guy shani", "guy@gmail.com", "126");
-
-
-        Fan fan1 = new Fan("adi", "adi@gmail.com", "adi");
-        Fan fan2 = new Fan("alisa", "alisa@gmail.com", "alisa");
-        Player player1 = new Player("yaara", "yaara@gmail.com", "yaara", new Date(1995, 1, 1), "player");
-        Player player2 = new Player("daniel", "daniel@gmail.com", "daniel", new Date(1995, 1, 1), "player");
-        Player player3 = new Player("may", "may@gmail.com", "may", new Date(1995, 1, 1), "player");
-        Player player4 = new Player("noa", "noa@gmail.com", "noa", new Date(1995, 1, 1), "player");
-        Player player5 = new Player("inbar", "inbar@gmail.com", "inbar", new Date(1995, 1, 1), "player");
-        Player player6 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
-        Player player7 = new Player("ziv", "ziv@gmail.com", "ziv", new Date(1995, 1, 1), "player");
-        Player player8 = new Player("neta", "neta@gmail.com", "neta", new Date(1995, 1, 1), "player");
-        Player player9 = new Player("or", "or@gmail.com", "or", new Date(1995, 1, 1), "player");
-        Player player10 = new Player("shoval", "shoval@gmail.com", "shoval", new Date(1995, 1, 1), "player");
-        Player player11 = new Player("gal", "gal@gmail.com", "gal", new Date(1995, 1, 1), "player");
-
-        try {
-            dbController.addPlayer(player1);
-            dbController.addPlayer(player2);
-            dbController.addPlayer(player3);
-            dbController.addPlayer(player4);
-            dbController.addPlayer(player5);
-            dbController.addPlayer(player6);
-            dbController.addPlayer(player7);
-            dbController.addPlayer(player8);
-            dbController.addPlayer(player9);
-            dbController.addPlayer(player10);
-            dbController.addPlayer(player11);
-        } catch (Exception e) {
-
-        }
-        HashSet<Player> players = new HashSet<>();
-        players.add(player1);
-        players.add(player2);
-        players.add(player3);
-        players.add(player4);
-        players.add(player5);
-        players.add(player6);
-        players.add(player7);
-        players.add(player8);
-        players.add(player9);
-        players.add(player10);
-        players.add(player11);
-
-
-//        controller.addFan(fan1);
-//        controller.addFan(fan2);
-
-        Transaction transaction = new Transaction("Transaction", 12);
-        Transaction transaction1 = new Transaction("Transaction1", 43);
-        Transaction transaction2 = new Transaction("Transaction2", 445453);
-        ArrayList<Transaction> listTransactions = new ArrayList<>();
-        listTransactions.add(transaction);
-        listTransactions.add(transaction1);
-        listTransactions.add(transaction2);
-
-        Account account0 = new Account("Hapoel", listTransactions, 123123);
-        Field field0 = new Field("sami");
-        Team team0 = new Team("hapoel", account0, field0);
-        field0.setTeam(team0);
-        HashSet<Owner> ownersTeam0 = team0.getOwners();
-        ownersTeam0.add(ownerHilla);
-
-        Account account1 = new Account("Maccabi", listTransactions, 12335435);
-        //  Field field1= new Field("Sami offer");
-        Team team1 = new Team("maccabi", account1, null);
-        // field1.setTeam(team1);
-        HashSet<Owner> ownersTeam1 = team1.getOwners();
-        ownersTeam1.add(ownerHilla);
-
-        HashMap<String, Team> hashMapTeams = new HashMap<>();
-        hashMapTeams.put("Maccabi", team0);
-        hashMapTeams.put("Hapoel", team1);
-
-        //    ownerHilla.setTeams(hashMapTeams);
-
-
-        team0.setPlayers(players);
-
-
-        HashSet<Owner> owners = new HashSet<>();
-        owners.add(ownerHilla);
-        owners.add(ownerLiat);
-
-        team0.setOwners(owners);
-
-        //managers
-        HashSet<Manager> managers = new HashSet<>();
-        managers.add(manager1);
-        managers.add(manager2);
-        team0.setManagers(managers);
-//
-//        controller.addTeam(team0);
-//        controller.addTeam(team1);
-    }
 
 
     /******************************* public function for guest menu (noa) **********************************/

@@ -199,7 +199,9 @@ public class DB {
      *
      * @param team
      */
-    public void addTeam(Team team) { teams.put(team.getName(), team); }
+    public void addTeam(Team team) {
+        teams.put(team.getName(), team);
+    }
 
     /**
      * this function add system manager to the system manager list
@@ -220,7 +222,7 @@ public class DB {
     }
 
     public void addReferee(Referee referee) {
-        roles.put(referee.getUserMail(),referee);
+        referees.put(referee.getUserMail(),referee);
     }
     /*****************************************exist function****************************************/
     public boolean existSeason(String year){
@@ -250,6 +252,7 @@ public class DB {
     public void addFan(Fan fan) {
         roles.put(fan.getUserMail(), fan);
     }
+
     public Member getMember(String id){
         if(roles.containsKey(id))
             return (Member)this.roles.get(id);
@@ -258,7 +261,7 @@ public class DB {
 
     /***************************************Exist function*****************************/
     public boolean existRefree(String refreeId) {
-        if(roles.containsKey(refreeId)==true && roles.get(refreeId) instanceof  Referee)
+        if(referees.containsKey(refreeId)==true)
         {
             return true;
         }

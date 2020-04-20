@@ -150,7 +150,7 @@ public class SystemManager extends Member {
                 throw new IncorrectInputException();
             } else if (alreadyIncludeThisTeamName(teamName) == true) {
                 throw new ObjectAlreadyExist();
-            } else if (notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == true) {
+            } else if (notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == false) {
                 throw new MemberNotExist();
             } else {
                 LinkedList<Coach> coaches = makeCoachList(dbController.getMembers(idCoach));
@@ -159,7 +159,7 @@ public class SystemManager extends Member {
                 LinkedList<Owner> owners = makeOwnerList(dbController.getMembers(idOwner));
                 Account account = new Account();
                 Team newTeam = new Team(account, players, coaches, managers, owners, teamName);
-                dbController.addTeam(newTeam);
+          //      dbController.addTeam(newTeam);
                 return true;
             }
         } catch (Exception e) {
@@ -213,7 +213,7 @@ public class SystemManager extends Member {
     private LinkedList<Coach> makeCoachList(LinkedList<Member> returnFromSystemTheExactUsers) {
         LinkedList<Coach> newList = new LinkedList<>();
         for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Coach) returnFromSystemTheExactUsers.get(i));
+                newList.add((Coach) returnFromSystemTheExactUsers.get(i));
         }
         return newList;
     }
@@ -221,15 +221,15 @@ public class SystemManager extends Member {
     private LinkedList<Player> makePlayerList(LinkedList<Member> returnFromSystemTheExactUsers) {
         LinkedList<Player> newList = new LinkedList<>();
         for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Player) returnFromSystemTheExactUsers.get(i));
+                newList.add((Player) returnFromSystemTheExactUsers.get(i));
         }
         return newList;
     }
 
-    private LinkedList<Owner> makeOwnerList(LinkedList<Member> returnFromSystemTheExactUsers) {
+    private LinkedList<Owner> makeOwnerList(LinkedList<Member> returnFromSystemTheExactUsers) throws DontHavePermissionException {
         LinkedList<Owner> newList = new LinkedList<>();
         for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-            newList.add((Owner) returnFromSystemTheExactUsers.get(i));
+                newList.add((Owner) returnFromSystemTheExactUsers.get(i));
         }
         return newList;
     }

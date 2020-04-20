@@ -2,6 +2,7 @@ package Asset;
 
 import Game.Event;
 import Game.Team;
+import Users.Fan;
 
 import java.util.HashSet;
 import java.util.Date;
@@ -26,4 +27,5 @@ public class Player extends TeamMember{
         this.role = role;
         setPassword(null);
     }
+
 }

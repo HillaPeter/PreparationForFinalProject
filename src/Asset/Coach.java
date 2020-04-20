@@ -1,5 +1,7 @@
 package Asset;
 
+import Users.Fan;
+
 public class Coach extends TeamMember{
     private String training;
 
@@ -7,6 +9,8 @@ public class Coach extends TeamMember{
         super(name, userMail, password);
         this.training = training;
     }
+
+
 
     public Coach(String name, String userMail, String training) {
         super(name, userMail);
