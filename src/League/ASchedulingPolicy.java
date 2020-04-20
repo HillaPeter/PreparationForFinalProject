@@ -22,10 +22,8 @@ public abstract class ASchedulingPolicy {
         Calendar dateAndTime = new GregorianCalendar(year, 0, 1, 20, 30, 0);
         Calendar time = new GregorianCalendar();
         time.set(10, 3);
-
         for(int i = 0; i < rounds.size(); ++i) {
             List<Fixture> round = (List)rounds.get(i);
-
             for(Fixture fixture: round) {
                 Game game = new Game(dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);
                 games.add(game);
