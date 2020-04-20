@@ -517,7 +517,17 @@ public class SystemController {
         return new HashMap<>();
     }
 
+    public void setMoneyToAccount(String teamName , double amount) throws ObjectNotExist, DontHavePermissionException {
+        if(! (connectedUser instanceof Owner) )
+            throw new DontHavePermissionException();
+        ((Owner)connectedUser).setMoneyToAccount(teamName,amount);
+    }
 
+    public double getAccountBalance(String teamName) throws DontHavePermissionException, ObjectNotExist {
+        if(! (connectedUser instanceof Owner) )
+            throw new DontHavePermissionException();
+        return ((Owner)connectedUser).getAccountBalance(teamName);
+    }
     /*************************************** function for associationDelegate******************************************/
 
     /**

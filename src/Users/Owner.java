@@ -450,6 +450,14 @@ public class Owner extends Member {
         //todo
     }
 
+    /****************************************** setters *********************************************/
+    public void setMoneyToAccount(String teamName , double amount) throws ObjectNotExist {
+        if(!this.teams.containsKey(teamName)){
+            throw new ObjectNotExist("team tot exist in owner list");
+        }
+        this.teams.get(teamName).getAccount().setAmountOfTeam(amount);
+    }
+
     /***************************Getters************************************************************/
     public HashMap<String, Team> getTeams() {
         return teams;
@@ -457,6 +465,12 @@ public class Owner extends Member {
 
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
         return dbController.getRoles(this);
+    }
+    public double getAccountBalance(String teamName) throws ObjectNotExist {
+        if(!this.teams.containsKey(teamName)){
+            throw new ObjectNotExist("team tot exist in owner list");
+        }
+       return this.teams.get(teamName).getAccount().getAmountOfTeam();
     }
 
 
