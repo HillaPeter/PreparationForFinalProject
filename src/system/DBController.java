@@ -9,7 +9,6 @@ import Users.*;
 import Exception.*;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 public class DBController {
@@ -111,7 +110,7 @@ public class DBController {
         return db.getMembers();
     }
 
-    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies(Role role) throws DontHavePermissionException {
+    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies(Role role) throws DontHavePermissionException {
         if(role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager ){
             return db.getSchedulingPolicies();
         }
@@ -221,7 +220,7 @@ public class DBController {
         db.addFan(fan);
     }
 
-    public void addSchedulingPolicies(Role role, ISchedulingPolicy policy) throws DontHavePermissionException {
+    public void addSchedulingPolicies(Role role, ASchedulingPolicy policy) throws DontHavePermissionException {
         if(role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager ){
              db.addSchedulingPolicies(policy);
         }

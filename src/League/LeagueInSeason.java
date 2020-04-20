@@ -10,7 +10,7 @@ public class LeagueInSeason {
     private HashSet<Game> games;
     private League league;
     private Season season;
-    private ISchedulingPolicy schedulingPolicy;
+    private ASchedulingPolicy schedulingPolicy;
     private IScorePolicy scorePolicy;
     private HashMap<String, Referee> referees;
     private LinkedList<Team> teams;
@@ -20,7 +20,7 @@ public class LeagueInSeason {
         this.season = season;
 //        this.schedulingPolicies = schedulingPolicies;
 //        this.scorePolicies = scorePolicies;
-//        , ISchedulingPolicy schedulingPolicies,IScorePolicy scorePolicies
+//        , ASchedulingPolicy schedulingPolicies,IScorePolicy scorePolicies
         games=new HashSet<>();
         referees=new HashMap<>();
         teams=new LinkedList<Team>();
@@ -60,7 +60,7 @@ public class LeagueInSeason {
         scorePolicy = policy;
     }
 
-    public void setSchedulingPolicy(ISchedulingPolicy policy) {
+    public void setSchedulingPolicy(ASchedulingPolicy policy) {
         schedulingPolicy = policy;
     }
 

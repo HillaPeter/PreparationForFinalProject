@@ -1,19 +1,15 @@
 
 import Asset.Coach;
-import Asset.Field;
 import Asset.Manager;
 import Asset.Player;
 import Exception.*;
-import Game.Account;
 import Game.Team;
-import Game.Transaction;
-import League.ISchedulingPolicy;
+import ASchedulingPolicy;
 import League.League;
 import League.LeagueInSeason;
 import League.Season;
 import Users.*;
 import javafx.util.Pair;
-import system.DBController;
 import system.SystemController;
 import League.*;
 import java.util.*;
@@ -1142,7 +1138,7 @@ public class Main {
                             controller.changeScorePolicy(specificLeague, year, sWinning, sDraw, sLosing);
                             System.out.println("The score policy has been changed successfully");
                             //scheduling policy
-                            HashMap<String, ISchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
+                            HashMap<String, ASchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
                             System.out.println("These the scheduling policies in the system: ");
                             for (String policyName : schedulingPolicies.keySet()) {
                                 System.out.println("policy- " + policyName);
@@ -1270,7 +1266,7 @@ public class Main {
                         if (!leaguesInSpecificSeason1.containsKey(sLeague1)) {
                             break;
                         }
-                        HashMap<String, ISchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
+                        HashMap<String, ASchedulingPolicy> schedulingPolicies = controller.getSchedulingPolicies();
                         System.out.println("These are the scheduling policies in the system: ");
                         for (String policyName : schedulingPolicies.keySet()) {
                             System.out.println("policy- " + policyName);

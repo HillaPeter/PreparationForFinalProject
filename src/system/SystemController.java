@@ -9,7 +9,6 @@ import Users.*;
 import Exception.*;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -606,7 +605,7 @@ public class SystemController {
         ((AssociationDelegate)connectedUser).changeScorePolicy(league, season, sWinning, sDraw, sLosing);
     }
 
-    public HashMap<String, ISchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException{
+    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException{
        return ((AssociationDelegate)connectedUser).getSchedulingPolicies();
     }
 
