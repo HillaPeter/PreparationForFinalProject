@@ -12,7 +12,6 @@ public class Game {
     private Calendar dateAndTime; //
     private Team hostTeam;
     private Team visitorTeam;
-    private String time; //hours:minutes
     private Field field;
     private String result;
     private EventLog eventLog;
