@@ -27,7 +27,7 @@ public class SystemController {
      */
     public SystemController(String name) {
         this.name = name;
-        this.initSystem("", "", ""); // change it
+        //this.initSystem("", "", ""); // change it
         connectedUser = new Guest(dbController);
         //todo
 //        password verifications
@@ -40,7 +40,7 @@ public class SystemController {
         //member = user; (argument in the constructor-Member user- Fan, Owner, AD, Referee...)
     }
 
-    public void initSystem(String name, String userName, String password) {
+    public void initSystem() {
         //check if the user name and the password are connect
         dbController = new DBController();
         System.out.println("Init System:");
@@ -685,5 +685,9 @@ public class SystemController {
 
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist {
         ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
+    }
+
+    public DBController getDbController() {
+        return dbController;
     }
 }

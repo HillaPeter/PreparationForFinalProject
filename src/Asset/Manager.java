@@ -1,5 +1,7 @@
 package Asset;
 
+import Users.Fan;
+
 public class Manager extends TeamMember {
 
     public Manager(String name, String userMail, String password) {

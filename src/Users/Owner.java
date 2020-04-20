@@ -26,6 +26,7 @@ public class Owner extends Member {
         }
     }
 
+
     public void addTeam(Team team) throws AlreadyExistException {
         dbController.addTeam(team);
     }

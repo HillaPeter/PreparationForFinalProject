@@ -2,12 +2,10 @@ package Game;
 import java.util.ArrayList;
 
 public class Account {
-    private String name;
     private ArrayList<Transaction> transactions;
     private double amountOfTeam;
 
-    public Account(String name, ArrayList<Transaction> transactions, double amountOfTeam) {
-        this.name = name;
+    public Account( ArrayList<Transaction> transactions, double amountOfTeam) {
         this.transactions = transactions;
         this.amountOfTeam = amountOfTeam;
     }
@@ -18,7 +16,6 @@ public class Account {
 
     //todo!
     public Account() {
-        this.name = "";
         this.transactions = new ArrayList<Transaction>();
         amountOfTeam = 0; //default->need to update!
     }
