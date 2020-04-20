@@ -36,6 +36,51 @@ public class SystemManager extends Member {
         return false;
     }
 
+    public boolean removeAssociationDelegate(String id)
+    {
+    try {
+        if (dbController.existAssociationDelegate(id)) {
+            if (inputAreLegal(id)) {
+
+                    dbController.deleteAssociationDelegate(id);
+
+            } else {
+                throw new IncorrectInputException();
+            }
+        } else {
+            throw new MemberNotExist();
+        }
+    } catch (Exception e) {
+
+    }
+        return false;
+}
+
+    public boolean removeOwner(String ownerId) {
+        try {
+            if (dbController.existOwner(ownerId)) {
+                if (inputAreLegal(ownerId)) {
+                    Owner owner = (Owner) dbController.getMember(ownerId);
+                    if(owner.haveTeams()) {
+                        dbController.deleteOwner(ownerId);
+                        return true;
+                    }
+                    else
+                    {
+                        throw new NotReadyToDelete("this owner ows teams. you must close the team before");
+                    }
+                } else {
+                    throw new IncorrectInputException();
+                }
+            } else {
+                throw new MemberNotExist();
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
+    }
+
     public void viewSystemInformation(String path) {
         print(readLineByLine(path));
     }
@@ -53,6 +98,30 @@ public class SystemManager extends Member {
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
         LinkedList<Team> teams=leagueInSeason.getTeams();
         //sceduling game for teams
+    }
+
+    public boolean removeSystemManager(String id) {
+        try {
+            if (dbController.existSystemManager(id)) {
+                if (inputAreLegal(id)) {
+                    if(dbController.getSystemManagers().size()>1) {
+                        dbController.deleteSystemManager(id);
+                        return true;
+                    }
+                    else
+                    {
+                        throw new NotReadyToDelete("this is the only system manager in the system. you can't delete him");
+                    }
+                } else {
+                    throw new IncorrectInputException();
+                }
+            } else {
+                throw new MemberNotExist();
+            }
+        } catch (Exception e) {
+
+        }
+        return false;
     }
 
     public boolean removeReferee(String id) {
@@ -320,4 +389,16 @@ public class SystemManager extends Member {
             this.dbController.addOwner(this,newOwner);
         }
     }
+
+    public void addSystemManager(String id) throws MemberNotExist, DontHavePermissionException, AlreadyExistException {
+        if( this.dbController.getFans().containsKey(id)){
+            Member member = (Member)this.dbController.getMember(id);
+            SystemManager newSystemManager = new SystemManager(member.getName(),member.getUserMail(),member.getPassword(),this.dbController);
+            this.dbController.deleteRole(this,id);
+            this.dbController.addSystemManager(newSystemManager);
+        }
+    }
+
+
+
 }

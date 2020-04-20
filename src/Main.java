@@ -338,9 +338,13 @@ public class Main {
                                 //System.out.println("please enter the Id of the refree");
                                 String id = addOwner();//scanInput.nextLine();
                                 try {
-                                    boolean success = controller.addOwner(id);
+                                    controller.addOwner(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to add owner");
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }
@@ -376,9 +380,13 @@ public class Main {
                                 //System.out.println("please enter the Id of the refree");
                                 String id = addAssociationDelegate();//scanInput.nextLine();
                                 try {
-                                    boolean success = controller.addAssociationDelegate(id);
+                                    controller.addAssociationDelegate(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to add association delegate");
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }
@@ -402,7 +410,7 @@ public class Main {
                                 System.out.println("please enter the Id of the referee");
                                 String id = removeSystemManager();// scanInput.nextLine();
                                 try {
-                                    boolean success = controller.removeSystemManager(id);
+                                    controller.removeSystemManager(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove System Manager");
                                     //    input="Exit";
@@ -414,9 +422,13 @@ public class Main {
                                 //System.out.println("please enter the Id of the refree");
                                 String id = addSystemManager();//scanInput.nextLine();
                                 try {
-                                    boolean success = controller.addSystemManager(id);
+                                    controller.addSystemManager(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to add System Manager");
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }
@@ -431,14 +443,69 @@ public class Main {
     }
 
     private static String removeOwner() {
-        HashMap<String, Fan> owners = controller.getFans();
+        HashMap<String, Owner> owners = controller.getOwners();
         System.out.println("Choose id to remove owner");
         for (String owner : owners.keySet()) {
             System.out.println(owner);
         }
 
-        String refereeToRemove = scanInput.nextLine();
-        return refereeToRemove;
+        String ownerToRemove = scanInput.nextLine();
+        return ownerToRemove;
+    }
+
+    private static String addOwner() {
+        HashMap<String, Fan> owners = controller.getFans();
+        System.out.println("Choose id to add owner");
+        for (String owner : owners.keySet()) {
+            System.out.println(owner);
+        }
+
+        String ownerToAdd = scanInput.nextLine();
+        return ownerToAdd;
+    }
+
+    private static String removeAssociationDelegate() {
+        HashMap<String, AssociationDelegate> associationDelegates = controller.getAssociationDelegates();
+        System.out.println("Choose id to remove associationDelegate");
+        for (String associationDelegate : associationDelegates.keySet()) {
+            System.out.println(associationDelegate);
+        }
+
+        String associationDelegateToRemove = scanInput.nextLine();
+        return associationDelegateToRemove;
+    }
+
+    private static String addAssociationDelegate() {
+        HashMap<String, Fan> associationDelegate = controller.getFans();
+        System.out.println("Choose id to add associationDelegate");
+        for (String owner : associationDelegate.keySet()) {
+            System.out.println(owner);
+        }
+
+        String associationDelegateToAdd = scanInput.nextLine();
+        return associationDelegateToAdd;
+    }
+
+    private static String removeSystemManager() {
+        HashMap<String, SystemManager> systemmanagers = controller.getSystemManager();
+        System.out.println("Choose id to remove system manager");
+        for (String systemmanager : systemmanagers.keySet()) {
+            System.out.println(systemmanager);
+        }
+
+        String systemmanagerToRemove = scanInput.nextLine();
+        return systemmanagerToRemove;
+    }
+
+    private static String addSystemManager() {
+        HashMap<String, Fan> systemmanagers = controller.getFans();
+        System.out.println("Choose id to add system manager");
+        for (String systemmanager : systemmanagers.keySet()) {
+            System.out.println(systemmanager);
+        }
+
+        String systemmanagerToAdd = scanInput.nextLine();
+        return systemmanagerToAdd;
     }
 
     private static String chooseSeason() {

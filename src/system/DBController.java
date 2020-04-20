@@ -273,4 +273,35 @@ public class DBController {
     }
 
 
+    public HashMap<String, SystemManager> getSystemManagers() {
+        return db.getSystemManagers();
+    }
+
+    public HashMap<String, AssociationDelegate> getAssociationDelegate() {
+        return db.getAssociationDelegate();
+    }
+
+    public boolean existOwner(String ownerId) {
+        return db.existOwner(ownerId);
+    }
+
+    public void deleteOwner(String ownerId) {
+        db.removeRole(ownerId);
+    }
+
+    public boolean existAssociationDelegate(String id) {
+       return db.existAssociationDelegate(id);
+    }
+
+    public void deleteAssociationDelegate(String id) {
+       db.removeAssociationDelegate(id);
+    }
+
+    public boolean existSystemManager(String id) {
+        return db.existSystemManager(id);
+    }
+
+    public void deleteSystemManager(String id) {
+        db.removeSystemManager(id);
+    }
 }

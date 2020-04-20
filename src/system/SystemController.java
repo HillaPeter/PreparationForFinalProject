@@ -76,6 +76,43 @@ public class SystemController {
         return (Member) this.connectedUser;
     }
     /*************************************** function for system manager******************************************/
+
+    public boolean removeAssociationDelegate(String id) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.removeAssociationDelegate(id);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public boolean removeOwner(String ownerId) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.removeOwner(ownerId);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public boolean removeSystemManager(String id) throws DontHavePermissionException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            return systemManager.removeSystemManager(id);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void addSystemManager(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+            systemManager.addSystemManager(id);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
     /***
      * this function get id of the refree to remove and the id of the system manager that take care of this function
      * if the referee didnt exist - return false
@@ -689,4 +726,15 @@ public class SystemController {
     public DBController getDbController() {
         return dbController;
     }
+
+    public HashMap<String, SystemManager> getSystemManager() {
+        return dbController.getSystemManagers();
+    }
+
+    public HashMap<String, AssociationDelegate> getAssociationDelegates() {
+        return dbController.getAssociationDelegate();
+    }
+
+
+
 }
