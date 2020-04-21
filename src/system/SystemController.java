@@ -60,13 +60,19 @@ public class SystemController {
      * @return true = success or false = failed to sign
      */
     public Member signIn(String userName, String userMail, String password , Date birthDate) throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
+        if(connectedUser==null)
+        {
+            Guest guest=new Guest(dbController,new Date(1,1,1));
+            return guest.signIn(userMail, userName, password , birthDate);
+        }
         return ((Guest) connectedUser).signIn(userMail, userName, password , birthDate);
 
     }
-    public Role logOut(){
+    public void logOut(){
         //todo
-        this.connectedUser = new Guest(this.dbController , null);
-        return this.connectedUser;
+        connectedUser=null;
+        //this.connectedUser = new Guest(this.dbController , null);
+        //return this.connectedUser;
     }
     /**
      * this function makes a guest into an existing member.
@@ -76,6 +82,12 @@ public class SystemController {
      * @return
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
+        if(connectedUser==null)
+        {
+            Guest guest=new Guest(dbController,new Date(1995,2,1));
+            this.connectedUser=guest.logIn(userMail,userPassword);
+            return (Member) this.connectedUser;
+        }
         this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
         return (Member) this.connectedUser;
     }
@@ -253,7 +265,7 @@ public class SystemController {
         }
     }
 */
-    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist {
+    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.addNewTeam(teamName , ownerId);

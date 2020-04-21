@@ -9,6 +9,7 @@ import Users.*;
 import javafx.util.Pair;
 import system.SystemController;
 import League.*;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -54,10 +55,11 @@ public class Main {
                     try {
                         String[] details = fillFormSignIn();
                         try {
-                            Date birthdate=new Date(Integer.parseInt(details[3]),Integer.parseInt(details[4]),Integer.parseInt(details[5]));
-                            member = controller.signIn(details[1], details[0], details[2] , birthdate);
+                            Date birthdate = new Date(Integer.parseInt(details[3]), Integer.parseInt(details[4]), Integer.parseInt(details[5]));
+                            member = controller.signIn(details[1], details[0], details[2], birthdate);
                             System.out.println("succeed to signIn!!");
-                            showMenu(member);
+                            //showMenu(member);
+                            break;
                         } catch (AlreadyExistException e) {
                             System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
                         } catch (DontHavePermissionException e) {
@@ -77,17 +79,19 @@ public class Main {
                     try {
                         member = controller.logIn(details[0], details[1]);
                         showMenu(member);
+                        break;
                     } catch (MemberNotExist e) {
                         System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail.");
                     } catch (PasswordDontMatchException e) {
                         System.out.println("You entered incorrect password.\nlog in with the correct password.");
                     } catch (IncorrectInputException e) {
                         break;
-                    } catch (DontHavePermissionException e) {
+                    }
+                    catch (DontHavePermissionException e) {
                         break;
                     }
+                    break;
                 }
-                break;
                 case "Exit": {
                 }
             }
@@ -129,7 +133,7 @@ public class Main {
             System.out.println("write \"7\" for handle with owner");
             System.out.println("write \"8\" for handle with Association Delegate");
             System.out.println("write \"9\" for handle with System Manager");
-            System.out.println("\nwrite \"ExitAll\" if you want to finish. \n");
+            System.out.println("\nwrite \"logOut\" if you want to finish. \n");
             //todo case for log out and not exit all
             input = "";
             while (input.equals("")) {
@@ -198,11 +202,11 @@ public class Main {
                                 String teamName = "";
                                 System.out.println("please enter the name of the new team");
                                 teamName = scanInput.nextLine();
-                                String ownerId=getOwnerId();
-                               // LinkedList<String> players = addTeamPlayers();// new LinkedList<>();
-                               // LinkedList<String> coaches = addTeamCoachs();//new LinkedList<>();
-                               // LinkedList<String> managers = addTeamManagers();//new LinkedList<>();
-                              //  LinkedList<String> owners = addTeamOwners();//new LinkedList<>();
+                                String ownerId = getOwnerId();
+                                // LinkedList<String> players = addTeamPlayers();// new LinkedList<>();
+                                // LinkedList<String> coaches = addTeamCoachs();//new LinkedList<>();
+                                // LinkedList<String> managers = addTeamManagers();//new LinkedList<>();
+                                //  LinkedList<String> owners = addTeamOwners();//new LinkedList<>();
 
                                 /*
                                 String id = "";
@@ -232,8 +236,8 @@ public class Main {
                                 }
                                 */
                                 try {
-                                    controller.addTeam(teamName,ownerId);
-                                   // boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
+                                    controller.addTeam(teamName, ownerId);
+                                    // boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 } catch (ObjectNotExist objectNotExist) {
@@ -242,6 +246,8 @@ public class Main {
                                     objectAlreadyExist.printStackTrace();
                                 } catch (MemberNotExist memberNotExist) {
                                     memberNotExist.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }
@@ -449,6 +455,12 @@ public class Main {
                     }
                     break;
                 }
+                case "logOut": {
+                    controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input="ExitAll";
+                    break;
+                }
             }
 
 
@@ -579,6 +591,7 @@ public class Main {
         for (String teamName : team.keySet()) {
             System.out.println(teamName);
         }
+        scanInput=new Scanner(System.in);
         String teamToRemove = scanInput.nextLine();
         return teamToRemove;
     }
@@ -678,7 +691,7 @@ public class Main {
                 System.out.println("write \"7\" Reopen Closed Team");
                 System.out.println("write \"8\" Add Outcome");
                 System.out.println("write \"9\" Add Income");
-                System.out.println("\nwrite \"Exit\" if you want to finish. \n");
+                System.out.println("\nwrite \"logOut\" if you want to finish. \n");
                 input = "";
                 while (input.equals("")) {
                     input = scanInput.nextLine();
@@ -832,11 +845,13 @@ public class Main {
                         controller.addInCome(teamName, description, amount);
                         break;
                     }
-                    case "Exit": {
-                        System.out.println("End of program");
+                    case "logOut": {
+                       // member = (Member) controller.logOut();
+                        break;
                     }
                 }
             }
+
         } catch (Exception ownerNotExist) {
         }
 
@@ -1202,7 +1217,6 @@ public class Main {
      */
 
 
-
     /******************************* public function for guest menu (noa) **********************************/
 
     /**
@@ -1239,20 +1253,20 @@ public class Main {
         //todo fix the check if legal
         System.out.println("please enter your birth date");
         System.out.println("year:");
-        String year=scanInput.nextLine();
+        String year = scanInput.nextLine();
         System.out.println("month:");
-        String month=scanInput.nextLine();
+        String month = scanInput.nextLine();
         System.out.println("day:");
-        String day=scanInput.nextLine();
+        String day = scanInput.nextLine();
 
-       // Date birthdate=new Date(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day));
+        // Date birthdate=new Date(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day));
         System.out.println("your details entered successfully!\nplease wait for confirmation");
         details[0] = mailInput;
         details[1] = nameInput;
         details[2] = password;
-        details[3]=year;
-        details[4]=month;
-        details[5]=day;
+        details[3] = year;
+        details[4] = month;
+        details[5] = day;
         return details;
     }
 
@@ -1535,7 +1549,7 @@ public class Main {
             switch (input) {
 
                 case "1": {
-                    try{
+                    try {
                         System.out.println("Please enter your new details: \n");
                         System.out.println("Insert your new name: \n");
                         String newName = scanInput.nextLine();
@@ -1546,26 +1560,25 @@ public class Main {
                         System.out.println("Insert your new training: \n");
                         String newTraining = scanInput.nextLine();
                         controller.updateDetails(newName, newMail, newPassword, newTraining);
+                    } catch (Exception e) {
+                        System.out.println("One or more of the details are illegal.");
                     }
-                catch (Exception e) {
-                    System.out.println("One or more of the details are illegal.");
-                }
                     break;
                 }
                 case "2": {
                     LinkedList<Game> editableGames = controller.getEditableGames();
-                    if (editableGames.size() ==0){
+                    if (editableGames.size() == 0) {
                         System.out.println("There are not games you can edit.");
                         break;
                     }
                     System.out.println("The games you can still edit are:");
-                    for (int i=0;i<editableGames.size(); i++){
-                        System.out.println((i+1) +"." + editableGames.get(i).getHostTeam().getName()+ " Vs. " + editableGames.get(i).getVisitorTeam().getName()+ " at " + editableGames.get(i).getField().getName());
+                    for (int i = 0; i < editableGames.size(); i++) {
+                        System.out.println((i + 1) + "." + editableGames.get(i).getHostTeam().getName() + " Vs. " + editableGames.get(i).getVisitorTeam().getName() + " at " + editableGames.get(i).getField().getName());
                     }
                     System.out.println("Please insert the number of the game you want to update");
                     String gameNumber = scanInput.nextLine();
                     int gameIndex = Integer.parseInt(gameNumber) - 1;
-                    if (gameIndex >= editableGames.size()){
+                    if (gameIndex >= editableGames.size()) {
                         System.out.println("game not exist");
                         break;
                     }
@@ -1574,45 +1587,44 @@ public class Main {
                     System.out.println("Please choose the type of the event:");
                     System.out.println("1.Goal 2.Foul 3.Red card 4.Yellow card 5.Wound 6.Replacement");
                     String eventType = scanInput.nextLine();
-                    switch (eventType){
-                        case "1":{
+                    switch (eventType) {
+                        case "1": {
 
                         }
-                        case "2":{
+                        case "2": {
 
                         }
-                        case "3":{
+                        case "3": {
 
                         }
-                        case "4":{
+                        case "4": {
 
                         }
-                        case "5":{
+                        case "5": {
 
                         }
-                        case "6":{
+                        case "6": {
 
                         }
-                        default:{
+                        default: {
                             System.out.println("illegal type of event.");
                         }
                     }
                     break;
                 }
-                case "3":{
-                    try{
+                case "3": {
+                    try {
                         HashSet<Game> games = controller.getGameSchedule();
                         System.out.println("The games scheduled for you:");
-                        if (games.size()==0){
+                        if (games.size() == 0) {
                             System.out.println("you dont have any games in your schedule");
                             break;
                         }
-                        for(Game game : games){
-                            System.out.println("" + game.getHostTeam().getName()+ " Vs. " + game.getVisitorTeam() + "at" + game.getField().getName() + " in " + game.getDateAndTimeString());
+                        for (Game game : games) {
+                            System.out.println("" + game.getHostTeam().getName() + " Vs. " + game.getVisitorTeam() + "at" + game.getField().getName() + " in " + game.getDateAndTimeString());
                         }
                         break;
-                    }
-                    catch(DontHavePermissionException e){
+                    } catch (DontHavePermissionException e) {
                         System.out.println("you are not allowed to get a referee's schedule");
                     }
                 }
@@ -1681,47 +1693,47 @@ public class Main {
 
     /***********************************************Fan**************************************************/
     private static void fanMenu() throws DontHavePermissionException {
-            String input = "";
-            while (!input.equals("ExitAll")) {
-                System.out.println("choose one of the following options:\n");
-                System.out.println("write \"1\" to update personal details");
-                System.out.println("write \"2\" to send a complaint");
-                System.out.println("write \"3\" to follow a team");
-                System.out.println("write \"4\" to follow a player");
-                System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
-                input = "";
-                while (input.equals("")) {
-                    input = scanInput.nextLine();
-                }
-                switch (input) {
+        String input = "";
+        while (!input.equals("ExitAll")) {
+            System.out.println("choose one of the following options:\n");
+            System.out.println("write \"1\" to update personal details");
+            System.out.println("write \"2\" to send a complaint");
+            System.out.println("write \"3\" to follow a team");
+            System.out.println("write \"4\" to follow a player");
+            System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
+            input = "";
+            while (input.equals("")) {
+                input = scanInput.nextLine();
+            }
+            switch (input) {
 
-                    case "1": {
-                        try {
-                            System.out.println("Please enter your new details: \n");
-                            System.out.println("Insert your new name: \n");
-                            String newName = scanInput.nextLine();
-                            System.out.println("Insert your new mail: \n");
-                            String newMail = scanInput.nextLine();
-                            System.out.println("Insert your new password: \n");
-                            String newPassword = scanInput.nextLine();
-                            controller.updatePersonalDetails(newName, newPassword, newMail);
-                        } catch (IncorrectInputException e) {
-                            System.out.println("One or more of the details are illegal.");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                case "1": {
+                    try {
+                        System.out.println("Please enter your new details: \n");
+                        System.out.println("Insert your new name: \n");
+                        String newName = scanInput.nextLine();
+                        System.out.println("Insert your new mail: \n");
+                        String newMail = scanInput.nextLine();
+                        System.out.println("Insert your new password: \n");
+                        String newPassword = scanInput.nextLine();
+                        controller.updatePersonalDetails(newName, newPassword, newMail);
+                    } catch (IncorrectInputException e) {
+                        System.out.println("One or more of the details are illegal.");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case "2": {
+                    try {
+                        System.out.println("Please enter your complaint");
+                        String complaint = scanInput.nextLine();
+                        controller.sendComplaint(path, complaint);
                         break;
+                    } catch (DontHavePermissionException e) {
+                        System.out.println("you dont have a permission to write a complaint");
                     }
-                    case "2": {
-                        try {
-                            System.out.println("Please enter your complaint");
-                            String complaint = scanInput.nextLine();
-                            controller.sendComplaint(path, complaint);
-                            break;
-                        } catch (DontHavePermissionException e) {
-                            System.out.println("you dont have a permission to write a complaint");
-                        }
-                    }
+                }
 //                    case "3":{
 //                        try{
 //                            System.out.println("Please enter the team name:");
@@ -1733,7 +1745,7 @@ public class Main {
 //                        }
 //                    }
 
-                }
             }
         }
     }
+}

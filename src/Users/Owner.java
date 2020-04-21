@@ -18,13 +18,13 @@ public class Owner extends Member {
         super(name, userMail, password , birthDate);
         this.dbController=dbController;
         teams=new HashMap<>();
-        for(String teamName:dbController.getTeams(this).keySet()){
+        /*for(String teamName:dbController.getTeams(this).keySet()){
             Team team=dbController.getTeams(this).get(teamName);
             //todo:check if works!
             if(team.getOwners().contains(this)){
                 teams.put(teamName,team);
             }
-        }
+        }*/
     }
 
     public Owner(String name, String userMail, String password , Date birthDate )
@@ -41,12 +41,12 @@ public class Owner extends Member {
         }
     }
 
-    public void addTeam(Team team) throws AlreadyExistException, DontHavePermissionException {
-        dbController.addTeam(this ,team);
+    public void addTeam(Team team){
+        teams.put(team.getName() ,team);
     }
 
-    public void removeTheTeamFromMyList(String name) throws ObjectNotExist, DontHavePermissionException {
-        dbController.removeTeam(this ,name);
+    public void removeTheTeamFromMyList(String name){
+        teams.remove(name);
     }
 
     /******************************Add Asset- Manage, Coach, Player, Field************************************/

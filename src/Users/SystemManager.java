@@ -211,27 +211,42 @@ public class SystemManager extends Member {
         return false;
     }
 
-        public boolean addNewTeam(String teamName , String idOwner) throws ObjectAlreadyExist, ObjectNotExist, MemberNotExist, DontHavePermissionException {
+    /**
+     * this function return true if the team added and false if there were problem with the data
+     */
+        public boolean addNewTeam(String teamName , String idOwner) throws ObjectAlreadyExist, ObjectNotExist, MemberNotExist, DontHavePermissionException, AlreadyExistException {
             if (alreadyIncludeThisTeamName(teamName) == true) {
                 throw new ObjectAlreadyExist();
             }
-            else if(dbController.existOwner(this ,idOwner)==false || dbController.existFan(this ,idOwner)==false)
+            else if(dbController.existOwner(this ,idOwner)==false && dbController.existFan(this ,idOwner)==false)
             {
                 throw new ObjectNotExist("the is you enter is not exist as owner of a team");
             }
             else
             {
-                Owner owner=dbController.getOwner(this , idOwner);
-                Account account = new Account();
-                Team newTeam = new Team(teamName,account,owner);
-                //todo
+                Owner owner=null;
+                Role role =dbController.getMember(this , idOwner);
+                if(role instanceof Fan)
+                {//if its the first team for this owner
+                    owner=new Owner(role.getName(),((Fan) role).getUserMail(),((Fan) role).getPassword() , role.getBirthDate() , dbController);
+                    dbController.deleteFan(this,((Fan) role).getUserMail());
+                    dbController.addOwner(this,owner);
+                }
+                else if(role instanceof Owner)
+                {
+                    owner=(Owner)role;
+                }
+                if(owner!=null) {
+                    Account account = new Account();
+                    Team newTeam = new Team(teamName, account, owner);
+                    owner.addTeam(newTeam);
+                    dbController.addTeam(this,newTeam);
+                }
             }
             return false;
         }
 
-        /**
-         * this function return true if the team added and false if there were problem with the data
-         */
+
         /*
     public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner, String teamName) {
         try {
