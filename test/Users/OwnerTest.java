@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 public class OwnerTest {
     SystemController controller = new SystemController("");
 
+    Date birthdate=new Date(1993,10,12);
     LinkedList<String> idPlayers = new LinkedList<>();
     LinkedList<String> idcoach = new LinkedList<>();
     LinkedList<String> idmanager = new LinkedList<>();
@@ -34,20 +35,20 @@ public class OwnerTest {
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
 
         /*add Team*/
-        controller.signIn("palyer0","p0@gmail.com","1");
-        controller.signIn("palyer1","p1@gmail.com","1");
-        controller.signIn("palyer2","p2@gmail.com","1");
-        controller.signIn("palyer3","p3@gmail.com","1");
-        controller.signIn("palyer4","p4@gmail.com","1");
-        controller.signIn("palyer5","p5@gmail.com","1");
-        controller.signIn("palyer6","p6@gmail.com","1");
-        controller.signIn("palyer7","p7@gmail.com","1");
-        controller.signIn("palyer8","p8@gmail.com","1");
-        controller.signIn("palyer9","p9@gmail.com","1");
-        controller.signIn("palyer10","p10@gmail.com","1");
-        controller.signIn("coach","coach@gmail.com","1");
-        controller.signIn("manager","manager@gmail.com","1");
-        controller.signIn("owner","owner@gmail.com","1");
+        controller.signIn("palyer0","p0@gmail.com","1",birthdate);
+        controller.signIn("palyer1","p1@gmail.com","1",birthdate);
+        controller.signIn("palyer2","p2@gmail.com","1",birthdate);
+        controller.signIn("palyer3","p3@gmail.com","1",birthdate);
+        controller.signIn("palyer4","p4@gmail.com","1",birthdate);
+        controller.signIn("palyer5","p5@gmail.com","1",birthdate);
+        controller.signIn("palyer6","p6@gmail.com","1",birthdate);
+        controller.signIn("palyer7","p7@gmail.com","1",birthdate);
+        controller.signIn("palyer8","p8@gmail.com","1",birthdate);
+        controller.signIn("palyer9","p9@gmail.com","1",birthdate);
+        controller.signIn("palyer10","p10@gmail.com","1",birthdate);
+        controller.signIn("coach","coach@gmail.com","1",birthdate);
+        controller.signIn("manager","manager@gmail.com","1",birthdate);
+        controller.signIn("owner","owner@gmail.com","1",birthdate);
 
         idPlayers.add("p0@gmail.com");
         idPlayers.add("p1@gmail.com");
@@ -74,9 +75,9 @@ public class OwnerTest {
     public void addCoach() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, IncorrectInputException, PasswordDontMatchException {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("c","c@gmail.com","123");
+        controller.signIn("c","c@gmail.com","123",birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
 
@@ -94,7 +95,7 @@ public class OwnerTest {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+        //controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to add coach - without login result should be negative */
@@ -105,7 +106,7 @@ public class OwnerTest {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+        //controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -120,7 +121,7 @@ public class OwnerTest {
         thrown.expect(AlreadyExistException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -137,7 +138,7 @@ public class OwnerTest {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -149,9 +150,9 @@ public class OwnerTest {
         thrown.expect(NoEnoughMoney.class);
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+      //  controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("c","c@gmail.com","123");
+        controller.signIn("c","c@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
 
         //TODO - add amount to account
@@ -164,9 +165,9 @@ public class OwnerTest {
     public void addPlayer() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+      //  controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("p","newPlayer@gmail.com","123");
+        controller.signIn("p","newPlayer@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
 
@@ -183,7 +184,7 @@ public class OwnerTest {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to add player - without login result should be negative */
@@ -194,7 +195,7 @@ public class OwnerTest {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -209,7 +210,7 @@ public class OwnerTest {
         thrown.expect(AlreadyExistException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -226,7 +227,7 @@ public class OwnerTest {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -238,9 +239,9 @@ public class OwnerTest {
         thrown.expect(NoEnoughMoney.class);
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("p","newPlayer@gmail.com","123");
+        controller.signIn("p","newPlayer@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",40);
         int sizeBefore = this.controller.getTeams().get("team").getPlayers().size();
@@ -256,9 +257,9 @@ public class OwnerTest {
     public void addField() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("p","newPlayer@gmail.com","123");
+        controller.signIn("p","newPlayer@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
         int sizeBefore = controller.getTeams().get("team").getTrainingFields().size();
@@ -282,7 +283,7 @@ public class OwnerTest {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to add field - without login result should be negative */
@@ -293,7 +294,7 @@ public class OwnerTest {
         thrown.expect(ObjectAlreadyExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+      //  controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
         controller.addField("team","f");
@@ -309,7 +310,7 @@ public class OwnerTest {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+    //    controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -321,9 +322,9 @@ public class OwnerTest {
         thrown.expect(NoEnoughMoney.class);
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+    //    controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("p","newPlayer@gmail.com","123");
+        controller.signIn("p","newPlayer@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",40);
         int sizeBefore = this.controller.getTeams().get("team").getTrainingFields().size();
@@ -351,9 +352,9 @@ public class OwnerTest {
     public void addNewManager() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist, NoEnoughMoney {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("M","newManager@gmail.com","123");
+        controller.signIn("M","newManager@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
 
@@ -370,7 +371,7 @@ public class OwnerTest {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+      //  controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to add new manager - without login result should be negative */
@@ -381,7 +382,7 @@ public class OwnerTest {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -396,7 +397,7 @@ public class OwnerTest {
         thrown.expect(AlreadyExistException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -412,7 +413,7 @@ public class OwnerTest {
     public void addNewManagerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -424,9 +425,9 @@ public class OwnerTest {
         thrown.expect(NoEnoughMoney.class);
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+        //controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("M","newManager@gmail.com","123");
+        controller.signIn("M","newManager@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",40);
 
@@ -447,9 +448,9 @@ public class OwnerTest {
     public void removeManager() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist, NoEnoughMoney {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
-        controller.signIn("M","newManager@gmail.com","123");
+        controller.signIn("M","newManager@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
         controller.addManager("team" , "newManager@gmail.com");
@@ -467,7 +468,7 @@ public class OwnerTest {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to remove manager - without login result should be negative */
@@ -478,7 +479,7 @@ public class OwnerTest {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -492,7 +493,7 @@ public class OwnerTest {
     public void removeManagerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+      //  controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -504,7 +505,7 @@ public class OwnerTest {
     @Test
     public void temporaryTeamClosing() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist {
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+   //     controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -519,7 +520,7 @@ public class OwnerTest {
     @Test
     public void temporaryTeamClosinNoPremission() throws DontHavePermissionException, ObjectNotExist {
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+     //   controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to temporary close team without login - result negative*/
@@ -531,7 +532,7 @@ public class OwnerTest {
         thrown.expect(ObjectNotExist.class);
 
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -552,7 +553,7 @@ public class OwnerTest {
     @Test
     public void reopenClosedTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist {
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+       // controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
@@ -567,7 +568,7 @@ public class OwnerTest {
     @Test
     public void reopenClosedTeamNoPremission() throws DontHavePermissionException, ObjectNotExist {
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+      //  controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to reopen team who open already - result negative*/
@@ -579,7 +580,7 @@ public class OwnerTest {
         thrown.expect(ObjectNotExist.class);
 
         /* init */
-        controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
+        //controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 

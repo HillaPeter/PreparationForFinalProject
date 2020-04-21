@@ -28,8 +28,7 @@ public class SystemController {
     public SystemController(String name) {
         this.name = name;
         //this.initSystem("", "", ""); // change it
-        connectedUser = new Guest(dbController ,null);
-        //todo
+        initSystem();
 //        password verifications
 //        passwordValidation=new HashMap<>();
 //        for(Role r:roles){
@@ -43,6 +42,7 @@ public class SystemController {
     public void initSystem() {
         //check if the user name and the password are connect
         dbController = new DBController();
+        connectedUser = new Guest(dbController ,null);
         System.out.println("Init System:");
         System.out.println("Connect to Security System");
         //todo
@@ -228,19 +228,19 @@ public class SystemController {
         }
     }
 
-    /**
-     * this function get the team name and all the team member and the id of the system manager that take care of this function
-     * if the team name not exist - open the team and return true
-     * if the team exist return false
-     *
-     * @param players
-     * @param coachs
-     * @param managers
-     * @param owners
-     * @param teamName
-     * @return
-     * @throws DontHavePermissionException
-     */
+//    /**
+//     * this function get the team name and all the team member and the id of the system manager that take care of this function
+//     * if the team name not exist - open the team and return true
+//     * if the team exist return false
+//     *
+//     * @param players
+//     * @param coachs
+//     * @param managers
+//     * @param owners
+//     * @param teamName
+//     * @return
+//     * @throws DontHavePermissionException
+//     */
     /*
     public boolean addTeam(LinkedList<String> players, LinkedList<String> coachs, LinkedList<String> managers, LinkedList<String> owners, String teamName) throws DontHavePermissionException {
         if (connectedUser instanceof SystemManager) {

@@ -8,15 +8,18 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import system.SystemController;
 
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 public class AssociationDelegateTest {
+    Date birthdate=new Date(1993,10,12);
     SystemController controller= new SystemController("test");
-    AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123");
+    AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123", birthdate);
 
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
-        controller.signIn(a_s_Test.getName(),a_s_Test.getUserMail(),a_s_Test.getPassword());
+        controller.signIn(a_s_Test.getName(),a_s_Test.getUserMail(),a_s_Test.getPassword(), a_s_Test.getBirthDate());
         controller.logIn("admin@gmail.com","123");
         controller.addAssociationDelegate(this.a_s_Test.getUserMail());
     }
@@ -24,7 +27,7 @@ public class AssociationDelegateTest {
     public final ExpectedException thrown= ExpectedException.none();
     /*******************************************************************************/
     @Test
-    public void setLeague() throws MemberNotExist, PasswordDontMatchException, AlreadyExistException, IncorrectInputException {
+    public void setLeague() throws MemberNotExist, PasswordDontMatchException, AlreadyExistException, IncorrectInputException, DontHavePermissionException {
         controller.logOut();
         controller.logIn("dani@gmail.com","123");
 
@@ -41,7 +44,7 @@ public class AssociationDelegateTest {
         controller.setLeague("league");
     }
     @Test
-    public void setLeagueAlreadyExistException() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException {
+    public void setLeagueAlreadyExistException() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
         thrown.expect(AlreadyExistException.class);
         /* UC 19 (noa) */
         /*init*/
@@ -58,6 +61,8 @@ public class AssociationDelegateTest {
         controller.logOut();
         controller.logIn("dani@gmail.com","123");
         controller.setLeague("league");
+
+
         /* try to add referee with valid details -result should be positive */
         controller.setLeagueByYear("league","2020");
 //       check if season is connect to league
@@ -94,7 +99,7 @@ public class AssociationDelegateTest {
     public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectNotExist {
         /* init - add referee , add league, add season */
         controller.logOut();
-        controller.signIn("referee","referee@gmail.com","123");
+        controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
         controller.logOut();
@@ -121,7 +126,7 @@ public class AssociationDelegateTest {
         thrown.expect(ObjectNotExist.class);
         /* init - add referee */
         controller.logOut();
-        controller.signIn("referee","referee@gmail.com","123");
+        controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
         controller.logOut();
@@ -138,7 +143,7 @@ public class AssociationDelegateTest {
         thrown.expect(ObjectNotExist.class);
         /* init - add referee , add league */
         controller.logOut();
-        controller.signIn("referee","referee@gmail.com","123");
+        controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
         controller.logOut();
