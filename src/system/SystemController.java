@@ -3,6 +3,7 @@ package system;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Game.Game;
 import Game.Team;
 import League.*;
 import Users.*;
@@ -11,6 +12,7 @@ import javafx.util.Pair;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 public class SystemController {
@@ -662,19 +664,70 @@ public class SystemController {
         ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
     /*************************************** function for Referee ******************************************/
-    public void updateDetails(String id ,String newName, String newMail,String newPassword, String newTraining){
-        //todo
+    public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
+        if (connectedUser instanceof MainReferee) {
+            MainReferee referee = (MainReferee) connectedUser;
+            referee.updateDetails(newName, newMail, newPassword, newTraining);
+        }
+        else if (connectedUser instanceof SecondaryReferee) {
+            SecondaryReferee referee = (SecondaryReferee) connectedUser;
+            referee.updateDetails(newName, newMail, newPassword, newTraining);
+        }
+        else {
+            throw new DontHavePermissionException();
+        }
     }
-    public void updateGameEvent(){
-        //todo
+
+    public LinkedList<Game> getEditableGames () throws DontHavePermissionException {
+        if (connectedUser instanceof MainReferee) {
+            MainReferee mainReferee = (MainReferee) connectedUser;
+            return mainReferee.getEditableGames ();
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
-    public HashMap<String,String> getGameSchedule(String refereeId){
-        //todo - return a list of date, gameDetails
-        return null;
+
+    public HashSet<Game> getGameSchedule() throws DontHavePermissionException {
+        if (connectedUser instanceof Referee) {
+            Referee referee = (Referee) connectedUser;
+            return referee.getGameSchedule();
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
+
+    public void updateGameEvent(Game game){
+
+    }
+
     public void getGameReport(){
         //todo
     }
+
+    /*************************************** function for Fan ******************************************/
+
+    public void updatePersonalDetails(String newName, String newPassword, String newMail) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
+        if (connectedUser instanceof Fan) {
+            Fan fan = (Fan) connectedUser;
+            fan.updatePersonalDetails(newName, newPassword, newMail);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void sendComplaint (String path, String complaint) throws DontHavePermissionException {
+        if (connectedUser instanceof Fan) {
+            Fan fan = (Fan) connectedUser;
+            fan.sendComplaint(path, complaint);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+
+
+
+
     /*************************************************************************************************************/
 
     public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {

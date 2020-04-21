@@ -1,14 +1,17 @@
 package Users;
 
 import Game.Game;
-import Exception.IncorrectInputException;
+import system.DBController;
 
 import java.util.Date;
 import java.util.HashSet;
 
+
 public abstract class Referee extends Member{
-    private String training;
-    private HashSet<Game> games;
+    protected String training;
+    protected HashSet<Game> games;
+
+    protected DBController dbController;
 
     public Referee(String name, String userMail, String password, String training , Date birthDate) {
         super(name, userMail, password , birthDate);
@@ -16,34 +19,14 @@ public abstract class Referee extends Member{
         games=new HashSet<Game>();
     }
 
+    public HashSet<Game> getGameSchedule(){
+        return games;
+    }
+
 
     public void addGame(Game game){
         games.add(game);
     }
-
-    public HashSet getGameSchedule(){
-        return games;
-    }
-
-    // the details which didn't update will be recieved as ""
-    public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws Exception{
-        if (newName == null || newMail ==null || newPassword == null || newTraining == null){
-            throw new IncorrectInputException("");
-        }
-        if (newName != ""){
-            super.setName(newName);
-        }
-        if (newMail != ""){
-            super.setUserMail(newMail);
-        }
-        if (newPassword != ""){
-            super.setPassword(newPassword);
-        }
-        if (newTraining != ""){
-            this.training = newTraining;
-        }
-    }
-
 
     public void deleteTheGames()
     {

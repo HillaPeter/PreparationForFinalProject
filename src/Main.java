@@ -3,6 +3,7 @@ import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
 import Exception.*;
+import Game.Game;
 import Game.Team;
 import Users.*;
 import javafx.util.Pair;
@@ -98,10 +99,12 @@ public class Main {
         if (member instanceof SystemManager) {
             SystemManagerMenu();
         } else if (member instanceof MainReferee) {
+            mainRefereeMenu();
 
         } else if (member instanceof SecondaryReferee) {
-
+            secondaryRefereeMenu();
         } else if (member instanceof Fan) {
+            fanMenu();
 
         } else if (member instanceof Owner) {
             OwnerMenu();
@@ -1512,5 +1515,225 @@ public class Main {
         }
     }
 
+    /***********************************************MainReferee**************************************************/
 
-}
+
+    private static void mainRefereeMenu() throws DontHavePermissionException {
+        String input = "";
+        while (!input.equals("ExitAll")) {
+            System.out.println("choose one of the following options:\n");
+            System.out.println("write \"1\" for update personal details");
+            System.out.println("write \"2\" for update game event");
+            System.out.println("write \"3\" for get game schedule");
+            System.out.println("write \"4\" for get game report");
+            System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
+            //todo case for log out and not exit all
+            input = "";
+            while (input.equals("")) {
+                input = scanInput.nextLine();
+            }
+            switch (input) {
+
+                case "1": {
+                    try{
+                        System.out.println("Please enter your new details: \n");
+                        System.out.println("Insert your new name: \n");
+                        String newName = scanInput.nextLine();
+                        System.out.println("Insert your new mail: \n");
+                        String newMail = scanInput.nextLine();
+                        System.out.println("Insert your new password: \n");
+                        String newPassword = scanInput.nextLine();
+                        System.out.println("Insert your new training: \n");
+                        String newTraining = scanInput.nextLine();
+                        controller.updateDetails(newName, newMail, newPassword, newTraining);
+                    }
+                catch (Exception e) {
+                    System.out.println("One or more of the details are illegal.");
+                }
+                    break;
+                }
+                case "2": {
+                    LinkedList<Game> editableGames = controller.getEditableGames();
+                    if (editableGames.size() ==0){
+                        System.out.println("There are not games you can edit.");
+                        break;
+                    }
+                    System.out.println("The games you can still edit are:");
+                    for (int i=0;i<editableGames.size(); i++){
+                        System.out.println((i+1) +"." + editableGames.get(i).getHostTeam().getName()+ " Vs. " + editableGames.get(i).getVisitorTeam().getName()+ " at " + editableGames.get(i).getField().getName());
+                    }
+                    System.out.println("Please insert the number of the game you want to update");
+                    String gameNumber = scanInput.nextLine();
+                    int gameIndex = Integer.parseInt(gameNumber) - 1;
+                    if (gameIndex >= editableGames.size()){
+                        System.out.println("game not exist");
+                        break;
+                    }
+                    System.out.println("enter the time in the game the event happened: ");
+                    String timeInGame = scanInput.nextLine();
+                    System.out.println("Please choose the type of the event:");
+                    System.out.println("1.Goal 2.Foul 3.Red card 4.Yellow card 5.Wound 6.Replacement");
+                    String eventType = scanInput.nextLine();
+                    switch (eventType){
+                        case "1":{
+
+                        }
+                        case "2":{
+
+                        }
+                        case "3":{
+
+                        }
+                        case "4":{
+
+                        }
+                        case "5":{
+
+                        }
+                        case "6":{
+
+                        }
+                        default:{
+                            System.out.println("illegal type of event.");
+                        }
+                    }
+                    break;
+                }
+                case "3":{
+                    try{
+                        HashSet<Game> games = controller.getGameSchedule();
+                        System.out.println("The games scheduled for you:");
+                        if (games.size()==0){
+                            System.out.println("you dont have any games in your schedule");
+                            break;
+                        }
+                        for(Game game : games){
+                            System.out.println("" + game.getHostTeam().getName()+ " Vs. " + game.getVisitorTeam() + "at" + game.getField().getName() + " in " + game.getDateAndTimeString());
+                        }
+                        break;
+                    }
+                    catch(DontHavePermissionException e){
+                        System.out.println("you are not allowed to get a referee's schedule");
+                    }
+                }
+                case "4": {
+                    //todo: game report
+                }
+
+            }
+        }
+    }
+
+
+    /***********************************************SecondaryReferee**************************************************/
+    private static void secondaryRefereeMenu() throws DontHavePermissionException {
+        String input = "";
+        while (!input.equals("ExitAll")) {
+            System.out.println("choose one of the following options:\n");
+            System.out.println("write \"1\" to update personal details");
+            System.out.println("write \"2\" to get game schedule");
+            System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
+            input = "";
+            while (input.equals("")) {
+                input = scanInput.nextLine();
+            }
+            switch (input) {
+
+                case "1": {
+                    try {
+                        System.out.println("Please enter your new details: \n");
+                        System.out.println("Insert your new name: \n");
+                        String newName = scanInput.nextLine();
+                        System.out.println("Insert your new mail: \n");
+                        String newMail = scanInput.nextLine();
+                        System.out.println("Insert your new password: \n");
+                        String newPassword = scanInput.nextLine();
+                        System.out.println("Insert your new training: \n");
+                        String newTraining = scanInput.nextLine();
+                        controller.updateDetails(newName, newMail, newPassword, newTraining);
+                    } catch (IncorrectInputException e) {
+                        System.out.println("One or more of the details are illegal.");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
+                case "2": {
+                    try {
+                        HashSet<Game> games = controller.getGameSchedule();
+                        System.out.println("The games scheduled for you:");
+                        if (games.size() == 0) {
+                            System.out.println("you dont have any games in your schedule");
+                            break;
+                        }
+                        for (Game game : games) {
+                            System.out.println("" + game.getHostTeam().getName() + " Vs. " + game.getVisitorTeam() + "at" + game.getField().getName() + " in " + game.getDateAndTimeString());
+                        }
+                        break;
+                    } catch (DontHavePermissionException e) {
+                        System.out.println("you are not allowed to get a referee's schedule");
+                    }
+                }
+            }
+        }
+    }
+
+    /***********************************************Fan**************************************************/
+    private static void fanMenu() throws DontHavePermissionException {
+            String input = "";
+            while (!input.equals("ExitAll")) {
+                System.out.println("choose one of the following options:\n");
+                System.out.println("write \"1\" to update personal details");
+                System.out.println("write \"2\" to send a complaint");
+                System.out.println("write \"3\" to follow a team");
+                System.out.println("write \"4\" to follow a player");
+                System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
+                input = "";
+                while (input.equals("")) {
+                    input = scanInput.nextLine();
+                }
+                switch (input) {
+
+                    case "1": {
+                        try {
+                            System.out.println("Please enter your new details: \n");
+                            System.out.println("Insert your new name: \n");
+                            String newName = scanInput.nextLine();
+                            System.out.println("Insert your new mail: \n");
+                            String newMail = scanInput.nextLine();
+                            System.out.println("Insert your new password: \n");
+                            String newPassword = scanInput.nextLine();
+                            controller.updatePersonalDetails(newName, newPassword, newMail);
+                        } catch (IncorrectInputException e) {
+                            System.out.println("One or more of the details are illegal.");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                    case "2": {
+                        try {
+                            System.out.println("Please enter your complaint");
+                            String complaint = scanInput.nextLine();
+                            controller.sendComplaint(path, complaint);
+                            break;
+                        } catch (DontHavePermissionException e) {
+                            System.out.println("you dont have a permission to write a complaint");
+                        }
+                    }
+//                    case "3":{
+//                        try{
+//                            System.out.println("Please enter the team name:");
+//                            String complaint = scanInput.nextLine();
+//                            break;
+//                        }
+//                        catch(Exception e){
+//
+//                        }
+//                    }
+
+                }
+            }
+        }
+    }

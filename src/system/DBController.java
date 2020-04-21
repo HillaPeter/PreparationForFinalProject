@@ -7,6 +7,7 @@ import Game.Team;
 import League.*;
 import Users.*;
 import Exception.*;
+import sun.applet.Main;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -210,7 +211,7 @@ public class DBController {
     }
 
     public void deleteReferee(Role role, String id) throws DontHavePermissionException, MemberNotExist {
-        if (role instanceof SystemManager) {
+        if (role instanceof SystemManager || role instanceof MainReferee || role instanceof SecondaryReferee) {
             if (db.existRefree(id)) {
                 db.removeRole(id);
             } else {
@@ -222,7 +223,7 @@ public class DBController {
     }
 
     public void deleteFan(Role role, String id) throws MemberNotExist, DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner) {
+        if (role instanceof SystemManager || role instanceof Owner || role instanceof Fan) {
             if (db.existFan(id)) {
                 db.removeRole(id);
             } else {
@@ -319,7 +320,7 @@ public class DBController {
     }
 
     public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
-        if (!(role instanceof Guest)) {
+        if (!(role instanceof Guest || role instanceof Fan)) {
             throw new DontHavePermissionException();
         }
         if (db.existMember(fan.getUserMail()))
@@ -406,7 +407,7 @@ public class DBController {
     }
 
     public void addReferee(Role role,Referee referee) throws DontHavePermissionException, AlreadyExistException {
-        if (role instanceof SystemManager ) {
+        if (role instanceof SystemManager || role instanceof MainReferee || role instanceof SecondaryReferee) {
             if(!db.existRefree(referee.getUserMail())) {
                 db.addReferee(referee);
             }
@@ -438,7 +439,6 @@ public class DBController {
 
     public boolean existFan(Role role,String fanId) throws DontHavePermissionException {
         if (role instanceof SystemManager  || role instanceof Owner ||role instanceof AssociationDelegate) {
-
             return db.existFan(fanId);
         }
         throw new DontHavePermissionException();

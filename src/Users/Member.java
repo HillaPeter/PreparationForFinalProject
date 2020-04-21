@@ -40,4 +40,8 @@ public abstract class Member extends Role {
     public void setName (String name){
         super.setName(name);
     }
+
+    public void setMail (String mail){
+        this.userMail = mail;
+    }
 }
