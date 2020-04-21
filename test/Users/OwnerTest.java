@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import system.DBController;
 import system.SystemController;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ import static org.junit.Assert.*;
 
 public class OwnerTest {
     SystemController controller = new SystemController("");
-    private SystemManager systemManager=new SystemManager("for test" , "for Test" , "fortest" , new DBController());
 
     LinkedList<String> idPlayers = new LinkedList<>();
     LinkedList<String> idcoach = new LinkedList<>();

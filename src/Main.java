@@ -53,7 +53,8 @@ public class Main {
                     try {
                         String[] details = fillFormSignIn();
                         try {
-                            member = controller.signIn(details[1], details[0], details[2]);
+                            Date birthdate=new Date(Integer.parseInt(details[3]),Integer.parseInt(details[4]),Integer.parseInt(details[5]));
+                            member = controller.signIn(details[1], details[0], details[2] , birthdate);
                             System.out.println("succeed to signIn!!");
                             showMenu(member);
                         } catch (AlreadyExistException e) {
@@ -126,6 +127,7 @@ public class Main {
             System.out.println("write \"8\" for handle with Association Delegate");
             System.out.println("write \"9\" for handle with System Manager");
             System.out.println("\nwrite \"ExitAll\" if you want to finish. \n");
+            //todo case for log out and not exit all
             input = "";
             while (input.equals("")) {
                 input = scanInput.nextLine();
@@ -1024,7 +1026,7 @@ public class Main {
     /***************************************************tests********************************************************/
 
     private static void shacharFunctionForTesting() throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
-
+/*
         SystemManager systemManager = new SystemManager("shachar meretz ", "shachar@gmail.com", "shachar", controller.getDbController());
       //  controller.addSystemManager(systemManager);
         controller.logIn("shachar@gmail.com","shachar");
@@ -1207,7 +1209,7 @@ public class Main {
      */
 
     public static String[] fillFormSignIn() throws IncorrectPasswordInputException, IncorrectInputException {
-        String[] details = new String[3];
+        String[] details = new String[6];
         Scanner scanInput = new Scanner(System.in);
         System.out.println("please enter your mail");
         String mailInput = scanInput.nextLine();
@@ -1231,11 +1233,23 @@ public class Main {
             password2 = scanInput.nextLine();
         }
 
+        //todo fix the check if legal
+        System.out.println("please enter your birth date");
+        System.out.println("year:");
+        String year=scanInput.nextLine();
+        System.out.println("month:");
+        String month=scanInput.nextLine();
+        System.out.println("day:");
+        String day=scanInput.nextLine();
+
+       // Date birthdate=new Date(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day));
         System.out.println("your details entered successfully!\nplease wait for confirmation");
         details[0] = mailInput;
         details[1] = nameInput;
         details[2] = password;
-
+        details[3]=year;
+        details[4]=month;
+        details[5]=day;
         return details;
     }
 
