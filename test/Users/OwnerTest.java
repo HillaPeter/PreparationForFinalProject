@@ -780,7 +780,6 @@ public class OwnerTest {
 
         /* try to add income to Team without login - result should be negative */
         controller.addInCome("team","present",1000);
-        assertTrue(11000 == controller.getAccountBalance("team"));
     }
     @Test
     public void addIncomeTeamNotExist() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
@@ -792,7 +791,7 @@ public class OwnerTest {
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team" , 10000);
 
-        /* try to add income to Team without login - result should be negative */
+        /* try to add income to Team team not exist - result should be negative */
         controller.addInCome("teammm","present",1000);
         assertTrue(10000 == controller.getAccountBalance("team"));
     }
@@ -806,12 +805,72 @@ public class OwnerTest {
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team" , 10000);
 
-        /* try to add income to Team without login - result should be negative */
+        /* try to add income to Team without fill the description field - result should be negative */
         controller.addInCome("team","",1000);
     }
-    @Test
     /******************************************addOutcome******************************************/
-    public void addOutCome() {
+    @Test
+    public void addOutCome() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team" , 10000);
+
+        /* try to add outcome to Team - result should be positive */
+        controller.addOutCome("team","outcome",1000);
+        assertTrue((10000-1000) == controller.getAccountBalance("team"));
+    }
+    @Test
+    public void addOutComeNoPermission() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(DontHavePermissionException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+
+        /* try to add outcome to Team without login - result should be negative */
+        controller.addOutCome("team","outcome",1000);
+    }
+    @Test
+    public void addOutComeTeamNotExist() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(ObjectNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team" , 10000);
+
+        /* try to add outcome to Team team not exist - result should be negative */
+        controller.addOutCome("teammm","present",1000);
+        assertTrue(10000 == controller.getAccountBalance("team"));
+    }
+    @Test
+    public void addOutComeWrongInput() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(IncorrectInputException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team" , 10000);
+
+        /* try to add outcome to Team without fill the description field - result should be negative */
+        controller.addOutCome("team","",1000);
+    }
+    @Test
+    public void addOutComeNotEnoughMoney() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(NoEnoughMoney.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+
+        /* try to add outcome to Team without set money no account - result should be negative */
+        controller.addOutCome("team","",1000);
     }
 
 }
