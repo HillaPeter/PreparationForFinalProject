@@ -18,6 +18,10 @@ public class GuestTest {
     SystemController controller = new SystemController("test controller");
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
+
+    public GuestTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
+    }
+
     @Test
     public void signInWithException() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException {
         thrown.expect(AlreadyExistException.class);

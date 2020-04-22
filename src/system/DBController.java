@@ -21,11 +21,6 @@ public class DBController {
 
     public DBController() {
         this.db = new DB();
-        if (!this.db.existSystemManager("admin@gmail.com")) {
-            SystemManager systemManager = new SystemManager("admin", "admin@gmail.com", "123", this , new Date(1995,2,15));
-            db.addSystemManager(systemManager);
-            db.addSystemManager(systemManager);
-        }
     }
     /***************************************Guest function******************************************/
 
@@ -521,13 +516,14 @@ public class DBController {
         }     }
 
     public boolean existSystemManager(Role role,String id) throws DontHavePermissionException {
-        if (role instanceof SystemManager ) {
+       // if (role instanceof SystemManager ) {
 
             return db.existSystemManager(id);
-        }
-        else {
-            throw new DontHavePermissionException();
-        }     }
+       // }
+       // else {
+      //      throw new DontHavePermissionException();
+       // }
+}
 
     public boolean existOwner(Role role,String ownerId) throws DontHavePermissionException {
         if (role instanceof SystemManager  || role instanceof Owner) {

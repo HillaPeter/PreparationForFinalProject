@@ -17,6 +17,9 @@ import static org.junit.Assert.*;
 
 public class RefereeTest {
     private SystemController controller = new SystemController("");
+
+    public RefereeTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
+    }
 //    private SystemManager systemManager=new SystemManager("for test" , "for Test" , "fortest" , new DBController());
     /*******************************************************************************/
     @Before

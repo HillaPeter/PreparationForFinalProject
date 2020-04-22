@@ -228,14 +228,19 @@ public class SystemManager extends Member {
         }
     }
 
-    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException {
+    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, IncorrectInputException {
         if (dbController.existTeam(this, teamName)) {
-            //המערכת מסירה את הקבוצה מכל שיבוצי המשחק שיש לה
             Team team = dbController.getTeam(this, teamName);
-            HashSet<Owner> allTheOwnerOfTheGroup = team.deleteTheData();
-            changeTheOwnerToFan(allTheOwnerOfTheGroup);
-            dbController.removeTeam(this, teamName);
-            return true;
+            if(team.getGamesSize()==0) {
+                HashSet<Owner> allTheOwnerOfTheGroup = team.deleteTheData();
+                changeTheOwnerToFan(allTheOwnerOfTheGroup);
+                dbController.removeTeam(this, teamName);
+                return true;
+            }
+            else
+            {
+                throw new IncorrectInputException("this team have games , you cant close it");
+            }
         } else {
             throw new ObjectNotExist("this team name is not exist");
         }
@@ -298,7 +303,7 @@ public class SystemManager extends Member {
                     throw new MemberNotExist();
                 }
             } else {
-                throw new IncorrectInputException();
+                throw new IncorrectInputException("input are illegal");
             }
         }
 

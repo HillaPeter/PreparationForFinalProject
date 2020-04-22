@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class Main {
     static Scanner scanInput = new Scanner(System.in);
-    static SystemController controller = new SystemController("System Controller");
+    static SystemController controller ;//= new SystemController("System Controller");
     static Role member;
     static String path;
     //static DBController dbController;//just for my test - you can delete
@@ -23,7 +23,7 @@ public class Main {
     public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
 /****************************************************menu******************************************************/
         //  controller.initSystem();
-
+        controller = new SystemController("System Controller");
         startMenu();
         /****shachar tests******/
         //must write the path in the main
@@ -244,6 +244,8 @@ public class Main {
                                     e.printStackTrace();
                                 } catch (MemberNotExist memberNotExist) {
                                     memberNotExist.printStackTrace();
+                                } catch (IncorrectInputException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }
@@ -256,11 +258,11 @@ public class Main {
                     String id = removeMember();// scanInput.nextLine();
                     try {
                         boolean success = controller.removeMember(id);
-                    } catch (DontHavePermissionException e) {
+                    }  catch (IncorrectInputException e ) {
+                        e.printStackTrace();
+                    }catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove member");
-                    } catch (MemberNotExist memberNotExist) {
-                        memberNotExist.printStackTrace();
-                    } catch (IncorrectInputException e) {
+                    } catch (MemberNotExist e) {
                         e.printStackTrace();
                     } catch (AlreadyExistException e) {
                         e.printStackTrace();
@@ -507,7 +509,7 @@ public class Main {
 
     private static String chooseSeason() {
         HashMap<String, Season> season = controller.getSeasons();
-        System.out.println("Choose team name to remove team");
+        System.out.println("Choose season id");
         for (String seasonId : season.keySet()) {
             System.out.println(seasonId);
         }
@@ -517,7 +519,7 @@ public class Main {
 
     private static String chooseLeague() {
         HashMap<String, League> leagues = controller.getLeagues();
-        System.out.println("Choose team name to remove team");
+        System.out.println("Choose league id");
         for (String leagueId : leagues.keySet()) {
             System.out.println(leagueId);
         }

@@ -30,7 +30,12 @@ public class SystemController {
     public SystemController(String name) {
         this.name = name;
         //this.initSystem("", "", ""); // change it
-        initSystem();
+        try {
+            initSystem();
+        }catch (IncorrectInputException e) {
+
+        } catch (DontHavePermissionException e) {
+        }
 //        password verifications
 //        passwordValidation=new HashMap<>();
 //        for(Role r:roles){
@@ -41,9 +46,22 @@ public class SystemController {
         //member = user; (argument in the constructor-Member user- Fan, Owner, AD, Referee...)
     }
 
-    public void initSystem() {
+    public void initSystem() throws IncorrectInputException, DontHavePermissionException {
         //check if the user name and the password are connect
         dbController = new DBController();
+        try{
+            Fan f = (Fan)signIn("admin", "admin@gmail.com" , "123",new Date(1995,2,15));
+            SystemManager systemManager = new SystemManager("admin", "admin@gmail.com", f.getPassword(), this.dbController ,new Date(1995,2,15) );
+            Role role=connectedUser;
+            connectedUser=systemManager;
+            this.addSystemManager(f.getUserMail());
+            connectedUser=role;
+
+        }catch (AlreadyExistException e){
+
+        } catch (MemberNotExist memberNotExist) {
+            memberNotExist.printStackTrace();
+        }
         connectedUser = new Guest(dbController ,null);
         System.out.println("Init System:");
         System.out.println("Connect to Security System");
@@ -163,7 +181,7 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException {
+    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, IncorrectInputException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.closeTeam(teamName);

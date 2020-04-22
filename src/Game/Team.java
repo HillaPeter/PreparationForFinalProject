@@ -3,6 +3,7 @@ package Game;
 import Asset.*;
 import Exception.*;
 import Users.Owner;
+import jdk.internal.org.objectweb.asm.tree.analysis.SourceValue;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ public class Team {
         managers = new HashSet<>();
         owners = new HashSet<>();
         trainingFields=new HashSet<>();
+        games=new HashSet<>();
     }
 
     public Team(String name, Account account,Owner owner) {
@@ -42,6 +44,7 @@ public class Team {
         players = new HashSet<>();
         managers = new HashSet<>();
         trainingFields=new HashSet<>();
+        games=new HashSet<>();
 
     }
 
@@ -52,6 +55,7 @@ public class Team {
         this.players = new HashSet<>();
         this.managers = new HashSet<>();
         this.owners = new HashSet<>();
+        games=new HashSet<>();
         this.coaches.addAll(coaches);
         this.players.addAll(players);
         this.owners.addAll(owners);
@@ -270,6 +274,10 @@ return newHash;
 
     public void addGame(Game game) {
         games.add(game);
+    }
+
+    public int getGamesSize() {
+        return games.size();
     }
 }
 

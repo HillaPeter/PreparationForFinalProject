@@ -2,11 +2,14 @@ package Users;
 
 import org.junit.Test;
 import system.SystemController;
-
+import Exception.*;
 import static org.junit.Assert.*;
 
 public class MainRefereeTest {
     SystemController controller = new SystemController("test controller");
+
+    public MainRefereeTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
+    }
 
     @Test
     public void printGameSchedule() {

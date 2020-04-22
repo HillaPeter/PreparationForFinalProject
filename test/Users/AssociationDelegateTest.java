@@ -17,6 +17,9 @@ public class AssociationDelegateTest {
     SystemController controller= new SystemController("test");
     AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123", birthdate);
 
+    public AssociationDelegateTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
+    }
+
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
         controller.signIn(a_s_Test.getName(),a_s_Test.getUserMail(),a_s_Test.getPassword(), a_s_Test.getBirthDate());

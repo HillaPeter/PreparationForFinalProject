@@ -23,6 +23,9 @@ public class SystemManagerTest {
     SystemController controller = new SystemController("");
     Date birthdate = new Date(1993, 10, 12);
 
+    public SystemManagerTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
+    }
+
 
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
@@ -233,14 +236,14 @@ public class SystemManagerTest {
     }
 
     @Test
-    public void closeTeamNoPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException {
+    public void closeTeamNoPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, IncorrectInputException {
         thrown.expect(DontHavePermissionException.class);
         /* try to close team without login  - result should be negative */
         controller.closeTeam("newTeam");
     }
 
     @Test
-    public void closeTeamNotExistingTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, AlreadyExistException, ObjectNotExist {
+    public void closeTeamNotExistingTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, AlreadyExistException, ObjectNotExist, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com", "123");
@@ -251,11 +254,13 @@ public class SystemManagerTest {
 
     /*******************************************************************************/
     @Test
-    public void removeMember() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException {
+    public void removeMember() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException {
         /*init*/
         controller.signIn("member", "member@gmail.com", "123", birthdate);
         controller.logIn("admin@gmail.com", "123");
 
+      //  controller.signIn("member", "member@gmail.com", "123", birthdate);
+        controller.addReferee("member@gmail.com" , false);
         assertTrue(controller.getRoles().containsKey("member@gmail.com"));
         int size = controller.getRoles().size();
 

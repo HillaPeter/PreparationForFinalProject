@@ -31,6 +31,9 @@ public class OwnerTest {
     LinkedList<String> idmanager = new LinkedList<>();
     LinkedList<String> idowner = new LinkedList<>();
 
+    public OwnerTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
+    }
+
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
 
