@@ -6,6 +6,7 @@ import Users.Owner;
 import jdk.internal.org.objectweb.asm.tree.analysis.SourceValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -157,7 +158,7 @@ return newHash;
             if (field.getNameOfField().equals(name))
                 return field;
         }
-        if (homeField.getNameOfField().equals(name))
+        if (homeField!=null && homeField.getNameOfField().equals(name))
             return homeField;
         return null;
     }
@@ -166,6 +167,15 @@ return newHash;
     }
 
     public HashSet<Field> getTrainingFields() { return trainingFields; }
+
+    public Field getFieldFromTrainingFields(String fieldName){
+        for(Field field:trainingFields){
+            if(field.getName().equals(fieldName)){
+                return field;
+            }
+        }
+        return null;
+    }
 
     public Field getHomeField() {
         return homeField;
@@ -248,7 +258,7 @@ return newHash;
     }
 
     public void addField(Field field) {
-        if (field != null && field!=homeField && !this.trainingFields.contains(field)){
+        if (field != null && !this.trainingFields.contains(field)){
             this.trainingFields.add(field);
         }
     }
@@ -267,7 +277,7 @@ return newHash;
     }
 
     public void removePlayer(Player someone) {
-        if (someone != null && !this.players.contains(someone)){
+        if (someone != null && this.players.contains(someone)){
             this.players.remove(someone);
         }
     }
@@ -278,6 +288,22 @@ return newHash;
 
     public int getGamesSize() {
         return games.size();
+    }
+
+    public Manager getManager(String id) {
+        for (Manager manager : this.managers) {
+            if (manager.getUserMail().equals(id))
+                return manager;
+        }
+        return null;
+    }
+
+    public Owner getOwner(String id){
+        for (Owner owner : this.owners) {
+            if (owner.getUserMail().equals(id))
+                return owner;
+        }
+        return null;
     }
 }
 

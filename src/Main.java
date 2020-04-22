@@ -875,7 +875,7 @@ public class Main {
 
     }
 
-    private static void addTeamPlayer() throws IncorrectInputException, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException {
+    private static void addTeamPlayer() throws IncorrectInputException, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException, NoEnoughMoney {
         System.out.println("Choose role by mail to make him coach");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
@@ -907,7 +907,7 @@ public class Main {
 
     }
 
-    private static void addTeamField() throws IncorrectInputException, ObjectNotExist, MemberNotExist, DontHavePermissionException {
+    private static void addTeamField() throws IncorrectInputException, ObjectNotExist, MemberNotExist, DontHavePermissionException, AlreadyExistException, ObjectAlreadyExist, NoEnoughMoney {
         HashMap<String, Team> teams = controller.getTeams();
         System.out.println("Choose team name to add new field");
         for (String teamName : teams.keySet()) {

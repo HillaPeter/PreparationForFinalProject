@@ -17,7 +17,7 @@ public class Account {
     //todo!
     public Account() {
         this.transactions = new ArrayList<Transaction>();
-        amountOfTeam = 0; //default->need to update!
+        amountOfTeam = 1000; //default->need to update!
     }
 
     public void setTransactions(ArrayList<Transaction> transactions) {

@@ -14,9 +14,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import system.SystemController;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -30,9 +28,6 @@ public class OwnerTest {
     LinkedList<String> idcoach = new LinkedList<>();
     LinkedList<String> idmanager = new LinkedList<>();
     LinkedList<String> idowner = new LinkedList<>();
-
-    public OwnerTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
-    }
 
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
@@ -69,7 +64,6 @@ public class OwnerTest {
         idmanager.add("manager@gmail.com");
         idowner.add("owner@gmail.com");
     }
-
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
 
@@ -79,7 +73,6 @@ public class OwnerTest {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
-        //controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
@@ -88,8 +81,8 @@ public class OwnerTest {
         controller.addCoach("team",this.idcoach.get(0));
         assertThat(controller.getRoles().get(this.idcoach.get(0)) , instanceOf(Coach.class));
         assertTrue(((Coach)controller.getRoles().get(this.idcoach.get(0))).getTeam().containsKey("team"));
-        assertTrue(controller.getTeams().get("team").getCoaches().contains(this.idcoach.get(0)));
-        assertEquals(950,controller.getAccountBalance("team"));
+        assertNotNull(controller.getTeams().get("team").getCoach(this.idcoach.get(0)));
+        assertTrue(950 == controller.getAccountBalance("team"));
 
     }
     @Test
@@ -98,7 +91,6 @@ public class OwnerTest {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
-        //controller.addTeam(this.idPlayers,this.idcoach,this.idmanager,this.idowner,"team");
         controller.logOut();
 
         /* try to add coach - without login result should be negative */
@@ -126,13 +118,36 @@ public class OwnerTest {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
+
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
+
+        controller.setMoneyToAccount("team",1000);
         controller.addCoach("team",this.idcoach.get(0));
+
         int sizeBefore = this.controller.getTeams().get("team").getCoaches().size();
-        System.out.println(sizeBefore);
 
         /* try to add coach who already exist in the team - result should be negative */
+        controller.addCoach("team",this.idcoach.get(0));
+        System.out.println(this.controller.getTeams().get("team").getCoaches().size());
+        assertEquals(sizeBefore, this.controller.getTeams().get("team").getCoaches().size());
+
+    }
+    @Test
+    public void addCoachTeamAlreadyExistInAnother() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
+        thrown.expect(AlreadyExistException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.addTeam("team2","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team2",1000);
+        controller.addCoach("team2",this.idcoach.get(0));
+
+        int sizeBefore = this.controller.getTeams().get("team").getCoaches().size();
+
+        /* try to add coach who already exist in Another team - result should be negative */
         controller.addCoach("team",this.idcoach.get(0));
         System.out.println(this.controller.getTeams().get("team").getCoaches().size());
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getCoaches().size());
@@ -169,7 +184,7 @@ public class OwnerTest {
     }
     /************************************************addAsset-player**************************************************/
     @Test
-    public void addPlayer() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist {
+    public void addPlayer() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -179,14 +194,16 @@ public class OwnerTest {
 
 
         /* try to add player - with login result should be positive */
-        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"df");
         assertThat(controller.getRoles().get(this.idPlayers.get(0)) , instanceOf(Player.class));
         assertTrue(((Player)controller.getRoles().get(this.idPlayers.get(0))).getTeam().containsKey("team"));
-        assertTrue(controller.getTeams().get("team").getPlayers().contains(this.idPlayers.get(0)));
-        assertEquals(950,controller.getAccountBalance("team"));
+        assertNotNull(controller.getTeams().get("team").getPlayer(this.idPlayers.get(0)));
+
+        int moneyLeft=(int)controller.getAccountBalance("team");
+        assertEquals(950,moneyLeft);
     }
     @Test
-    public void addPlayerPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+    public void addPlayerPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -194,7 +211,7 @@ public class OwnerTest {
         controller.logOut();
 
         /* try to add player - without login result should be negative */
-        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"yi");
     }
     @Test
     public void addPlayerNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -208,7 +225,7 @@ public class OwnerTest {
         int sizeBefore = this.controller.getTeams().get("team").getPlayers().size();
 
         /* try to add player who not exist in the system - result should be negative */
-        controller.addPlayer("newPlayer@gmail.com","team",2000,10,12,"");
+        controller.addPlayer("newPlayer@gmail.com","team",2000,10,12,"yi");
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getPlayers().size());
     }
     @Test
@@ -217,16 +234,41 @@ public class OwnerTest {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
+
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
+
+        controller.setMoneyToAccount("team",1000);
+        controller.addPlayer(this.idPlayers.get(0),"team",2000,10,12,"fd");
 
         int sizeBefore = this.controller.getTeams().get("team").getPlayers().size();
 
 
         /* try to add player who already exist in the team - result should be negative */
-        controller.addPlayer("p0@gmail.com","team",2000,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"team",2000,10,12,"uu");
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getPlayers().size());
 
+    }
+    @Test
+    public void addPlayerTeamAlreadyExistInAnother() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+        thrown.expect(AlreadyExistException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.addTeam("team2","owner@gmail.com");
+
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+
+        controller.setMoneyToAccount("team2",1000);
+        controller.addPlayer(this.idPlayers.get(0),"team2",1993,10,12,"esfd");
+
+        int sizeBefore = this.controller.getTeams().get("team").getPlayers().size();
+
+
+        /* try to add player who already exist in the team - result should be negative */
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"wer");
+        assertEquals(sizeBefore, this.controller.getTeams().get("team").getPlayers().size());
     }
     @Test
     public void addPlayerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -238,7 +280,7 @@ public class OwnerTest {
         controller.logIn("owner@gmail.com","1");
 
         /* try to add player - invalid team name result should be negative */
-        controller.addPlayer(this.idPlayers.get(0),"teammm",1993,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"teammm",1993,10,12,"df");
     }
     @Test
     public void addPlayerNotMoney() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -253,13 +295,13 @@ public class OwnerTest {
 
 
         /* try to add player - with login result should be positive */
-        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"fd");
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getPlayers().size());
 
     }
     /************************************************addAsset-field**************************************************/
     @Test
-    public void addField() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist {
+    public void addField() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney {
         /* init - create team  */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -278,7 +320,9 @@ public class OwnerTest {
             }
         }
         assertTrue(fieldExist);
-        assertEquals(950,controller.getAccountBalance("team"));
+
+        int leftAmount=(int)controller.getAccountBalance("team");
+        assertEquals(950,leftAmount);
         assertEquals(sizeBefore+1,controller.getTeams().get("team").getTrainingFields().size());
 
     }
@@ -301,6 +345,7 @@ public class OwnerTest {
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team",1000);
         controller.addField("team","f");
 
         int sizeBefore = this.controller.getTeams().get("team").getTrainingFields().size();
@@ -352,7 +397,7 @@ public class OwnerTest {
         controller.removeCoach("team",this.idcoach.get(0));
         assertTrue(controller.getRoles().containsKey(this.idcoach.get(0)));
         assertThat(controller.getRoles().get(this.idcoach.get(0)), instanceOf(Fan.class));
-        assertNull(controller.getTeams().get("team").getCoach(this.idcoach.get(0)));
+        assertNotNull(controller.getTeams().get("team").getCoach(this.idcoach.get(0)));
         assertTrue(950 == controller.getAccountBalance("team"));
     }
     @Test
@@ -402,7 +447,7 @@ public class OwnerTest {
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
-        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"dfs");
         int sizeBefore = this.controller.getTeams().get("team").getPlayers().size();
 
 
@@ -432,7 +477,7 @@ public class OwnerTest {
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
-        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"");
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"dfg");
 
         int sizeBefore = this.controller.getTeams().get("team").getPlayers().size();
 
@@ -483,7 +528,7 @@ public class OwnerTest {
     }
     @Test
     public void removeFieldNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
-        thrown.expect(MemberNotExist.class);
+        thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -523,10 +568,10 @@ public class OwnerTest {
         /* try to add new manager - with login result should be positive */
         controller.addManager("team" , "newManager@gmail.com");
         assertThat(controller.getRoles().get("newManager@gmail.com") , instanceOf(Manager.class));
+        assertNotNull(controller.getTeams().get("team").getManager("newManager@gmail.com"));
         Manager m = (Manager)controller.getRoles().get("newManager@gmail.com");
         assertTrue(m.getTeam().containsKey("team"));
-        assertTrue(controller.getTeams().get("team").getManagers().contains(m));
-        assertEquals(950 ,controller.getAccountBalance("team"));
+        assertTrue(950 == controller.getAccountBalance("team"));
     }
     @Test
     public void addNewManagerPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -548,33 +593,31 @@ public class OwnerTest {
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
 
-        int sizeBefore = this.controller.getTeams().get("team").getManagers().size();
 
         /* try to add new manager who not exist in the system - result should be negative */
         controller.addManager("team" , "newManager@gmail.com");
-        assertEquals(sizeBefore, this.controller.getTeams().get("team").getManagers().size());
     }
     @Test
     public void addNewManagerTeamAlreadyExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
         thrown.expect(AlreadyExistException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
+
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
-
-        int sizeBefore = this.controller.getTeams().get("team").getManagers().size();
-
+        controller.addManager("team","manager@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
 
         /* try to add new manager who already exist in the team - result should be negative */
         controller.addManager("team","manager@gmail.com");
-        assertEquals(sizeBefore, this.controller.getTeams().get("team").getManagers().size());
-
     }
     @Test
     public void addNewManagerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
         thrown.expect(ObjectNotExist.class);
         /* init */
+        controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
@@ -602,7 +645,90 @@ public class OwnerTest {
     }
     /******************************************addNewOwner******************************************/
     @Test
-    public void addNewOwner() {
+    public void addNewOwner() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, NoEnoughMoney {
+        /* init - create team  */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.signIn("owner2","owner2@gmail.com","1",birthdate);
+        controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team",1000);
+
+        /* try to add owner - with login result should be positive */
+        controller.addNewOwner("team","owner2@gmail.com");
+        assertThat(controller.getRoles().get("owner2@gmail.com") , instanceOf(Owner.class));
+        assertNotNull(((Owner)controller.getRoles().get("owner2@gmail.com")).getTeams().get("team"));
+        assertNotNull(controller.getTeams().get("team").getOwner("owner2@gmail.com"));
+
+        int leftMoney=(int) controller.getAccountBalance("team");
+        assertEquals(950,leftMoney);
+    }
+    @Test
+    public void addNewOwnerPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+        thrown.expect(DontHavePermissionException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+
+        /* try to add new owner - without login result should be negative */
+        controller.addNewOwner("team" , "owner2@gmail.com");
+    }
+    @Test
+    public void addNewOwnerNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+        thrown.expect(MemberNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+
+        /* try to add new owner who not exist in the system - result should be negative */
+        controller.addNewOwner("team" , "owner2@gmail.com");
+    }
+    @Test
+    public void addNewOwnerTeamAlreadyExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+        thrown.expect(AlreadyExistException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.signIn("owner2","owner2@gmail.com","1",birthdate);
+        controller.logIn("owner@gmail.com","1");
+
+        controller.addNewOwner("team","owner2@gmail.com");
+
+
+        /* try to add new owner who already exist in the team - result should be negative */
+        controller.addNewOwner("team","owner2@gmail.com");
+
+    }
+    @Test
+    public void addNewOwnerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+        thrown.expect(ObjectNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.signIn("owner2","owner2@gmail.com","1",birthdate);
+        controller.logIn("owner@gmail.com","1");
+
+        /* try to add new owner - invalid team name result should be negative */
+        controller.addNewOwner("teammmm","owner2@gmail.com");
+    }
+    @Test
+    public void addNewOwnerNoEnoughMoney() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
+        thrown.expect(NoEnoughMoney.class);
+        /* init - create team  */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.signIn("owner","owner2@gmail.com","123", birthdate);
+        controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team",40);
+
+        /* try to add new owner - with not enough money-  result should be negative */
+        controller.addManager("team" , "owner2@gmail.com");
     }
     /******************************************removeManager******************************************/
     @Test
@@ -615,14 +741,18 @@ public class OwnerTest {
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
         controller.addManager("team" , "newManager@gmail.com");
-        Manager m = (Manager)controller.getRoles().get("newManager@gmail.com");
+
+        int sizeBefore = this.controller.getTeams().get("team").getManagers().size();
+
 
         /* try to remove manager - with login result should be positive */
         controller.removeManager("team" , "newManager@gmail.com");
         assertTrue(controller.getRoles().containsKey("newManager@gmail.com"));
-        assertFalse(controller.getTeams().get("team").getManagers().contains(m));
-        assertEquals(1000 ,controller.getAccountBalance("team"));
-        assertFalse(m.getTeam().containsKey("team"));
+        assertThat(controller.getRoles().get("newManager@gmail.com"),instanceOf(Fan.class));
+        assertNull(controller.getTeams().get("team").getManager("newManager@gmail.com"));
+        assertTrue(950 == controller.getAccountBalance("team"));
+        assertEquals(sizeBefore-1 ,this.controller.getTeams().get("team").getManagers().size());
+
     }
     @Test
     public void removeManagerPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -654,6 +784,7 @@ public class OwnerTest {
     public void removeManagerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
         thrown.expect(ObjectNotExist.class);
         /* init */
+        controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
@@ -663,12 +794,14 @@ public class OwnerTest {
     }
     /******************************************temporaryTeamClosing******************************************/
     @Test
-    public void temporaryTeamClosing() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
+    public void temporaryTeamClosing() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, NoEnoughMoney {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
+        controller.setMoneyToAccount("team" , 1000);
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"fsd");
 
         int sizeBefore = controller.getTeams().size();
 
@@ -677,9 +810,12 @@ public class OwnerTest {
         assertTrue(controller.getTeams().containsKey("team"));
         assertFalse(controller.getTeams().get("team").getStatus());
         assertEquals(sizeBefore ,controller.getTeams().size());
+        assertThat(controller.getRoles().get(this.idPlayers.get(0)) , instanceOf(Player.class));
+        assertFalse(((Player)controller.getRoles().get(this.idPlayers.get(0))).getTeam().containsKey("team"));
     }
     @Test
     public void temporaryTeamClosinNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, PasswordDontMatchException, IncorrectInputException {
+        thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -713,13 +849,15 @@ public class OwnerTest {
     }
     /******************************************reopenClosedTeam******************************************/
     @Test
-    public void reopenClosedTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
+    public void reopenClosedTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, NoEnoughMoney {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
         controller.logIn("owner@gmail.com","1");
-
+        controller.setMoneyToAccount("team" , 1000);
+        controller.addPlayer(this.idPlayers.get(0),"team",1993,10,12,"guard");
+        controller.temporaryTeamClosing("team");
         int sizeBefore = controller.getTeams().size();
 
         /* try to reopen team - result positive*/
@@ -727,10 +865,14 @@ public class OwnerTest {
         assertTrue(controller.getTeams().containsKey("team"));
         assertTrue(controller.getTeams().get("team").getStatus());
         assertEquals(sizeBefore ,controller.getTeams().size());
+        assertThat(controller.getRoles().get(this.idPlayers.get(0)) , instanceOf(Player.class));
+        assertTrue(((Player)controller.getRoles().get(this.idPlayers.get(0))).getTeam().containsKey("team"));
     }
     @Test
-    public void reopenClosedTeamNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
+    public void reopenClosedTeamNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, PasswordDontMatchException {
+        thrown.expect(DontHavePermissionException.class);
         /* init */
+        controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
 
@@ -873,7 +1015,7 @@ public class OwnerTest {
         controller.logIn("owner@gmail.com","1");
 
         /* try to add outcome to Team without set money no account - result should be negative */
-        controller.addOutCome("team","",1000);
+        controller.addOutCome("team","tt",1001);
     }
 
 }

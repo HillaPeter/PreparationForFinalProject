@@ -14,38 +14,29 @@ public class Owner extends Member {
     private DBController dbController;
 
 
-    public Owner(String name, String userMail, String password,Date birthDate , DBController dbController) throws DontHavePermissionException {
-        super(name, userMail, password , birthDate);
-        this.dbController=dbController;
-        teams=new HashMap<>();
-        /*for(String teamName:dbController.getTeams(this).keySet()){
-            Team team=dbController.getTeams(this).get(teamName);
-            //todo:check if works!
-            if(team.getOwners().contains(this)){
-                teams.put(teamName,team);
-            }
-        }*/
+    public Owner(String name, String userMail, String password, Date birthDate, DBController dbController) throws DontHavePermissionException {
+        super(name, userMail, password, birthDate);
+        this.dbController = dbController;
+        teams = new HashMap<>();
     }
 
-    public Owner(String name, String userMail, String password , Date birthDate )
-    {
-        super(name, userMail, password , birthDate);
-        dbController=null;
-        teams=new HashMap<>();
+    public Owner(String name, String userMail, String password, Date birthDate) {
+        super(name, userMail, password, birthDate);
+        dbController = null;
+        teams = new HashMap<>();
     }
 
-    public void setDb(DBController dbController)
-    {
-        if(dbController==null) {
+    public void setDb(DBController dbController) {
+        if (dbController == null) {
             this.dbController = dbController;
         }
     }
 
-    public void addTeam(Team team){
-        teams.put(team.getName() ,team);
+    public void addTeam(Team team) {
+        teams.put(team.getName(), team);
     }
 
-    public void removeTheTeamFromMyList(String name){
+    public void removeTheTeamFromMyList(String name) {
         teams.remove(name);
     }
 
@@ -61,55 +52,38 @@ public class Owner extends Member {
 
         Account account = team.getAccount();
         //set amount
-        account.setAmountOfTeam(account.getAmountOfTeam() - 0);
+        account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
         HashMap<String, Role> roles = dbController.getRoles(this);
         Role role = roles.get(mailId);
-        Manager manager;
+        Manager manager = null;
         if (role instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) role;
             manager = new Manager(systemManager.getName(), systemManager.getUserMail(), systemManager.getPassword(), systemManager.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addManager(this , manager);
-            team.addManager(manager);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Player) {
             Player player = (Player) role;
             manager = new Manager(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addManager(this ,manager);
-            team.addManager(manager);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Coach) {
             Coach coach = (Coach) role;
             manager = new Manager(coach.getName(), coach.getUserMail(), coach.getPassword(), coach.getBirthDate());
-            dbController.deleteRole(this, mailId);
-            dbController.addManager(this ,manager);
-            team.addManager(manager);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Fan) {
             Fan fan = (Fan) role;
             manager = new Manager(fan.getName(), fan.getUserMail(), fan.getPassword(), fan.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addManager(this ,manager);
-            team.addManager(manager);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof AssociationDelegate) {
             AssociationDelegate associationDelegate = (AssociationDelegate) role;
             manager = new Manager(associationDelegate.getName(), associationDelegate.getUserMail(), associationDelegate.getPassword(), associationDelegate.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addManager(this ,manager);
-            team.addManager(manager);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Referee) {
             Referee referee = (Referee) role;
             manager = new Manager(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addManager(this ,manager);
-            team.addManager(manager);
-            dbController.getTeams(this).replace(teamName,team);
         }
-
+        if (manager != null) {
+            manager.addTeam(team);
+            dbController.deleteRole(this, mailId);
+            dbController.addManager(this, manager);
+            team.addManager(manager);
+            HashMap<String, Team> teams = dbController.getTeams(this);
+            teams.replace(teamName, team);
+        }
 
     }
 
@@ -119,59 +93,42 @@ public class Owner extends Member {
      * @param teamName,mailId
      */
     public void addCoach(String teamName, String mailId) throws MemberNotExist, AlreadyExistException, DontHavePermissionException {
-        Team team =  teams.get(teamName);
+        Team team = teams.get(teamName);
 
         Account account = team.getAccount();
         //set amount
-        account.setAmountOfTeam(account.getAmountOfTeam() - 0);
+        account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
         HashMap<String, Role> roles = dbController.getRoles(this);
         Role role = roles.get(mailId);
-        Coach coach;
+        Coach coach = null;
         if (role instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) role;
             coach = new Coach(systemManager.getName(), systemManager.getUserMail(), systemManager.getPassword(), systemManager.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addCoach(this ,coach);
-            team.addCoach(coach);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Manager) {
             Manager manager = (Manager) role;
             coach = new Coach(manager.getName(), manager.getUserMail(), manager.getPassword(), manager.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addCoach(this ,coach);
-            team.addCoach(coach);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Player) {
             Player player = (Player) role;
             coach = new Coach(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addCoach(this ,coach);
-            team.addCoach(coach);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Fan) {
             Fan fan = (Fan) role;
             coach = new Coach(fan.getName(), fan.getUserMail(), fan.getPassword(), fan.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addCoach(this ,coach);
-            team.addCoach(coach);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof AssociationDelegate) {
             AssociationDelegate associationDelegate = (AssociationDelegate) role;
             coach = new Coach(associationDelegate.getName(), associationDelegate.getUserMail(), associationDelegate.getPassword(), associationDelegate.getBirthDate());
-            dbController.deleteRole(this, mailId);
-            dbController.addCoach(this ,coach);
-            team.addCoach(coach);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Referee) {
             Referee referee = (Referee) role;
             coach = new Coach(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate());
-            dbController.deleteRole(this,mailId);
-            dbController.addCoach(this ,coach);
-            team.addCoach(coach);
-            dbController.getTeams(this).replace(teamName,team);
         }
-
+        if (coach != null) {
+            coach.addTeam(team);
+            dbController.deleteRole(this, mailId);
+            dbController.addCoach(this, coach);
+            team.addCoach(coach);
+            HashMap<String, Team> teams = dbController.getTeams(this);
+            teams.replace(teamName, team);
+        }
     }
 
     /**
@@ -179,62 +136,45 @@ public class Owner extends Member {
      *
      * @param teamName,mailId
      */
-    public void addPlayer(String teamName, String mailId,int year, int month, int day, String roleInPlayers) throws MemberNotExist, AlreadyExistException, DontHavePermissionException {
-        Team team =  teams.get(teamName);
+    public void addPlayer(String teamName, String mailId, int year, int month, int day, String roleInPlayers) throws MemberNotExist, AlreadyExistException, DontHavePermissionException {
+        Team team = teams.get(teamName);
 
         Account account = team.getAccount();
         //set amount
-        account.setAmountOfTeam(account.getAmountOfTeam() - 0);
+        account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
         HashMap<String, Role> roles = dbController.getRoles(this);
         Role role = roles.get(mailId);
-        Player player;
+        Player player=null;
         Date date = new Date(year, month, day);
 
         if (role instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) role;
             player = new Player(systemManager.getName(), systemManager.getUserMail(), systemManager.getPassword(), date, roleInPlayers);
-            dbController.deleteRole(this,mailId);
-            dbController.addPlayer(this ,player);
-            team.addPlayer(player);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Manager) {
             Manager manager = (Manager) role;
             player = new Player(manager.getName(), manager.getUserMail(), manager.getPassword(), date, roleInPlayers);
-            dbController.deleteRole(this,mailId);
-            dbController.addPlayer(this ,player);
-            team.addPlayer(player);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Coach) {
             Coach coach = (Coach) role;
             player = new Player(coach.getName(), coach.getUserMail(), coach.getPassword(), date, roleInPlayers);
-            dbController.deleteRole(this,mailId);
-            dbController.addPlayer(this ,player);
-            team.addPlayer(player);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Fan) {
             Fan fan = (Fan) role;
             player = new Player(fan.getName(), fan.getUserMail(), fan.getPassword(), date, roleInPlayers);
-            dbController.deleteRole(this,mailId);
-            dbController.addPlayer(this ,player);
-            team.addPlayer(player);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof AssociationDelegate) {
             AssociationDelegate associationDelegate = (AssociationDelegate) role;
             player = new Player(associationDelegate.getName(), associationDelegate.getUserMail(), associationDelegate.getPassword(), date, roleInPlayers);
-            dbController.deleteRole(this,mailId);
-            dbController.addPlayer(this ,player);
-            team.addPlayer(player);
-            dbController.getTeams(this).replace(teamName,team);
         } else if (role instanceof Referee) {
             Referee referee = (Referee) role;
             player = new Player(referee.getName(), referee.getUserMail(), referee.getPassword(), date, roleInPlayers);
-            dbController.deleteRole(this,mailId);
-            dbController.addPlayer(this ,player);
-            team.addPlayer(player);
-            dbController.getTeams(this).replace(teamName,team);
         }
-        //todo: owner??
+        if(player!=null){
+            player.addTeam(team);
+            dbController.deleteRole(this, mailId);
+            dbController.addPlayer(this, player);
+            team.addPlayer(player);
+            HashMap<String, Team> teams = dbController.getTeams(this);
+            teams.replace(teamName, team);
+        }
 
     }
 
@@ -243,13 +183,36 @@ public class Owner extends Member {
      *
      * @param teamName
      */
-    public void addField(String teamName,  String fieldName) throws DontHavePermissionException {
+    public void addField(String teamName, String fieldName) throws DontHavePermissionException {
         Team team = teams.get(teamName);
-        Field field = new Field(fieldName);
-        team.addField(field);
-        HashSet<Field> trainingFields = dbController.getTeams(this).get(teamName).getTrainingFields();
-        trainingFields.add(field);
-        dbController.getTeams(this).get(teamName).setTrainingFields(trainingFields);
+
+        //Field field = new Field(fieldName);
+        HashSet<Field> fieldExist=team.getTrainingFields();
+        boolean exist=false;
+        for(Field field:fieldExist){
+            if(field.getName().equals(fieldName)){
+                exist=true;
+            }
+        }
+        if(!exist){
+            //not exist
+            Account account = team.getAccount();
+            //set amount
+            account.setAmountOfTeam(account.getAmountOfTeam() - 50);
+
+            Field field=new Field(fieldName);
+
+            team.addField(field);
+            field.setTeam(team);
+            HashSet<Field> trainingFields = dbController.getTeams(this).get(teamName).getTrainingFields();
+            trainingFields.add(field);
+            HashMap<String, Team> teams = dbController.getTeams(this);
+            teams.replace(teamName, team);
+
+        }
+
+
+
     }
 
     /******************************Remove Asset- Manage, Coach, Player, Field************************************/
@@ -268,11 +231,17 @@ public class Owner extends Member {
         for (Manager manager : managers) {
             //found the manager to remove
             if (manager.getUserMail().equals(mailInput)) {
-                Fan fan = new Fan(manager.getName(), manager.getUserMail(), manager.getPassword() , manager.getBirthDate());
+                Fan fan = new Fan(manager.getName(), manager.getUserMail(), manager.getPassword(), manager.getBirthDate());
                 team.removeManager(manager);
-                dbController.deleteRole(this,mailInput);
-                dbController.addFan(this,fan);
-                dbController.getTeams(this).replace(teamName,team);
+                dbController.deleteRole(this, mailInput);
+
+                HashSet<Manager> managersAll= team.getManagers();
+                managersAll.remove(manager);
+
+                HashMap<String, Team> teams = dbController.getTeams(this);
+                teams.replace(teamName, team);
+
+                dbController.addFan(this, fan);
                 break;
             }
         }
@@ -294,9 +263,10 @@ public class Owner extends Member {
             if (coach.getUserMail().equals(mailInput)) {
                 Fan fan = new Fan(coach.getName(), coach.getUserMail(), coach.getPassword(), coach.getBirthDate());
                 team.removeCoach(coach);
-                dbController.deleteRole(this,mailInput);
-                dbController.addFan(this,fan);
-                dbController.getTeams(this).replace(teamName,team);
+                dbController.deleteRole(this, mailInput);
+                dbController.addFan(this, fan);
+                HashMap<String, Team> teams = dbController.getTeams(this);
+                teams.replace(teamName, team);
                 break;
             }
         }
@@ -318,9 +288,11 @@ public class Owner extends Member {
             if (player.getUserMail().equals(mailInput)) {
                 Fan fan = new Fan(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate());
                 team.removePlayer(player);
-                dbController.deleteRole(this,mailInput);
-                dbController.addFan(this,fan);
-                dbController.getTeams(this).replace(teamName,team);
+                dbController.getPlayers(this).remove(player);
+                dbController.deleteRole(this, mailInput);
+                dbController.addFan(this, fan);
+                HashMap<String, Team> teams = dbController.getTeams(this);
+                teams.replace(teamName, team);
                 break;
             }
         }
@@ -333,11 +305,21 @@ public class Owner extends Member {
      * @param fieldName
      */
     public void removeField(String teamName, String fieldName) throws DontHavePermissionException {
-        Team team = dbController.getTeams(this).get(teamName);
-        HashSet<Field> field = team.getTrainingFields();
-        field.remove(fieldName);
-        team.setTrainingFields(field);
-        dbController.getTeams(this).replace(teamName,team);
+
+       Team team = dbController.getTeams(this).get(teamName);
+       HashSet<Field> allFields=dbController.getTeams(this).get(teamName).getTrainingFields();
+        for(Field field:allFields){
+            if(field.getName().equals(fieldName)){
+                allFields.remove(field);
+                team.setTrainingFields(allFields);
+                HashMap<String, Team> teams = dbController.getTeams(this);
+                teams.replace(teamName, team);
+                allFields.remove(field);
+                teams.replace(teamName, team);
+            }
+        }
+
+
     }
 
 
@@ -353,61 +335,42 @@ public class Owner extends Member {
 
         Account account = team.getAccount();
         //set amount
-        account.setAmountOfTeam(account.getAmountOfTeam() - 0);
+        account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
         HashMap<String, Role> roles = dbController.getRoles(this);
         Role role = roles.get(mailId);
-        Owner owner;
+        Owner owner=null;
         if (role instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) role;
-            owner = new Owner(systemManager.getName(), systemManager.getUserMail(), systemManager.getPassword(), systemManager.getBirthDate(),dbController );
-            dbController.deleteRole(this,mailId);
-            dbController.addOwner(this , owner);
-            dbController.getTeams(this).replace(teamName,team);
-            team.addOwner(owner);
+            owner = new Owner(systemManager.getName(), systemManager.getUserMail(), systemManager.getPassword(), systemManager.getBirthDate(), dbController);
         } else if (role instanceof Manager) {
             Manager manager = (Manager) role;
-            owner = new Owner(manager.getName(), manager.getUserMail(), manager.getPassword(), manager.getBirthDate(),dbController);
-            dbController.deleteRole(this,mailId);
-            dbController.addOwner(this , owner);
-            team.addOwner(owner);
-            dbController.getTeams(this).replace(teamName,team);
+            owner = new Owner(manager.getName(), manager.getUserMail(), manager.getPassword(), manager.getBirthDate(), dbController);
         } else if (role instanceof Player) {
             Player player = (Player) role;
-            owner = new Owner(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate(),dbController);
-            dbController.deleteRole(this,mailId);
-            dbController.addOwner(this,owner);
-            team.addOwner(owner);
-            dbController.getTeams(this).replace(teamName,team);
+            owner = new Owner(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate(), dbController);
         } else if (role instanceof Coach) {
             Coach coach = (Coach) role;
-            owner = new Owner(coach.getName(), coach.getUserMail(), coach.getPassword(), coach.getBirthDate(),dbController);
-            dbController.deleteRole(this,mailId);
-            dbController.addOwner(this,owner);
-            team.addOwner(owner);
-            dbController.getTeams(this).replace(teamName,team);
+            owner = new Owner(coach.getName(), coach.getUserMail(), coach.getPassword(), coach.getBirthDate(), dbController);
         } else if (role instanceof Fan) {
             Fan fan = (Fan) role;
-            owner = new Owner(fan.getName(), fan.getUserMail(), fan.getPassword(), fan.getBirthDate(),dbController);
-            dbController.deleteRole(this,mailId);
-            dbController.addOwner(this, owner);
-            team.addOwner(owner);
-            dbController.getTeams(this).replace(teamName,team);
+            owner = new Owner(fan.getName(), fan.getUserMail(), fan.getPassword(), fan.getBirthDate(), dbController);
         } else if (role instanceof AssociationDelegate) {
             AssociationDelegate associationDelegate = (AssociationDelegate) role;
-            owner = new Owner(associationDelegate.getName(), associationDelegate.getUserMail(), associationDelegate.getPassword(), associationDelegate.getBirthDate(),dbController);
-            dbController.deleteRole(this, mailId);
-            dbController.addOwner(this,owner);
-            team.addOwner(owner);
-            dbController.getTeams(this).replace(teamName,team);
+            owner = new Owner(associationDelegate.getName(), associationDelegate.getUserMail(), associationDelegate.getPassword(), associationDelegate.getBirthDate(), dbController);
         } else if (role instanceof Referee) {
             Referee referee = (Referee) role;
-            owner = new Owner(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate(),dbController);
-            dbController.deleteRole(this,mailId);
-            dbController.addOwner(this,owner);
-            team.addOwner(owner);
-            dbController.getTeams(this).replace(teamName,team);
+            owner = new Owner(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate(), dbController);
         }
+        if(owner!=null){
+            owner.addTeam(team);
+            dbController.deleteRole(this, mailId);
+            dbController.addOwner(this, owner);
+            team.addOwner(owner);
+            HashMap<String, Team> teams = dbController.getTeams(this);
+            teams.replace(teamName, team);
+        }
+
     }
 
     /**
@@ -418,7 +381,12 @@ public class Owner extends Member {
     public void temporaryTeamClosing(String teamName) throws DontHavePermissionException {
         Team team = dbController.getTeams(this).get(teamName);
         team.setStatus(false);
-        dbController.getTeams(this).replace(teamName,team);
+        dbController.getTeams(this).replace(teamName, team);
+        HashSet<Player> players=team.getPlayers();
+        for(Player p:players){
+            HashMap<String, Team> allTeams=p.getTeam();
+            allTeams.remove(teamName);
+        }
     }
 
     /**
@@ -426,10 +394,16 @@ public class Owner extends Member {
      *
      * @param teamName
      */
-    public void reopenClosedTeam(String teamName) throws DontHavePermissionException { ;
+    public void reopenClosedTeam(String teamName) throws DontHavePermissionException {
+        ;
         Team team = dbController.getTeams(this).get(teamName);
         team.setStatus(true);
-        dbController.getTeams(this).replace(teamName,team);
+        dbController.getTeams(this).replace(teamName, team);
+        HashSet<Player> players=team.getPlayers();
+        for(Player p:players){
+            HashMap<String, Team> allTeams=p.getTeam();
+            allTeams.put(teamName,team);
+        }
     }
 
     /**
@@ -443,7 +417,7 @@ public class Owner extends Member {
         Team team = dbController.getTeams(this).get(teamName);
         team.addTransaction(description, amount);
         team.getAccount().setAmountOfTeam(team.getAccount().getAmountOfTeam() - amount);
-        dbController.getTeams(this).replace(teamName,team);
+        dbController.getTeams(this).replace(teamName, team);
     }
 
     /**
@@ -457,16 +431,13 @@ public class Owner extends Member {
         Team team = dbController.getTeams(this).get(teamName);
         team.addTransaction(description, amount);
         team.getAccount().setAmountOfTeam(team.getAccount().getAmountOfTeam() + amount);
-        dbController.getTeams(this).replace(teamName,team);
+        dbController.getTeams(this).replace(teamName, team);
     }
 
-    public void updateAsset() {
-        //todo
-    }
 
     /****************************************** setters *********************************************/
-    public void setMoneyToAccount(String teamName , double amount) throws ObjectNotExist {
-        if(!this.teams.containsKey(teamName)){
+    public void setMoneyToAccount(String teamName, double amount) throws ObjectNotExist {
+        if (!this.teams.containsKey(teamName)) {
             throw new ObjectNotExist("team tot exist in owner list");
         }
         this.teams.get(teamName).getAccount().setAmountOfTeam(amount);
@@ -480,11 +451,12 @@ public class Owner extends Member {
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
         return dbController.getRoles(this);
     }
+
     public double getAccountBalance(String teamName) throws ObjectNotExist {
-        if(!this.teams.containsKey(teamName)){
+        if (!this.teams.containsKey(teamName)) {
             throw new ObjectNotExist("team tot exist in owner list");
         }
-       return this.teams.get(teamName).getAccount().getAmountOfTeam();
+        return this.teams.get(teamName).getAccount().getAmountOfTeam();
     }
 
 
