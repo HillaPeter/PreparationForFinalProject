@@ -19,7 +19,7 @@ public class Game {
     private LeagueInSeason leagueInSeason;
     private HashSet<Referee> referees;
 
-    public Game(String id , Calendar dateAndTime,Team hostTeam, Team visitorTeam, Field field, LeagueInSeason leagueInSeason) {
+    public Game(String id , Calendar dateAndTime,Team hostTeam, Team visitorTeam, Field field, Referee mainReferee, Referee secondaryReferee, LeagueInSeason leagueInSeason) {
         this.id=id;
         this.dateAndTime = dateAndTime;
         this.hostTeam = hostTeam;
@@ -28,6 +28,9 @@ public class Game {
         this.result = "";
         this.eventLog = new EventLog(this);
         this.leagueInSeason=leagueInSeason;
+        referees = new HashSet<>();
+        referees.add(mainReferee);
+        referees.add(secondaryReferee);
     }
     public String getId(){
         return id;

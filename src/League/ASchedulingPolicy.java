@@ -7,6 +7,7 @@ package League;
 
 import Game.Game;
 import Game.Team;
+import Users.Referee;
 
 import java.util.*;
 
@@ -23,8 +24,12 @@ public abstract class ASchedulingPolicy {
 
         for(int i = 0; i < rounds.size(); ++i) {
             List<Fixture> round = rounds.get(i);
+            List<Referee> mainReferees = (ArrayList<Referee>)leagueInSeason.getMainReferee().values();
+            List<Referee> secondaryReferees =(ArrayList<Referee>)leagueInSeason.getSecondaryReferee().values();
             for(Fixture fixture: round) {
-                Game game = new Game(dateAndTime.toString()+""+fixture.getHomeTeam().toString() , dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);
+                Game game = new Game(dateAndTime.toString()+""+fixture.getHomeTeam().toString() , dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), mainReferees.get(i),secondaryReferees.get(i), leagueInSeason);
+                mainReferees.remove(i);
+                secondaryReferees.remove(i);
                 Team team1=fixture.getHomeTeam();
                 Team team2=fixture.getAwayTeam();
                 team1.addGame(game);

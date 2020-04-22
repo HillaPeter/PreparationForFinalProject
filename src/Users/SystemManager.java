@@ -3,7 +3,6 @@ package Users;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
-import Asset.TeamMember;
 import Game.Account;
 import Game.Game;
 import Game.Team;
@@ -16,7 +15,6 @@ import system.DBController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.sql.Ref;
 import java.util.*;
 import League.ASchedulingPolicy;
 import Exception.*;
@@ -94,7 +92,7 @@ public class SystemManager extends Member {
         League league = dbController.getLeague(this, leagueId);
         Season season = dbController.getSeason(this, seasonId);
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
-        LinkedList<Team> teams = leagueInSeason.getTeamsForSceduling();
+        LinkedList<Team> teams = leagueInSeason.getTeamsForScheduling();
         if(teams.size()%2!=0)
         {
             throw new IncorrectInputException("need to be even teams to scheduling");

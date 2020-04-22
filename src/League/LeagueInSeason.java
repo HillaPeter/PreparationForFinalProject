@@ -75,7 +75,7 @@ public class LeagueInSeason {
         schedulingPolicy = policy;
     }
 
-    public LinkedList<Team> getTeamsForSceduling() {
+    public LinkedList<Team> getTeamsForScheduling() {
         LinkedList<Team> teamToReturn=new LinkedList<>();
         for (int i=0; i<teams.size(); i++)
         {
