@@ -387,6 +387,16 @@ public class Owner extends Member {
             HashMap<String, Team> allTeams=p.getTeam();
             allTeams.remove(teamName);
         }
+        HashSet<Coach> coaches=team.getCoaches();
+        for(Coach c:coaches){
+            HashMap<String, Team> allTeams=c.getTeam();
+            allTeams.remove(teamName);
+        }
+        HashSet<Manager> managers=team.getManagers();
+        for(Manager m:managers){
+            HashMap<String, Team> allTeams=m.getTeam();
+            allTeams.remove(teamName);
+        }
     }
 
     /**
@@ -402,6 +412,16 @@ public class Owner extends Member {
         HashSet<Player> players=team.getPlayers();
         for(Player p:players){
             HashMap<String, Team> allTeams=p.getTeam();
+            allTeams.put(teamName,team);
+        }
+        HashSet<Coach> coaches=team.getCoaches();
+        for(Coach c:coaches){
+            HashMap<String, Team> allTeams=c.getTeam();
+            allTeams.put(teamName,team);
+        }
+        HashSet<Manager> managers=team.getManagers();
+        for(Manager m:managers){
+            HashMap<String, Team> allTeams=m.getTeam();
             allTeams.put(teamName,team);
         }
     }
