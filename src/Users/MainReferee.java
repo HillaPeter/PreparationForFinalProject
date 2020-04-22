@@ -20,10 +20,8 @@ public class MainReferee extends Referee {
    // public HashMap<Game,String> getGameReport()
     //todo
 
-   public void updateGameEvent(Game game, int id, Date date, Date time, String description,
-                               EventInGame eventInGame, Date gameMinute, ArrayList<Player> players){
-        game.addEvent(new Event(id, date, time, description,
-               eventInGame, gameMinute, players));
+   public void updateGameEvent(Game game, int timeInGame, EventInGame event, Date time, String description){
+        game.addEvent(new Event(time, description, event, timeInGame));
    }
 
 

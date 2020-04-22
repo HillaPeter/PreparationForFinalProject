@@ -5,6 +5,7 @@ import Asset.Manager;
 import Asset.Player;
 import Game.Game;
 import Game.Team;
+import Game.EventInGame;
 import League.*;
 import Users.*;
 import Exception.*;
@@ -714,6 +715,9 @@ public class SystemController {
         ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
     /*************************************** function for Referee ******************************************/
+
+    /** secondary and main referee **/
+
     public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof MainReferee) {
             MainReferee referee = (MainReferee) connectedUser;
@@ -728,15 +732,6 @@ public class SystemController {
         }
     }
 
-    public LinkedList<Game> getEditableGames () throws DontHavePermissionException {
-        if (connectedUser instanceof MainReferee) {
-            MainReferee mainReferee = (MainReferee) connectedUser;
-            return mainReferee.getEditableGames ();
-        } else {
-            throw new DontHavePermissionException();
-        }
-    }
-
     public HashSet<Game> getGameSchedule() throws DontHavePermissionException {
         if (connectedUser instanceof Referee) {
             Referee referee = (Referee) connectedUser;
@@ -746,8 +741,24 @@ public class SystemController {
         }
     }
 
-    public void updateGameEvent(Game game){
+    /** main referee only **/
 
+    public LinkedList<Game> getEditableGames () throws DontHavePermissionException {
+        if (connectedUser instanceof MainReferee) {
+            MainReferee mainReferee = (MainReferee) connectedUser;
+            return mainReferee.getEditableGames ();
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void updateGameEvent(Game game, int timeInGame, EventInGame event, Date date, String description){
+        if (connectedUser instanceof MainReferee) {
+            MainReferee mainReferee = (MainReferee) connectedUser;
+            mainReferee.updateGameEvent(game, timeInGame, event, date, description);
+        } else {
+
+        }
     }
 
     public void getGameReport(){
@@ -774,8 +785,15 @@ public class SystemController {
         }
     }
 
-
-
+    public Team getTeamByName (String teamName) throws DontHavePermissionException, ObjectNotExist {
+        if (connectedUser instanceof Fan) {
+            Fan fan = (Fan) connectedUser;
+            Team team = dbController.getTeam(fan, teamName);
+            return team;
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
 
 
     /*************************************************************************************************************/

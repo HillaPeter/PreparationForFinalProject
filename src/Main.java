@@ -9,6 +9,7 @@ import Users.*;
 import javafx.util.Pair;
 import system.SystemController;
 import League.*;
+import Game.EventInGame;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -1518,7 +1519,6 @@ public class Main {
             System.out.println("write \"1\" for update personal details");
             System.out.println("write \"2\" for update game event");
             System.out.println("write \"3\" for get game schedule");
-            System.out.println("write \"4\" for get game report");
             System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
             //todo case for log out and not exit all
             input = "";
@@ -1561,34 +1561,46 @@ public class Main {
                         System.out.println("game not exist");
                         break;
                     }
+                    Game game = editableGames.get(gameIndex);
                     System.out.println("enter the time in the game the event happened: ");
-                    String timeInGame = scanInput.nextLine();
+                    int timeInGame = scanInput.nextInt();
                     System.out.println("Please choose the type of the event:");
                     System.out.println("1.Goal 2.Foul 3.Red card 4.Yellow card 5.Wound 6.Replacement");
                     String eventType = scanInput.nextLine();
+                    EventInGame event = null;
                     switch (eventType) {
                         case "1": {
-
+                            event = EventInGame.GOAL;
+                            break;
                         }
                         case "2": {
-
+                            event = EventInGame.FOUL;
+                            break;
                         }
                         case "3": {
-
+                            event = EventInGame.RED_CARD;
+                            break;
                         }
                         case "4": {
-
+                            event = EventInGame.YELLOW_CARD;
+                            break;
                         }
                         case "5": {
-
+                            event = EventInGame.WOUND;
+                            break;
                         }
                         case "6": {
-
+                            event = EventInGame.REPLACEMENT;
+                            break;
                         }
                         default: {
                             System.out.println("illegal type of event.");
+                            break;
                         }
                     }
+                    System.out.println("please insert a description of the event");
+                    String description = scanInput.nextLine();
+                    controller.updateGameEvent(game, timeInGame, event, new Date(), description);
                     break;
                 }
                 case "3": {
@@ -1607,9 +1619,7 @@ public class Main {
                         System.out.println("you are not allowed to get a referee's schedule");
                     }
                 }
-                case "4": {
-                    //todo: game report
-                }
+
 
             }
         }
@@ -1712,16 +1722,18 @@ public class Main {
                         System.out.println("you dont have a permission to write a complaint");
                     }
                 }
-//                    case "3":{
-//                        try{
-//                            System.out.println("Please enter the team name:");
-//                            String complaint = scanInput.nextLine();
-//                            break;
-//                        }
-//                        catch(Exception e){
-//
-//                        }
-//                    }
+                case "3":{
+                    try{
+                        System.out.println("Please enter the team name:");
+                        String teamName = scanInput.nextLine();
+                        Team team = controller.getTeamByName(teamName);
+
+                        break;
+                    }
+                    catch(Exception e){
+
+                    }
+                }
 
             }
         }
