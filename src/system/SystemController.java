@@ -691,6 +691,12 @@ public class SystemController {
         }
 
     }
+    public HashMap<String, Referee> getRefereesInLeagueInSeason(String league , String season) throws DontHavePermissionException, ObjectNotExist {
+        if( this.connectedUser instanceof AssociationDelegate){
+            return ((AssociationDelegate)connectedUser).getRefereesInLeagueInSeason(league,season);
+        }
+        throw new DontHavePermissionException();
+    }
 
     public HashMap<String, Season> getSeasons() {
         HashMap<String, Season> seasons=new HashMap<String, Season>();
@@ -705,6 +711,12 @@ public class SystemController {
 
     public void changeScorePolicy(String league, String season, String sWinning, String sDraw, String sLosing) throws ObjectNotExist, IncorrectInputException {
         ((AssociationDelegate)connectedUser).changeScorePolicy(league, season, sWinning, sDraw, sLosing);
+    }
+    public IScorePolicy getScorePolicy(String league, String season) throws DontHavePermissionException, ObjectNotExist {
+        if(this.connectedUser instanceof AssociationDelegate)
+            return ((AssociationDelegate)connectedUser).getScorePolicy(league, season);
+        else
+            throw new DontHavePermissionException();
     }
 
     public HashMap<String, ASchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException{
@@ -846,7 +858,6 @@ public class SystemController {
     public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
         return dbController.getOwnersAndFans(role);
     }
-
 
     /**********shachar test*************/
     /*

@@ -41,4 +41,14 @@ public class ScorePolicy implements IScorePolicy{
     public double finalScore (double points){
         return points;
     }
+
+    public double getScoreToDrawGame() {
+        return scoreToDrawGame;
+    }
+    public double getScoreToWinningTeam(){
+        return scoreToWinningTeam;
+    }
+    public double getScoreToLosingTeam(){
+        return scoreToLosingTeam;
+    }
 }

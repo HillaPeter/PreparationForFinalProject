@@ -37,8 +37,29 @@ public class SystemManagerTest {
 
     /*******************************************************************************/
     @Test
-    public void schedulingGames() {
-        //todo - UC4 noa
+    public void schedulingGames() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist {
+        /*add 20 Teams*/
+        addTeams(20);
+        /* init */
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
+
+        controller.logIn("admin@gmail.com", "123");
+
+        /*try to scheduling game eith correct input - result should be positive*/
+        controller.schedulingGames("2020","league");
+        HashSet<Game> games = controller.getGameSchedule();
+        int amountOfGames = 190; // 20 Choose 2 (???)
+        assertTrue(games.size() == amountOfGames );
+        //todo - check if the list inside leagueInSeason, check if we get enough games (190)
+        //todo - check if all teams status==true, check if each team play in 38 games - 19*2
+        //todo - check if team.games.contains(game) i dont know how to check this........
+
+
+
     }
 
     /*******************************************************************************/
@@ -303,5 +324,45 @@ public class SystemManagerTest {
     /*******************************************************************************/
     @Test
     public void readLineByLine() {
+    }
+
+    private void addTeams(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, PasswordDontMatchException, NoEnoughMoney {
+        for(int i=0 ; i< mumOfTeams ; i++){
+            addTeam(i);
+        }
+
+    }
+
+    private void addTeam(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectAlreadyExist, ObjectNotExist, NoEnoughMoney {
+        controller.signIn("palyer0"+i,"p0"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer1"+i,"p1"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer3"+i,"p3"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer4"+i,"p4"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer5"+i,"p5"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer6"+i,"p6"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer7"+i,"p7"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer8"+i,"p8"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer9"+i,"p9"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer10"+i,"p10"+i+"@gmail.com","1",birthdate);
+        controller.signIn("coach"+i,"coach"+i+"@gmail.com","1",birthdate);
+        controller.signIn("manager"+i,"manager"+i+"@gmail.com","1",birthdate);
+        controller.signIn("owner"+i,"owner"+i+"@gmail.com","1",birthdate);
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team"+i,"owner"+i+"@gmail.com");
+        controller.logOut();
+        controller.logIn("owner"+i+"@gmail.com","1");
+
+        controller.setMoneyToAccount("team"+i,10000);
+        controller.addPlayer("p0"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p1"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p2"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p3"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p4"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p5"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p6"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p7"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p8"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p9"+i+"@gmail.com","team",1993,10,12,"df");
+        controller.addPlayer("p10"+i+"@gmail.com","team",1993,10,12,"df");
     }
 }

@@ -83,6 +83,36 @@ public class AssociationDelegate extends Member {
     }
 
     /**
+     * this function returns the policy in league in season
+     * @param league
+     * @param season
+     * @return
+     * @throws DontHavePermissionException
+     * @throws ObjectNotExist
+     */
+    public ScorePolicy getScorePolicy(String league,String season) throws DontHavePermissionException, ObjectNotExist {
+        League leagueObj = dbController.getLeague(this,league);
+        Season seasonObj = dbController.getSeason(this , season);
+        LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+        return leagueInSeason.getScorePolicy();
+    }
+
+    /**
+     *this function return a Hash map of referees in league in season
+     * @param league
+     * @param season
+     * @return
+     * @throws DontHavePermissionException
+     * @throws ObjectNotExist
+     */
+    public HashMap<String,Referee> getRefereesInLeagueInSeason(String league,String season) throws DontHavePermissionException, ObjectNotExist {
+        League leagueObj = dbController.getLeague(this,league);
+        Season seasonObj = dbController.getSeason(this,season);
+        LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
+        HashMap<String, Referee> refereesInLeagueInSeason = leagueInSeason.getReferees();
+        return refereesInLeagueInSeason;
+    }
+    /**
      * This function returns all the referees that each referee doesn't exist in the league in season that
      * we get in the parameters
      *
@@ -151,7 +181,6 @@ public class AssociationDelegate extends Member {
         Season seasonObj = dbController.getSeason(this,year);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
-
     }
 }
 

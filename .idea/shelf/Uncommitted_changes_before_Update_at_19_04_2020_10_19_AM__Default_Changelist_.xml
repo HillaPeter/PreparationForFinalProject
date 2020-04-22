@@ -1,0 +1,14 @@
+<changelist name="Uncommitted_changes_before_Update_at_19_04_2020_10_19_AM_[Default_Changelist]" date="1587280775334" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2020_10_19_AM_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 19/04/2020 10:19 AM [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/PreparationForFinalProject/System/SystemController.class" />
+    <option name="AFTER_PATH" value="out/production/PreparationForFinalProject/System/SystemController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2020_10_19_AM_[Default_Changelist]/SystemController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/PreparationForFinalProject/System/DBController.class" />
+    <option name="AFTER_PATH" value="out/production/PreparationForFinalProject/System/DBController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_04_2020_10_19_AM_[Default_Changelist]/DBController.class" />
+  </binary>
+</changelist>

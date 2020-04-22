@@ -132,4 +132,8 @@ public class LeagueInSeason {
         }
         return toReturn;
     }
+
+    public ScorePolicy getScorePolicy() {
+        return (ScorePolicy)this.scorePolicy;
+    }
 }
