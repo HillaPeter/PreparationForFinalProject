@@ -68,11 +68,10 @@ public class SystemController {
         return ((Guest) connectedUser).signIn(userMail, userName, password , birthDate);
 
     }
-    public void logOut(){
+    public Role logOut(){
         //todo
-        connectedUser=null;
-        //this.connectedUser = new Guest(this.dbController , null);
-        //return this.connectedUser;
+        this.connectedUser = new Guest(this.dbController , null);
+        return this.connectedUser;
     }
     /**
      * this function makes a guest into an existing member.

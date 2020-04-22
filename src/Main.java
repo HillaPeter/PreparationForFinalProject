@@ -100,6 +100,9 @@ public class Main {
 
     private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
         // member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
+        if( member instanceof Guest){
+            startMenu();
+        }
         if (member instanceof SystemManager) {
             SystemManagerMenu();
         } else if (member instanceof MainReferee) {
@@ -1522,7 +1525,7 @@ public class Main {
                         System.out.println("The Object is not exist");
                     }
                 case "Exit":
-
+                    showMenu(controller.logOut());
                 default:
 
             }
@@ -1530,8 +1533,6 @@ public class Main {
     }
 
     /***********************************************MainReferee**************************************************/
-
-
     private static void mainRefereeMenu() throws DontHavePermissionException {
         String input = "";
         while (!input.equals("ExitAll")) {
@@ -1635,7 +1636,6 @@ public class Main {
             }
         }
     }
-
 
     /***********************************************SecondaryReferee**************************************************/
     private static void secondaryRefereeMenu() throws DontHavePermissionException {

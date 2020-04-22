@@ -131,7 +131,29 @@ public class Team {
     public HashSet<Player> getPlayers() {
         return players;
     }
-
+    public Player getPlayer(String id){
+        for (Player player : this.players) {
+            if (player.getUserMail().equals(id))
+                return player;
+        }
+        return null;
+    }
+    public Coach getCoach(String id){
+        for (Coach coach : this.coaches) {
+            if (coach.getUserMail().equals(id))
+                return coach;
+        }
+        return null;
+    }
+    public Field getField(String name){
+        for (Field field : this.trainingFields) {
+            if (field.getNameOfField().equals(name))
+                return field;
+        }
+        if (homeField.getNameOfField().equals(name))
+            return homeField;
+        return null;
+    }
     public Account getAccount() {
         return account;
     }
