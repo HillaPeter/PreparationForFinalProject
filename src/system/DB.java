@@ -3,12 +3,14 @@ package system;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Game.Game;
 import Game.Team;
 import League.*;
 import Users.*;
 import Exception.*;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class DB {
 
@@ -18,6 +20,8 @@ public class DB {
     private HashMap<String, Role> roles; // hash map <mail,role> - maybe users instead roles??
     private HashMap<String, Team> teams;
     private HashMap<String, ASchedulingPolicy> schedulingPolicies;
+    private HashMap<String, Game> games;
+
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -375,5 +379,32 @@ public class DB {
     }
 
 
+    public void addGames(Set<Game> game) {
+        for (Game gameToAdd:game
+             ) {
+            games.put(gameToAdd.getId() , gameToAdd);
+        }
+    }
 
+    /*
+    public HashMap<String, Referee> getMainReferee() {
+        HashMap<String , Referee> toReturn=new HashMap<>();
+        for (String role:roles.keySet()
+             ) {
+            if(roles.get(role) instanceof MainReferee)
+                toReturn.put(((MainReferee) roles.get(role)).getUserMail() , (MainReferee)roles.get(role));
+        }
+        return toReturn;
+    }
+
+    public HashMap<String, Referee> getSecondaryReferee() {
+        HashMap<String , Referee> toReturn=new HashMap<>();
+        for (String role:roles.keySet()
+        ) {
+            if(roles.get(role) instanceof SecondaryReferee)
+                toReturn.put(((SecondaryReferee) roles.get(role)).getUserMail() , (SecondaryReferee)roles.get(role));
+        }
+        return toReturn;
+    }
+    */
 }

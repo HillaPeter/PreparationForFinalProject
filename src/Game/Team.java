@@ -16,6 +16,7 @@ public class Team {
     private HashSet<Manager> managers;
     private HashSet<Owner> owners;
     private Field homeField;
+    private HashSet<Game> games;
     private HashSet<Field> trainingFields; // list of all fields that the group training at
     private Boolean status; //true=> team is open , false=>team is closed
     private double points; //points of this team
@@ -94,7 +95,9 @@ public class Team {
         return name;
     }
 
-    public void deleteTheData() throws ObjectNotExist, DontHavePermissionException {
+    public HashSet<Owner> deleteTheData(){
+
+        HashSet<Owner> newHash=owners;
         for (Player player : players
         ) {
             player.removeTheTeamFromMyList(this.name);
@@ -111,7 +114,7 @@ public class Team {
         ) {
             manager.removeTheTeamFromMyList(this.name);
         }
-
+return newHash;
     }
 
 
@@ -265,5 +268,8 @@ public class Team {
         }
     }
 
+    public void addGame(Game game) {
+        games.add(game);
+    }
 }
 

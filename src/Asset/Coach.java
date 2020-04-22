@@ -19,4 +19,12 @@ public class Coach extends TeamMember{
         this.training = training;
     }
 
+    public void deleteAllTheData()
+    {
+        for (String strTeam:team.keySet()
+        ) {
+            team.get(strTeam).removeCoach(this);
+        }
+    }
+
 }

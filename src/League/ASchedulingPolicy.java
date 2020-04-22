@@ -24,7 +24,11 @@ public abstract class ASchedulingPolicy {
         for(int i = 0; i < rounds.size(); ++i) {
             List<Fixture> round = rounds.get(i);
             for(Fixture fixture: round) {
-                Game game = new Game(dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);
+                Game game = new Game(dateAndTime.toString()+""+fixture.getHomeTeam().toString() , dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);
+                Team team1=fixture.getHomeTeam();
+                Team team2=fixture.getAwayTeam();
+                team1.addGame(game);
+                team2.addGame(game);
                 //System.out.println("Date1- " + game.getDateAndTimeString());
                 games.add(game);
             }

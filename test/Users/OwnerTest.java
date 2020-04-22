@@ -90,7 +90,7 @@ public class OwnerTest {
 
     }
     @Test
-    public void addCoachPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void addCoachPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -102,7 +102,7 @@ public class OwnerTest {
         controller.addCoach("team",this.idcoach.get(0));
     }
     @Test
-    public void addCoachNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void addCoachNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -118,7 +118,7 @@ public class OwnerTest {
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getCoaches().size());
     }
     @Test
-    public void addCoachTeamAlreadyExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void addCoachTeamAlreadyExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(AlreadyExistException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -136,7 +136,7 @@ public class OwnerTest {
 
     }
     @Test
-    public void addCoachTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void addCoachTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -353,7 +353,7 @@ public class OwnerTest {
         assertTrue(950 == controller.getAccountBalance("team"));
     }
     @Test
-    public void removeCoachPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void removeCoachPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -363,7 +363,7 @@ public class OwnerTest {
         controller.removeCoach("team",this.idcoach.get(0));
     }
     @Test
-    public void removeCoachNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void removeCoachNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -379,7 +379,7 @@ public class OwnerTest {
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getCoaches().size());
     }
     @Test
-    public void removeCoachTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void removeCoachTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -412,7 +412,7 @@ public class OwnerTest {
         assertEquals(sizeBefore-1 , this.controller.getTeams().get("team").getPlayers().size());
     }
     @Test
-    public void removePlayerPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void removePlayerPermission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(DontHavePermissionException.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -438,7 +438,7 @@ public class OwnerTest {
         assertEquals(sizeBefore, this.controller.getTeams().get("team").getPlayers().size());
     }
     @Test
-    public void removePlayerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist {
+    public void removePlayerTeamNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, ObjectAlreadyExist, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com","123");
@@ -660,7 +660,7 @@ public class OwnerTest {
     }
     /******************************************temporaryTeamClosing******************************************/
     @Test
-    public void temporaryTeamClosing() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException {
+    public void temporaryTeamClosing() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -676,7 +676,7 @@ public class OwnerTest {
         assertEquals(sizeBefore ,controller.getTeams().size());
     }
     @Test
-    public void temporaryTeamClosinNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, PasswordDontMatchException {
+    public void temporaryTeamClosinNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, PasswordDontMatchException, IncorrectInputException {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -687,7 +687,7 @@ public class OwnerTest {
         assertTrue(controller.getTeams().get("team").getStatus());
     }
     @Test
-    public void temporaryTeamClosingTeamNotExist1() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException {
+    public void temporaryTeamClosingTeamNotExist1() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
 
         /* init */
@@ -710,7 +710,7 @@ public class OwnerTest {
     }
     /******************************************reopenClosedTeam******************************************/
     @Test
-    public void reopenClosedTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException {
+    public void reopenClosedTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         /* init */
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
@@ -726,7 +726,7 @@ public class OwnerTest {
         assertEquals(sizeBefore ,controller.getTeams().size());
     }
     @Test
-    public void reopenClosedTeamNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException {
+    public void reopenClosedTeamNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         /* init */
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
@@ -736,7 +736,7 @@ public class OwnerTest {
         assertFalse(controller.getTeams().get("team").getStatus());
     }
     @Test
-    public void reopenClosedTeamTeamNotExist1() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException {
+    public void reopenClosedTeamTeamNotExist1() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         thrown.expect(ObjectNotExist.class);
 
         /* init */

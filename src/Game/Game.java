@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 
 public class Game {
+    private String id;
     private Calendar dateAndTime; //
     private Team hostTeam;
     private Team visitorTeam;
@@ -18,7 +19,8 @@ public class Game {
     private LeagueInSeason leagueInSeason;
     private HashSet<Referee> referees;
 
-    public Game(Calendar dateAndTime,Team hostTeam, Team visitorTeam, Field field, LeagueInSeason leagueInSeason) {
+    public Game(String id , Calendar dateAndTime,Team hostTeam, Team visitorTeam, Field field, LeagueInSeason leagueInSeason) {
+        this.id=id;
         this.dateAndTime = dateAndTime;
         this.hostTeam = hostTeam;
         this.visitorTeam = visitorTeam;
@@ -27,7 +29,9 @@ public class Game {
         this.eventLog = new EventLog(this);
         this.leagueInSeason=leagueInSeason;
     }
-
+    public String getId(){
+        return id;
+    }
     public void removeReferee(Referee referee) {
         referees.remove(referee);
         //put new referee after the delete
@@ -67,4 +71,6 @@ public class Game {
     public Field getField() {
         return field;
     }
+
+
 }

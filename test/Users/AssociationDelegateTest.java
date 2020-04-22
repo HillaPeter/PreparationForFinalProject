@@ -96,7 +96,7 @@ public class AssociationDelegateTest {
     }
     /*******************************************************************************/
     @Test
-    public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectNotExist {
+    public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, MemberAlreadyExistException {
         /* init - add referee , add league, add season */
         controller.logOut();
         controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
@@ -122,7 +122,7 @@ public class AssociationDelegateTest {
         controller.addRefereeToLeagueInSeason("league","season","referee");
     }
     @Test
-    public void addRefereeToLeagueInSeasonLeagueException() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException, DontHavePermissionException, ObjectNotExist {
+    public void addRefereeToLeagueInSeasonLeagueException() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException, DontHavePermissionException, ObjectNotExist, MemberAlreadyExistException {
         thrown.expect(ObjectNotExist.class);
         /* init - add referee */
         controller.logOut();
@@ -139,7 +139,7 @@ public class AssociationDelegateTest {
 
     }
     @Test
-    public void addRefereeToLeagueInSeasonSeasonException() throws MemberNotExist, PasswordDontMatchException, AlreadyExistException, IncorrectInputException, DontHavePermissionException, ObjectNotExist {
+    public void addRefereeToLeagueInSeasonSeasonException() throws MemberNotExist, PasswordDontMatchException, AlreadyExistException, IncorrectInputException, DontHavePermissionException, ObjectNotExist, MemberAlreadyExistException {
         thrown.expect(ObjectNotExist.class);
         /* init - add referee , add league */
         controller.logOut();

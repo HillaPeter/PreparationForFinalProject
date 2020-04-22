@@ -4,13 +4,15 @@ import java.util.regex.Pattern;
 
 import Exception.*;
 import system.DBController;
+import system.SecurityMachine;
 
 public class Guest extends Role{
     private DBController dbController;
-
+    private SecurityMachine securityMachine;
     public Guest(DBController dbC, Date birthDate) {
         super("guest", birthDate);
         this.dbController = dbC;
+        this.securityMachine = new SecurityMachine();
     }
 
     /**
@@ -24,7 +26,8 @@ public class Guest extends Role{
         if (! checkPasswordValue(password)) {
             throw new IncorrectPasswordInputException();
         }
-        Fan newMember = new Fan(userName, userMail, password, birthDate );
+        String encriptPassword = securityMachine.encrypt(password);
+        Fan newMember = new Fan(userName, userMail, encriptPassword, birthDate );
         dbController.addFan(this,newMember);
         return newMember;
     }
@@ -78,7 +81,7 @@ public class Guest extends Role{
     }
     private void checkValidationPassword(Member member, String userPassword) throws PasswordDontMatchException {
 
-        if (!member.getPassword().equals(userPassword))
+        if (!member.getPassword().equals(securityMachine.encrypt(userPassword)))
             throw new PasswordDontMatchException();
         return;
     }

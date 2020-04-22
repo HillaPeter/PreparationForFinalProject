@@ -27,5 +27,11 @@ public class Player extends TeamMember{
         this.role = role;
         setPassword(null);
     }
-
+    public void deleteAllTheData()
+    {
+        for (String strTeam:team.keySet()
+        ) {
+            team.get(strTeam).removePlayer(this);
+        }
+    }
 }

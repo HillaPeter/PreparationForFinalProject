@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 
 public class TeamMember extends Member {
-    private HashMap<String, Team> team;
+    protected HashMap<String, Team> team;
 
     public TeamMember(String name, String userMail, String password, Date birthDate) {
         super(name, userMail, password, birthDate);
@@ -46,4 +46,7 @@ public class TeamMember extends Member {
         }
         return false;
     }
+
+
+
 }

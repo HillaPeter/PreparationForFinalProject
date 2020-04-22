@@ -4,19 +4,49 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class SecurityMachine {
     public static final String DEFAULT_ENCODING = "UTF-8";
     BASE64Encoder enc = new BASE64Encoder();
     BASE64Decoder dec = new BASE64Decoder();
+    private String key ;
 
-    public String encrypt(String password , String key) {
+    public SecurityMachine(){
+        key = readFromDisc();
+    }
+
+    private String readFromDisc() {
+        byte[] keyInBytes = getbythes("key_short");
+        String keyInString = "";
+        for (byte b : keyInBytes) {
+            keyInString += b;
+        }
+        return keyInString;
+    }
+
+    /**
+     * this function read a byte[] from a absolute path
+     * @param pathToRead
+     * @return
+     */
+    public static byte[] getbythes(String pathToRead) {
+        try {
+            byte[] result = Files.readAllBytes(Paths.get(pathToRead));
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String encrypt(String password) {
         password = xorMessage(password, key);
         String encoded = base64encode(password);
         return encoded;
     }
 
-    public String decrypt(String encodedPassword, String key) {
+    public String decrypt(String encodedPassword) {
         String password;
         password = base64decode(encodedPassword);
         String theRealOne = xorMessage(password, key);

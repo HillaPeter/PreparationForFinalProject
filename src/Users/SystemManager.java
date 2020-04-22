@@ -3,21 +3,22 @@ package Users;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Asset.TeamMember;
 import Game.Account;
+import Game.Game;
 import Game.Team;
 import League.Season;
 import League.League;
 import League.LeagueInSeason;
 import javafx.util.Pair;
 import system.DBController;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Scanner;
-
+import java.sql.Ref;
+import java.util.*;
+import League.ASchedulingPolicy;
 import Exception.*;
 
 
@@ -25,9 +26,9 @@ public class SystemManager extends Member {
 
     private DBController dbController;
 
-    public SystemManager(String name, String userMail, String password , DBController dbController, Date birthDate) {
+    public SystemManager(String name, String userMail, String password, DBController dbController, Date birthDate) {
         super(name, userMail, password, birthDate);
-        this.dbController=dbController;
+        this.dbController = dbController;
     }
 
     private boolean inputAreLegal(String refreeId) {
@@ -37,37 +38,34 @@ public class SystemManager extends Member {
         return false;
     }
 
-    public boolean removeAssociationDelegate(String id)
-    {
-    try {
-        if (dbController.existAssociationDelegate(this ,id)) {
-            if (inputAreLegal(id)) {
+    public boolean removeAssociationDelegate(String id) {
+        try {
+            if (dbController.existAssociationDelegate(this, id)) {
+                if (inputAreLegal(id)) {
 
-                    dbController.deleteAssociationDelegate(this ,id);
+                    dbController.deleteAssociationDelegate(this, id);
 
+                } else {
+                    throw new IncorrectInputException();
+                }
             } else {
-                throw new IncorrectInputException();
+                throw new MemberNotExist();
             }
-        } else {
-            throw new MemberNotExist();
-        }
-    } catch (Exception e) {
+        } catch (Exception e) {
 
-    }
+        }
         return false;
-}
+    }
 
     public boolean removeOwner(String ownerId) {
         try {
-            if (dbController.existOwner(this ,ownerId)) {
+            if (dbController.existOwner(this, ownerId)) {
                 if (inputAreLegal(ownerId)) {
-                    Owner owner = (Owner) dbController.getMember(this,ownerId);
-                    if(owner.haveTeams()) {
-                        dbController.deleteOwner(this ,ownerId);
+                    Owner owner = (Owner) dbController.getMember(this, ownerId);
+                    if (owner.notHaveTeams() == true) {
+                        dbController.deleteOwner(this, ownerId);
                         return true;
-                    }
-                    else
-                    {
+                    } else {
                         throw new NotReadyToDelete("this owner ows teams. you must close the team before");
                     }
                 } else {
@@ -87,30 +85,88 @@ public class SystemManager extends Member {
     }
 
     private void print(LinkedList<String> readLineByLine) {
-        for(int i=0; i<readLineByLine.size(); i++)
-        {
+        for (int i = 0; i < readLineByLine.size(); i++) {
             System.out.println(readLineByLine.get(i));
         }
     }
 
-    public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist, DontHavePermissionException {
-        League league = dbController.getLeague(this , leagueId);
-        Season season = dbController.getSeason(this , seasonId);
+    public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist, DontHavePermissionException, IncorrectInputException {
+        League league = dbController.getLeague(this, leagueId);
+        Season season = dbController.getSeason(this, seasonId);
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
-        LinkedList<Team> teams=leagueInSeason.getTeams();
-        //sceduling game for teams
+        LinkedList<Team> teams = leagueInSeason.getTeamsForSceduling();
+        if(teams.size()%2!=0)
+        {
+            throw new IncorrectInputException("need to be even teams to scheduling");
+        }
+        else if(notEnoughReferee(leagueInSeason , teams.size()))
+        {
+            throw new IncorrectInputException("not enough refree for scheduling games");
+        }
+        else {
+            ASchedulingPolicy schedulingPolicy = leagueInSeason.getPolicy();
+            Set <Game> games=schedulingPolicy.setGamesOfTeams(teams, leagueInSeason);
+            leagueInSeason.addGames(games);
+            dbController.addGames(this,games);
+        }
+    }
+
+    private void setReferee(Set<Game> games , LeagueInSeason leagueInSeason) throws DontHavePermissionException {
+        HashMap<String,Referee> mainReferees=leagueInSeason.getMainReferee();
+        HashMap<String,Referee> secondaryReferees=leagueInSeason.getSecondaryReferee();
+        boolean check1=false;//main
+        boolean check2=false;//secondary
+            for (Game game : games
+            ) {
+                while(check1==false || check2== false) {
+                    if (check1 == false) {
+                 //   check1 = game.addReferee(secondaryReferees.get(Math.random() * mainReferees.size()));
+                }
+                if (check2 == false) {
+                 //   check2 = game.addReferee(mainReferees.get(Math.random() * mainReferees.size()));
+                }
+            }
+        }
+    }
+
+    private boolean notEnoughReferee( LeagueInSeason leagueInSeason , int numOfTeams) throws DontHavePermissionException {
+        HashMap<String,Referee> refereeHashMap=leagueInSeason.getReferees();
+        if(refereeHashMap.size()<3) {
+            return false;
+        }
+        int counterMain=0;
+        int counterSecondary=0;
+
+        for (String referee:refereeHashMap.keySet()
+             ) {
+            if(refereeHashMap.get(referee) instanceof MainReferee)
+            {
+                counterMain++;
+            }
+            else if(refereeHashMap.get(referee) instanceof SecondaryReferee)
+            {
+                counterSecondary++;
+            }
+        }
+        if (counterSecondary<numOfTeams)
+        {
+            return false;
+        }
+        if (counterMain<numOfTeams)
+        {
+            return false;
+        }
+        return true;
     }
 
     public boolean removeSystemManager(String id) {
         try {
-            if (dbController.existSystemManager(this ,id)) {
+            if (dbController.existSystemManager(this, id)) {
                 if (inputAreLegal(id)) {
-                    if(dbController.getSystemManagers(this).size()>1) {
-                        dbController.deleteSystemManager(this ,id);
+                    if (dbController.getSystemManagers(this).size() > 1 && !(this.getUserMail().equals(id))) {
+                        dbController.deleteSystemManager(this, id);
                         return true;
-                    }
-                    else
-                    {
+                    } else {
                         throw new NotReadyToDelete("this is the only system manager in the system. you can't delete him");
                     }
                 } else {
@@ -125,79 +181,118 @@ public class SystemManager extends Member {
         return false;
     }
 
-    public boolean removeReferee(String id) {
-        try {
-            if (dbController.existReferee(this ,id)) {
-                if (inputAreLegal(id)) {
-                    Referee referee = (Referee) dbController.getMember(this , id);
-                    referee.deleteTheGames();
-                    //6.המערכת משבצת מחדש את השופטים למשחקים ששופטיהם נמחקו
-                    dbController.deleteReferee(this ,id);
-                    return true;
-                } else {
-                    throw new IncorrectInputException();
-                }
-            } else {
-                throw new MemberNotExist();
-            }
-        } catch (Exception e) {
-
-        }
-        return false;
-    }
-
-    public boolean addReferee(String id, boolean ifMainRefree) {
-        try {
+    public boolean removeReferee(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException, IncorrectInputException {
+        if (dbController.existReferee(this, id)) {
             if (inputAreLegal(id)) {
-                if (!dbController.existReferee(this ,id)) {
-                    if (dbController.existFan(this ,id)) {
-                        Fan fan = (Fan) dbController.getMember(this , id);
-                        Referee referee = null;
-                        if (ifMainRefree) {
-                            referee = new MainReferee(fan);
-                        } else {
-                            referee = new SecondaryReferee(fan);
-                        }
-                        dbController.deleteFan(this ,id);
-                        dbController.addReferee(this ,referee);
-                        return true;
-                    } else {
-                        throw new MemberNotExist();
-                    }
-                } else {
-                    throw new MemberAlreadyExistException();
+                Referee referee = (Referee) dbController.getMember(this, id);
+                if(referee.hadGames())
+                {
+                    throw new IncorrectInputException("this referee has games to work in , you cant delete it");
+                }
+                else {
+                    dbController.deleteReferee(this, id);
+                    Fan newFan = new Fan(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate());
+                    dbController.addFan(this, newFan);
+                    return true;
                 }
             } else {
                 throw new IncorrectInputException();
             }
-        } catch (Exception e) {
-
+        } else {
+            throw new MemberNotExist();
         }
-        return false;
     }
 
-    public boolean closeTeam(String teamName) {
-        try {
-            if (dbController.existTeam(this ,teamName)) {
-                //המערכת מסירה את הקבוצה מכל שיבוצי המשחק שיש לה
-                Team team = dbController.getTeam(this , teamName);
-                team.deleteTheData();
-                dbController.removeTeam(this ,teamName);
-                return true;
+    public boolean addReferee(String id, boolean ifMainRefree) throws IncorrectInputException, MemberAlreadyExistException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
+        if (inputAreLegal(id)) {
+            if (!dbController.existReferee(this, id)) {
+                if (dbController.existFan(this, id)) {
+                    Fan fan = (Fan) dbController.getMember(this, id);
+                    Referee referee = null;
+                    if (ifMainRefree) {
+                        referee = new MainReferee(fan);
+                    } else {
+                        referee = new SecondaryReferee(fan);
+                    }
+                    dbController.deleteFan(this, id);
+                    dbController.addReferee(this, referee);
+                    return true;
+                } else {
+                    throw new MemberNotExist();
+                }
             } else {
-                throw new ObjectNotExist("this team name is not exist");
+                throw new MemberAlreadyExistException();
             }
-        } catch (Exception e) {
-
+        } else {
+            throw new IncorrectInputException();
         }
-        return false;
     }
 
-    public boolean removeMember(String id) {
-        try {
+    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException {
+        if (dbController.existTeam(this, teamName)) {
+            //המערכת מסירה את הקבוצה מכל שיבוצי המשחק שיש לה
+            Team team = dbController.getTeam(this, teamName);
+            HashSet<Owner> allTheOwnerOfTheGroup = team.deleteTheData();
+            changeTheOwnerToFan(allTheOwnerOfTheGroup);
+            dbController.removeTeam(this, teamName);
+            return true;
+        } else {
+            throw new ObjectNotExist("this team name is not exist");
+        }
+    }
+
+    private void changeTheOwnerToFan(HashSet<Owner> allTheOwnerOfTheGroup) throws MemberNotExist, DontHavePermissionException, AlreadyExistException {
+        for (Owner owner : allTheOwnerOfTheGroup
+        ) {
+            if (owner.getTeams().size() == 0) {
+                Fan newFan = new Fan(owner.getName(), owner.getUserMail(), owner.getPassword(), owner.getBirthDate());
+                dbController.deleteOwner(this, owner.getUserMail());
+                dbController.addFan(this, newFan);
+            }
+        }
+    }
+
+    public boolean removeMember(String id) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
             if (inputAreLegal(id)) {
-                if (dbController.existMember(this ,id)) {
-                    dbController.deleteMember(this ,id);
+                if (dbController.existMember(this, id)) {
+                    Role role=dbController.getMember(this,id);
+                    if(role instanceof Player)
+                    {
+                        ((Player)role).deleteAllTheData();
+                    }
+                    else if(role instanceof Coach)
+                    {
+                        ((Coach)role).deleteAllTheData();
+                    }
+                    else if(role instanceof Manager)
+                    {
+                        ((Manager)role).deleteAllTheData();
+                    }
+                    else if(role instanceof Owner)
+                    {
+                        removeOwner(((Owner) role).getUserMail());
+                   //     removeFan(((Owner) role).getUserMail());
+                    }
+                    else if(role instanceof Referee)
+                    {
+                        removeReferee(((Referee) role).getUserMail());
+                      //  removeFan(((Owner) role).getUserMail());
+                    }
+                    else if(role instanceof AssociationDelegate)
+                    {
+                        removeAssociationDelegate(((AssociationDelegate) role).getUserMail());
+                       // removeFan(((AssociationDelegate) role).getUserMail());
+                    }
+                    else if(role instanceof SystemManager)
+                    {
+                        removeSystemManager(((Owner) role).getUserMail());
+                       // removeFan(((SystemManager) role).getUserMail());
+                    }
+                    else if(role instanceof Fan)
+                    {
+                       // removeFan(((Fan) role).getUserMail());
+                    }
+                    dbController.deleteMember(this, id);
                     return true;
                 } else {
                     throw new MemberNotExist();
@@ -205,104 +300,85 @@ public class SystemManager extends Member {
             } else {
                 throw new IncorrectInputException();
             }
-        } catch (Exception e) {
-
         }
-        return false;
+
+    private void removeFan(String id) throws MemberNotExist, DontHavePermissionException {
+        dbController.deleteFan(this,id);
     }
+
 
     /**
      * this function return true if the team added and false if there were problem with the data
      */
-        public boolean addNewTeam(String teamName , String idOwner) throws ObjectAlreadyExist, ObjectNotExist, MemberNotExist, DontHavePermissionException, AlreadyExistException {
-            if (alreadyIncludeThisTeamName(teamName) == true) {
-                throw new ObjectAlreadyExist();
-            }
-            else if(dbController.existOwner(this ,idOwner)==false && dbController.existFan(this ,idOwner)==false)
-            {
-                throw new ObjectNotExist("the is you enter is not exist as owner of a team");
-            }
-            else
-            {
-                Owner owner=null;
-                Role role =dbController.getMember(this , idOwner);
-                if(role instanceof Fan)
-                {//if its the first team for this owner
-                    owner=new Owner(role.getName(),((Fan) role).getUserMail(),((Fan) role).getPassword() , role.getBirthDate() , dbController);
-                    dbController.deleteFan(this,((Fan) role).getUserMail());
-                    dbController.addOwner(this,owner);
-                }
-                else if(role instanceof Owner)
-                {
-                    owner=(Owner)role;
-                }
-                if(owner!=null) {
-                    Account account = new Account();
-                    Team newTeam = new Team(teamName, account, owner);
-                    owner.addTeam(newTeam);
-                    dbController.addTeam(this,newTeam);
-                }
-            }
-            return false;
+    public boolean addNewTeam(String teamName, String idOwner) throws ObjectAlreadyExist, ObjectNotExist, MemberNotExist, DontHavePermissionException, AlreadyExistException, IncorrectInputException {
+        if (alreadyIncludeThisTeamName(teamName) == true) {
+            throw new ObjectAlreadyExist();
         }
-
-
-        /*
-    public boolean addNewTeam(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner, String teamName) {
-        try {
-            if (idPlayers.size() < 11) {
-                throw new IncorrectInputException();
-            } else if (alreadyIncludeThisTeamName(teamName) == true) {
-                throw new ObjectAlreadyExist();
-            } else if (notAllTheIdAreMembers(idPlayers, idCoach, idManager, idOwner) == false) {
-                throw new MemberNotExist();
-            } else {
-                LinkedList<Coach> coaches = makeCoachList(dbController.getMembers(idCoach));
-                LinkedList<Player> players = makePlayerList(dbController.getMembers(idPlayers));
-                LinkedList<Manager> managers = makeManagerList(dbController.getMembers(idManager));
-                LinkedList<Owner> owners = makeOwnerList(dbController.getMembers(idOwner));
-                Account account = new Account();
-                Team newTeam = new Team(account, players, coaches, managers, owners, teamName);
-          //      dbController.addTeam(newTeam);
-                return true;
+        else if(legalInputTeamName(teamName)==false)
+        {
+            throw new IncorrectInputException();
+        }
+        else if (dbController.existOwner(this, idOwner) == false && dbController.existFan(this, idOwner) == false) {
+            throw new ObjectNotExist("the is you enter is not exist as owner of a team");
+        } else {
+            Owner owner = null;
+            Role role = dbController.getMember(this, idOwner);
+            if (role instanceof Fan) {//if its the first team for this owner
+                owner = new Owner(role.getName(), ((Fan) role).getUserMail(), ((Fan) role).getPassword(), role.getBirthDate(), dbController);
+                dbController.deleteFan(this, ((Fan) role).getUserMail());
+                dbController.addOwner(this, owner);
+            } else if (role instanceof Owner) {
+                owner = (Owner) role;
             }
-        } catch (Exception e) {
-
+            if (owner != null) {
+                Account account = new Account();
+                Team newTeam = new Team(teamName, account, owner);
+                owner.addTeam(newTeam);
+                dbController.addTeam(this, newTeam);
+            }
         }
         return false;
     }
-    */
+
+    private boolean legalInputTeamName(String teamName) {
+        int counter=0;
+        for(int i=0; i<teamName.length(); i++)
+        {
+            if(teamName.charAt(i)>='0' && teamName.charAt(i)<='9')
+                counter++;
+        }
+        if(counter==teamName.length())
+            return false;
+
+        return true;
+    }
+
 
     /************* help function for addNewTeam****************/
 
     private boolean notAllTheIdAreMembers(LinkedList<String> idPlayers, LinkedList<String> idCoach, LinkedList<String> idManager, LinkedList<String> idOwner) throws DontHavePermissionException {
-        boolean check=allTheListAreMember(idPlayers);
-        if(check==false)
-        {
+        boolean check = allTheListAreMember(idPlayers);
+        if (check == false) {
             return false;
         }
-        check=allTheListAreMember(idCoach);
-        if(check==false)
-        {
-            return false;
-        }check=allTheListAreMember(idManager);
-        if(check==false)
-        {
+        check = allTheListAreMember(idCoach);
+        if (check == false) {
             return false;
         }
-        check=allTheListAreMember(idOwner);
-        if(check==false)
-        {
+        check = allTheListAreMember(idManager);
+        if (check == false) {
+            return false;
+        }
+        check = allTheListAreMember(idOwner);
+        if (check == false) {
             return false;
         }
         return true;
     }
 
     private boolean allTheListAreMember(LinkedList<String> list) throws DontHavePermissionException {
-        for(int i=0; i<list.size(); i++)
-        {
-            if(dbController.existMember(this ,list.get(i))==false)
-            {
+        for (int i = 0; i < list.size(); i++) {
+            if (dbController.existMember(this, list.get(i)) == false) {
                 return false;
             }
         }
@@ -311,13 +387,13 @@ public class SystemManager extends Member {
 
     private boolean alreadyIncludeThisTeamName(String teamName) throws DontHavePermissionException {
 
-        return dbController.existTeam(this ,teamName);
+        return dbController.existTeam(this, teamName);
     }
 
     private LinkedList<Coach> makeCoachList(LinkedList<Member> returnFromSystemTheExactUsers) {
         LinkedList<Coach> newList = new LinkedList<>();
         for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-                newList.add((Coach) returnFromSystemTheExactUsers.get(i));
+            newList.add((Coach) returnFromSystemTheExactUsers.get(i));
         }
         return newList;
     }
@@ -325,7 +401,7 @@ public class SystemManager extends Member {
     private LinkedList<Player> makePlayerList(LinkedList<Member> returnFromSystemTheExactUsers) {
         LinkedList<Player> newList = new LinkedList<>();
         for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-                newList.add((Player) returnFromSystemTheExactUsers.get(i));
+            newList.add((Player) returnFromSystemTheExactUsers.get(i));
         }
         return newList;
     }
@@ -333,7 +409,7 @@ public class SystemManager extends Member {
     private LinkedList<Owner> makeOwnerList(LinkedList<Member> returnFromSystemTheExactUsers) throws DontHavePermissionException {
         LinkedList<Owner> newList = new LinkedList<>();
         for (int i = 0; i < returnFromSystemTheExactUsers.size(); i++) {
-                newList.add((Owner) returnFromSystemTheExactUsers.get(i));
+            newList.add((Owner) returnFromSystemTheExactUsers.get(i));
         }
         return newList;
     }
@@ -404,36 +480,38 @@ public class SystemManager extends Member {
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
         return this.dbController.getRoles(this);
     }
+
     public HashMap<String, Team> getTeams() throws DontHavePermissionException {
         return this.dbController.getTeams(this);
     }
+
     /************* add function (noa) *************/
     public void addAssociationDelegate(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
-       if( this.dbController.getFans(this ).containsKey(id)){
-           Member member = (Member)this.dbController.getMember(this , id);
-           AssociationDelegate newA_D = new AssociationDelegate(member.getName(),member.getUserMail(),member.getPassword() , member.getBirthDate());
-           this.dbController.deleteRole(this,id);
-           this.dbController.addAssociationDelegate(this,newA_D);
-       }
+        if (this.dbController.getFans(this).containsKey(id)) {
+            Member member = (Member) this.dbController.getMember(this, id);
+            AssociationDelegate newA_D = new AssociationDelegate(member.getName(), member.getUserMail(), member.getPassword(), member.getBirthDate());
+            this.dbController.deleteRole(this, id);
+            this.dbController.addAssociationDelegate(this, newA_D);
+        }
     }
+
     public void addOwner(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
-        if( this.dbController.getFans(this).containsKey(id)){
-            Member member = (Member)this.dbController.getMember(this , id);
-            Owner newOwner = new Owner(member.getName(),member.getUserMail(),member.getPassword(),member.getBirthDate(),this.dbController);
-            this.dbController.deleteRole(this,id);
-            this.dbController.addOwner(this,newOwner);
+        if (this.dbController.getFans(this).containsKey(id)) {
+            Member member = (Member) this.dbController.getMember(this, id);
+            Owner newOwner = new Owner(member.getName(), member.getUserMail(), member.getPassword(), member.getBirthDate(), this.dbController);
+            this.dbController.deleteRole(this, id);
+            this.dbController.addOwner(this, newOwner);
         }
     }
 
     public void addSystemManager(String id) throws MemberNotExist, DontHavePermissionException, AlreadyExistException {
-        if( this.dbController.getFans(this).containsKey(id)){
-            Member member = (Member)this.dbController.getMember(this , id);
-            SystemManager newSystemManager = new SystemManager(member.getName(),member.getUserMail(),member.getPassword(),this.dbController , member.getBirthDate());
-            this.dbController.deleteRole(this,id);
-            this.dbController.addSystemManager(this ,newSystemManager);
+        if (this.dbController.getFans(this).containsKey(id)) {
+            Member member = (Member) this.dbController.getMember(this, id);
+            SystemManager newSystemManager = new SystemManager(member.getName(), member.getUserMail(), member.getPassword(), this.dbController, member.getBirthDate());
+            this.dbController.deleteRole(this, id);
+            this.dbController.addSystemManager(this, newSystemManager);
         }
     }
-
 
 
 }

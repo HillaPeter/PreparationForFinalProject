@@ -3,6 +3,7 @@ package system;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Game.Game;
 import Game.Team;
 import League.*;
 import Users.*;
@@ -12,6 +13,7 @@ import sun.applet.Main;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class DBController {
 
@@ -248,7 +250,9 @@ public class DBController {
         if (role instanceof SystemManager || role instanceof Owner || role instanceof Fan) {
             if (db.existFan(id)) {
                 db.removeRole(id);
-            } else {
+            }
+            else
+                {
                 throw new MemberNotExist();
             }
         }
@@ -354,9 +358,9 @@ public class DBController {
         }     }
 
     public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
-        if (!(role instanceof Guest || role instanceof Fan)) {
-            throw new DontHavePermissionException();
-        }
+       // if (!(role instanceof Guest || role instanceof Fan) {
+      //      throw new DontHavePermissionException();
+      //  }
         if (db.existMember(fan.getUserMail()))
             throw new AlreadyExistException();
         db.addFan(fan);
@@ -533,5 +537,15 @@ public class DBController {
         else {
             throw new DontHavePermissionException();
         }     }
+
+    public void addGames(Role role,Set<Game> games) throws DontHavePermissionException {
+        if (role instanceof SystemManager) {
+            db.addGames(games);
+        }
+        else {
+            throw new DontHavePermissionException();
+        }
+    }
+
 
 }

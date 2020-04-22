@@ -488,7 +488,7 @@ public class Owner extends Member {
     }
 
 
-    public boolean haveTeams() {
+    public boolean notHaveTeams() {
         return teams.isEmpty();
     }
 }

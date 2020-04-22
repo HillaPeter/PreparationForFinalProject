@@ -39,4 +39,8 @@ public abstract class Referee extends Member{
     }
 
 
+    public boolean hadGames()
+    {
+        return games.size()>0;
+    }
 }

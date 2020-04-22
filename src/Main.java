@@ -16,13 +16,14 @@ import java.util.regex.Pattern;
 public class Main {
     static Scanner scanInput = new Scanner(System.in);
     static SystemController controller = new SystemController("System Controller");
-    static Member member;
+    static Role member;
     static String path;
     //static DBController dbController;//just for my test - you can delete
 
     public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
 /****************************************************menu******************************************************/
-        controller.initSystem();
+        //  controller.initSystem();
+
         startMenu();
         /****shachar tests******/
         //must write the path in the main
@@ -58,7 +59,6 @@ public class Main {
                             Date birthdate = new Date(Integer.parseInt(details[3]), Integer.parseInt(details[4]), Integer.parseInt(details[5]));
                             member = controller.signIn(details[1], details[0], details[2], birthdate);
                             System.out.println("succeed to signIn!!");
-                            //showMenu(member);
                             break;
                         } catch (AlreadyExistException e) {
                             System.out.println("this mail is already exist in the system.\ntry again with a different mai.");
@@ -86,24 +86,22 @@ public class Main {
                         System.out.println("You entered incorrect password.\nlog in with the correct password.");
                     } catch (IncorrectInputException e) {
                         break;
-                    }
-                    catch (DontHavePermissionException e) {
+                    } catch (DontHavePermissionException e) {
                         break;
                     }
                     break;
                 }
                 case "Exit": {
+                    System.exit(1);
                 }
             }
         }
     }
 
     private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
-        // member = new Owner("hilla", "hilla@gmail.com", "h1", controller);
-        if( member instanceof Guest){
+        if (member instanceof Guest) {
             startMenu();
-        }
-        if (member instanceof SystemManager) {
+        } else if (member instanceof SystemManager) {
             SystemManagerMenu();
         } else if (member instanceof MainReferee) {
             mainRefereeMenu();
@@ -133,11 +131,10 @@ public class Main {
             System.out.println("write \"4\" for handle with complaints");
             System.out.println("write \"5\" for handle with games");
             System.out.println("write \"6\" for view System Information");
-            System.out.println("write \"7\" for handle with owner");
+            System.out.println("write \"7\" for remove owner");
             System.out.println("write \"8\" for handle with Association Delegate");
             System.out.println("write \"9\" for handle with System Manager");
             System.out.println("\nwrite \"logOut\" if you want to finish. \n");
-            //todo case for log out and not exit all
             input = "";
             while (input.equals("")) {
                 input = scanInput.nextLine();
@@ -158,19 +155,23 @@ public class Main {
                         switch (input) {
                             case "1": {
                                 System.out.println("please enter the Id of the referee");
-                                String id = removeRefree();// scanInput.nextLine();
+                                String id = removeRefree();
                                 try {
-                                    boolean success = controller.removeReferee(id);
+                                    controller.removeReferee(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
-                                    //    input="Exit";
+                                } catch (IncorrectInputException e) {
+                                    e.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
                                 }
                                 break;
                             }
 
                             case "2": {
-                                //System.out.println("please enter the Id of the refree");
-                                String id = addRefree();//scanInput.nextLine();
+                                String id = addRefree();
                                 System.out.println("would you like this refree will be main refree ? yes/no");
                                 String bool = scanInput.nextLine();
                                 boolean mainReferee;
@@ -180,9 +181,17 @@ public class Main {
                                     mainReferee = false;
                                 }
                                 try {
-                                    boolean success = controller.addReferee(id, mainReferee);
+                                    controller.addReferee(id, mainReferee);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
+                                } catch (IncorrectInputException e) {
+                                    e.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
+                                } catch (MemberAlreadyExistException e) {
+                                    e.printStackTrace();
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
                                 }
                                 break;
                             }
@@ -206,41 +215,8 @@ public class Main {
                                 System.out.println("please enter the name of the new team");
                                 teamName = scanInput.nextLine();
                                 String ownerId = getOwnerId();
-                                // LinkedList<String> players = addTeamPlayers();// new LinkedList<>();
-                                // LinkedList<String> coaches = addTeamCoachs();//new LinkedList<>();
-                                // LinkedList<String> managers = addTeamManagers();//new LinkedList<>();
-                                //  LinkedList<String> owners = addTeamOwners();//new LinkedList<>();
-
-                                /*
-                                String id = "";
-                                while (!id.equals("0")) {
-                                    System.out.println("please enter the id of the players in the team \n when you finish press 0");
-                                    id = scanInput.nextLine();
-                                    if (!id.equals(0))
-                                        players.add(id);
-                                }
-                                while (!id.equals("0")) {
-                                    System.out.println("please enter the id of the coaches in the team \n when you finish press 0");
-                                    id = scanInput.nextLine();
-                                    if (!id.equals(0))
-                                        coaches.add(id);
-                                }
-                                while (!id.equals("0")) {
-                                    System.out.println("please enter the id of the managers in the team \n when you finish press 0");
-                                    id = scanInput.nextLine();
-                                    if (!id.equals(0))
-                                        managers.add(id);
-                                }
-                                while (!id.equals("0")) {
-                                    System.out.println("please enter the id of the owners in the team \n when you finish press 0");
-                                    id = scanInput.nextLine();
-                                    if (!id.equals(0))
-                                        owners.add(id);
-                                }
-                                */
                                 try {
                                     controller.addTeam(teamName, ownerId);
-                                    // boolean success = controller.addTeam(players, coaches, managers, owners, teamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
                                 } catch (ObjectNotExist objectNotExist) {
@@ -251,16 +227,23 @@ public class Main {
                                     memberNotExist.printStackTrace();
                                 } catch (AlreadyExistException e) {
                                     e.printStackTrace();
+                                } catch (IncorrectInputException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }
                             case "2": {
-                                //  System.out.println("please enter the team name you want to close");
-                                String TeamName = removeTeam();// scanInput.nextLine();
+                                String TeamName = removeTeam();
                                 try {
-                                    boolean success = controller.closeTeam(TeamName);
+                                    controller.closeTeam(TeamName);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove referee");
+                                } catch (ObjectNotExist objectNotExist) {
+                                    objectNotExist.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
                                 }
                                 break;
                             }
@@ -275,6 +258,12 @@ public class Main {
                         boolean success = controller.removeMember(id);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove member");
+                    } catch (MemberNotExist memberNotExist) {
+                        memberNotExist.printStackTrace();
+                    } catch (IncorrectInputException e) {
+                        e.printStackTrace();
+                    } catch (AlreadyExistException e) {
+                        e.printStackTrace();
                     }
                     break;
                 }
@@ -312,15 +301,15 @@ public class Main {
                 }
                 case "5": {
                     try {
-                        //System.out.println("please enter the id of the season");
-                        String seasonId = chooseSeason();//scanInput.nextLine();
-                        //System.out.println("please enter the id of the season");
-                        String leagueId = chooseLeague();// scanInput.nextLine();
+                        String seasonId = chooseSeason();
+                        String leagueId = chooseLeague();
                         controller.schedulingGames(seasonId, leagueId);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove referee");
                     } catch (ObjectNotExist e) {
                         System.out.println("the season or the league you choose doesnt exist");
+                    } catch (IncorrectInputException e) {
+                        e.printStackTrace();
                     }
                     break;
                 }
@@ -334,43 +323,12 @@ public class Main {
                 }
                 case "7": {
 
-                    while (!input.equals("Exit")) {
-                        System.out.println("choose one of the following options:\n");
-                        System.out.println("write \"1\" to remove owner");
-                        System.out.println("write \"2\" to add owner");
-                        System.out.println("\nwrite \"Exit\" if you want to finish. \n");
-                        input = "";
-                        while (input.equals("")) {
-                            input = scanInput.nextLine();
-                        }
-                        switch (input) {
-                            case "1": {
-                                System.out.println("please enter the Id of the owner");
-                                String id = removeOwner();// scanInput.nextLine();
-                                try {
-                                    boolean success = controller.removeOwner(id);
-                                } catch (DontHavePermissionException e) {
-                                    System.out.println("you don't have the permission to remove owner");
-                                    //    input="Exit";
-                                }
-                                break;
-                            }
-
-                            case "2": {
-                                //System.out.println("please enter the Id of the refree");
-                                String id = addOwner();//scanInput.nextLine();
-                                try {
-                                    controller.addOwner(id);
-                                } catch (DontHavePermissionException e) {
-                                    System.out.println("you don't have the permission to add owner");
-                                } catch (MemberNotExist memberNotExist) {
-                                    memberNotExist.printStackTrace();
-                                } catch (AlreadyExistException e) {
-                                    e.printStackTrace();
-                                }
-                                break;
-                            }
-                        }
+                    System.out.println("please enter the Id of the owner");
+                    String id = removeOwner();
+                    try {
+                        controller.removeOwner(id);
+                    } catch (DontHavePermissionException e) {
+                        System.out.println("you don't have the permission to remove owner");
                     }
                     break;
                 }
@@ -461,7 +419,7 @@ public class Main {
                 case "logOut": {
                     controller.logOut();
                     member = null;//(Role) controller.logOut();
-                    input="ExitAll";
+                    input = "ExitAll";
                     break;
                 }
             }
@@ -594,7 +552,7 @@ public class Main {
         for (String teamName : team.keySet()) {
             System.out.println(teamName);
         }
-        scanInput=new Scanner(System.in);
+        scanInput = new Scanner(System.in);
         String teamToRemove = scanInput.nextLine();
         return teamToRemove;
     }
@@ -849,7 +807,7 @@ public class Main {
                         break;
                     }
                     case "logOut": {
-                       // member = (Member) controller.logOut();
+                        // member = (Member) controller.logOut();
                         break;
                     }
                 }
@@ -1261,8 +1219,10 @@ public class Main {
         String month = scanInput.nextLine();
         System.out.println("day:");
         String day = scanInput.nextLine();
+        if (!checkDateBirth(year,month,day)) {
+            throw new IncorrectInputException("incorrect date input");
+        }
 
-        // Date birthdate=new Date(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day));
         System.out.println("your details entered successfully!\nplease wait for confirmation");
         details[0] = mailInput;
         details[1] = nameInput;
@@ -1271,6 +1231,22 @@ public class Main {
         details[4] = month;
         details[5] = day;
         return details;
+    }
+
+    private static boolean checkDateBirth(String year, String month, String day) {
+        if(year.length()>4)
+        {
+            return false;
+        }
+        if(Integer.parseInt(month)<1 || Integer.parseInt(month)>12)
+        {
+            return false;
+        }
+        if(Integer.parseInt(day)<1 || Integer.parseInt(day)>31)
+        {
+            return false;
+        }
+        return true;
     }
 
     /**

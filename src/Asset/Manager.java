@@ -15,6 +15,12 @@ public class Manager extends TeamMember {
         this.setPassword(null);
     }
 
-
+    public void deleteAllTheData()
+    {
+        for (String strTeam:team.keySet()
+        ) {
+            team.get(strTeam).removeManager(this);
+        }
+    }
 
 }

@@ -20,7 +20,7 @@ public class RefereeTest {
 //    private SystemManager systemManager=new SystemManager("for test" , "for Test" , "fortest" , new DBController());
     /*******************************************************************************/
     @Before
-    public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+    public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException, MemberAlreadyExistException {
         Date birthdate=new Date(1993,10,12);
         controller.signIn("referee","referee@gmail.com","123" ,birthdate);
         controller.logIn("admin@gmail.com","123");

@@ -133,7 +133,7 @@ public class SystemController {
      * if the referee didnt exist - return false
      * if the referee exist - delete it and return true
      */
-    public boolean removeReferee(String refereeId) throws DontHavePermissionException {
+    public boolean removeReferee(String refereeId) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
             if (connectedUser instanceof SystemManager) {
                 SystemManager systemManager = (SystemManager) connectedUser;
                 return systemManager.removeReferee(refereeId);
@@ -146,7 +146,7 @@ public class SystemController {
      * if the referee already exist - return false
      * if the referee not exist and success of adding it - add it and return true
      */
-    public boolean addReferee(String refereeId, boolean ifMainReferee) throws DontHavePermissionException {
+    public boolean addReferee(String refereeId, boolean ifMainReferee) throws DontHavePermissionException, MemberAlreadyExistException, AlreadyExistException, MemberNotExist, IncorrectInputException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.addReferee(refereeId, ifMainReferee);
@@ -163,7 +163,7 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean closeTeam(String teamName) throws DontHavePermissionException {
+    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.closeTeam(teamName);
@@ -179,7 +179,7 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean removeMember(String id) throws DontHavePermissionException {
+    public boolean removeMember(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeMember(id);
@@ -220,7 +220,7 @@ public class SystemController {
         }
     }
 
-    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist {
+    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist, IncorrectInputException {
 
            if (connectedUser instanceof SystemManager) {
                SystemManager systemManager = (SystemManager) connectedUser;
@@ -264,7 +264,7 @@ public class SystemController {
         }
     }
 */
-    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException {
+    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.addNewTeam(teamName , ownerId);
