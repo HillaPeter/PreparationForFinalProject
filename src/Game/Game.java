@@ -77,6 +77,7 @@ public class Game extends Observable {
     public Field getField() {
         return field;
     }
+    public HashSet<Referee> getReferees(){ return this.referees;}
 
     public void addFollower (Observer follower){
         addObserver(follower);

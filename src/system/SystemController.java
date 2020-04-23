@@ -724,8 +724,12 @@ public class SystemController {
         ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
     public HashSet<Game> getGames(String league , String season) throws ObjectNotExist, DontHavePermissionException {
-        if (connectedUser instanceof SystemManager || connectedUser instanceof Fan) {
+        if (connectedUser instanceof SystemManager) {
             return ((SystemManager) this.connectedUser).getGames(league, season);
+        }
+        else if( connectedUser instanceof Fan){
+            //return ((Fan)this.connectedUser).getGames(league,season);
+            return null;
         }
         else {
             throw new DontHavePermissionException();
@@ -863,9 +867,13 @@ public class SystemController {
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist, DontHavePermissionException {
         ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
     }
-
-    public DBController getDbController() {
-        return dbController;
+    public ASchedulingPolicy getSchedulingPolicyInLeagueInSeason(String league , String seson) throws DontHavePermissionException, ObjectNotExist {
+        if(this.connectedUser instanceof AssociationDelegate){
+            return ((AssociationDelegate)connectedUser).getSchedulingPolicyInLeagueInSeason(league,seson);
+        }
+        else {
+            throw new DontHavePermissionException();
+        }
     }
 
     public HashMap<String, SystemManager> getSystemManager(Role role) throws DontHavePermissionException {
@@ -879,6 +887,25 @@ public class SystemController {
 
     public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
         return dbController.getOwnersAndFans(role);
+    }
+
+    /**
+     * Associate Dellegite
+     * this function add team to league in season
+     * @param league
+     * @param season
+     * @param teamName
+     * @throws DontHavePermissionException
+     * @throws ObjectNotExist
+     * @throws AlreadyExistException
+     */
+    public void addTeamToLeagueInSeason(String league,String season,String teamName) throws DontHavePermissionException, ObjectNotExist, AlreadyExistException, IncorrectInputException {
+        if(this.connectedUser instanceof AssociationDelegate){
+            ((AssociationDelegate)connectedUser).addTeamToLeagueInSeason(league,season,teamName);
+        }
+        else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /**********shachar test*************/

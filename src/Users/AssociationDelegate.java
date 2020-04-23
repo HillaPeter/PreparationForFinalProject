@@ -1,5 +1,6 @@
 package Users;
 
+import Game.Team;
 import League.*;
 import system.DBController;
 import Exception.*;
@@ -181,6 +182,37 @@ public class AssociationDelegate extends Member {
         Season seasonObj = dbController.getSeason(this,year);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
+    }
+
+    /**
+     * adding the team to leagueInSeason list - if the team is not valid - throw exception
+     * @param league
+     * @param season
+     * @param teamName
+     */
+    public void addTeamToLeagueInSeason(String league, String season, String teamName) throws DontHavePermissionException, ObjectNotExist, AlreadyExistException, IncorrectInputException {
+        Team team = dbController.getTeam(this, teamName);
+        if(team.getPlayers().size() < 11 || team.getStatus() == false || team.getHomeField()==null ){
+            throw new IncorrectInputException();
+        }
+
+        Season season1 = dbController.getSeason(this,season);
+        LeagueInSeason leagueInSeason = dbController.getLeague(this,league).getLeagueInSeason(season1);
+        leagueInSeason.addTeam(team);
+    }
+
+    /**
+     * this function return the schedule policy in league in season
+     * @param league
+     * @param season
+     * @return
+     * @throws DontHavePermissionException
+     * @throws ObjectNotExist
+     */
+    public ASchedulingPolicy getSchedulingPolicyInLeagueInSeason(String league, String season) throws DontHavePermissionException, ObjectNotExist {
+        Season season1 = dbController.getSeason(this,season);
+        LeagueInSeason leagueInSeason = dbController.getLeague(this,league).getLeagueInSeason(season1);
+        return leagueInSeason.getSchedulePolicy();
     }
 }
 

@@ -37,10 +37,204 @@ public class SystemManagerTest {
 
     /*******************************************************************************/
     @Test
-    public void schedulingGames() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist {
-        /*add 20 Teams*/
-        addTeams(20);
-        /* init */
+    public void schedulingGames1() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist, MemberAlreadyExistException {
+        /* init - enter league , season , schedulePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
+
+        /*init - add 20 Teams ,referees to league in season */
+        addTeamsCorrectly(20);
+        enterReferee(20);
+        addTeamsToLeagueSeason(20);
+        addRefereesToLeagueInSeason(20);
+
+        controller.logIn("admin@gmail.com", "123");
+
+        /* try to scheduling game with correct input - teams with 11 players - result should be positive */
+        controller.schedulingGames("2020","league");
+
+        HashSet<Game> games = controller.getGames("league","2020");
+        int amountOfGames = 190; // 20 Choose 2 (???)
+        assertTrue(games.size() == amountOfGames );
+        //check if all teams status==true
+        // && check if each team play in 38 games - 19*2
+        // && check if team.games.contains(game)
+        for (Game game: games) {
+            assertTrue(game.getHostTeam().getStatus());
+            assertTrue(game.getHostTeam().getGamesSize() == 38);
+            assertTrue(game.getHostTeam().getGames().contains(game));
+
+            assertTrue(game.getVisitorTeam().getStatus());
+            assertTrue(game.getVisitorTeam().getGamesSize() == 38);
+            assertTrue(game.getVisitorTeam().getGames().contains(game));
+
+            assertTrue(game.getReferees().size() == 2);
+            assertNotNull(game.getField());
+        }
+    }
+    @Test
+    public void schedulingGames2() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist, MemberAlreadyExistException {
+        /* init - enter league , season , schedulePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other twice");
+        controller.logOut();
+
+        /*init - add 20 Teams ,referees to league in season */
+        addTeamsCorrectly(20);
+        enterReferee(20);
+        addTeamsToLeagueSeason(20);
+        addRefereesToLeagueInSeason(20);
+
+        controller.logOut();
+
+        controller.logIn("admin@gmail.com", "123");
+
+        /*try to scheduling game with correct input - teams with 11 players - result should be positive*/
+        controller.schedulingGames("2020","league");
+        HashSet<Game> games = controller.getGames("league","2020");
+        int amountOfGames = 190; // 20 Choose 2 (???)
+        assertTrue(games.size() == amountOfGames );
+        //check if all teams status==true
+        // && check if each team play in 38 games - 19*2
+        // && check if team.games.contains(game)
+        for (Game game: games) {
+            assertTrue(game.getHostTeam().getStatus());
+            assertTrue(game.getHostTeam().getGamesSize() == 38);
+            assertTrue(game.getHostTeam().getGames().contains(game));
+
+            assertTrue(game.getVisitorTeam().getStatus());
+            assertTrue(game.getVisitorTeam().getGamesSize() == 38);
+            assertTrue(game.getVisitorTeam().getGames().contains(game));
+
+            assertTrue(game.getReferees().size() == 2);
+            assertNotNull(game.getField());
+        }
+    }
+    @Test
+    public void schedulingGamesWrongTeams() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist, MemberAlreadyExistException {
+        thrown.expect(IncorrectInputException.class);
+
+        /* init - enter league , season , scedualePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
+
+        /*init - add 11 Teams ,referees to league in season */
+        addTeamsCorrectly(11);
+        enterReferee(11);
+        addTeamsToLeagueSeason(11);
+        addRefereesToLeagueInSeason(11);
+
+        controller.logOut();
+
+
+        controller.logIn("admin@gmail.com", "123");
+
+        /*try to scheduling game with incorrect input - teams odd number of teams- result should be negative*/
+        controller.schedulingGames("2020","league");
+    }
+    @Test
+    public void schedulingGamesNoPlayers() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist, MemberAlreadyExistException {
+        thrown.expect(IncorrectInputException.class);
+
+        /* init - enter league , season , scedualePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
+
+        /*init - add 11 Teams ,referees to league in season */
+        addTeamsWithoutPlayers(10);
+        enterReferee(10);
+        addTeamsToLeagueSeason(10);
+        addRefereesToLeagueInSeason(10);
+
+        controller.logOut();
+
+
+        controller.logIn("admin@gmail.com", "123");
+
+        /*try to scheduling game with incorrect input - teams without 11 players- result should be negative*/
+        controller.schedulingGames("2020","league");
+    }
+    @Test
+    public void schedulingGamesNoReferees() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist, MemberAlreadyExistException {
+        thrown.expect(IncorrectInputException.class);
+
+        /* init - enter league , season , scedualePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
+
+        /*init - add 11 Teams ,referees to league in season */
+        addTeamsCorrectly(20);
+        enterReferee(20);
+        addTeamsToLeagueSeason(20);
+        addRefereesToLeagueInSeason(11);
+
+        controller.logOut();
+
+
+        controller.logIn("admin@gmail.com", "123");
+
+        /*try to scheduling game with incorrect input - not enough referees- result should be negative*/
+        controller.schedulingGames("2020","league");
+    }
+    @Test
+    public void schedulingGamesLeagueNotExist() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist {
+        thrown.expect(ObjectNotExist.class);
+
+        /* init - enter league , season , scedualePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+
         controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
@@ -49,20 +243,52 @@ public class SystemManagerTest {
 
         controller.logIn("admin@gmail.com", "123");
 
-        /*try to scheduling game eith correct input - result should be positive*/
-        controller.schedulingGames("2020","league");
-        HashSet<Game> games = controller.getGameSchedule();
-        int amountOfGames = 190; // 20 Choose 2 (???)
-        assertTrue(games.size() == amountOfGames );
+        /*try to scheduling game with incorrect input - league not exist - result should be negative*/
+        controller.schedulingGames("2020","league2");
+    }
+    @Test
+    public void schedulingGamesSeasonNotExist() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist {
+        thrown.expect(ObjectNotExist.class);
+
+        /* init - enter league , season , scedualePolicy  */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
+
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
 
 
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
 
-        //todo - check if the list inside leagueInSeason, check if we get enough games (190)
-        //todo - check if all teams status==true, check if each team play in 38 games - 19*2
-        //todo - check if team.games.contains(game) i dont know how to check this........
+        controller.logIn("admin@gmail.com", "123");
 
+        /*try to scheduling game with incorrect input - season not exist- result should be negative*/
+        controller.schedulingGames("202","league");
+    }
+    @Test
+    public void schedulingGamesNoPermission() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist {
+        thrown.expect(DontHavePermissionException.class);
 
+        /* init - enter league , season , scedulePolicy and teams */
+        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
 
+        controller.logIn("admin@gmail.com", "123");
+        controller.addAssociationDelegate("dani@gmail.com");
+        controller.logOut();
+
+        controller.logIn("dani@gmail.com", "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+        controller.logOut();
+
+        /*try to scheduling game without login - season not exist- result should be negative*/
+        controller.schedulingGames("202","league");
     }
 
     /*******************************************************************************/
@@ -87,7 +313,7 @@ public class SystemManagerTest {
     @Test
     public void addNewTeamNoPermission() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
         thrown.expect(DontHavePermissionException.class);
-       // controller.logIn("admin@gmail.com", "123");
+        // controller.logIn("admin@gmail.com", "123");
 
         //controller.logIn("admin@gmail.com","123");
         //try to make new team without log in
@@ -283,7 +509,7 @@ public class SystemManagerTest {
         controller.signIn("member", "member@gmail.com", "123", birthdate);
         controller.logIn("admin@gmail.com", "123");
 
-      //  controller.signIn("member", "member@gmail.com", "123", birthdate);
+        //  controller.signIn("member", "member@gmail.com", "123", birthdate);
         controller.addReferee("member@gmail.com" , false);
         assertTrue(controller.getRoles().containsKey("member@gmail.com"));
         int size = controller.getRoles().size();
@@ -329,15 +555,18 @@ public class SystemManagerTest {
     public void readLineByLine() {
     }
 
-    private void addTeams(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, PasswordDontMatchException, NoEnoughMoney {
+
+    private void addTeamsCorrectly(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
         for(int i=0 ; i< mumOfTeams ; i++){
+            addUsers(i);
             addTeam(i);
+            addPlayers(i);
         }
     }
-
-    private void addTeam(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectAlreadyExist, ObjectNotExist, NoEnoughMoney {
+    private void addUsers(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
         controller.signIn("palyer0"+i,"p0"+i+"@gmail.com","1",birthdate);
         controller.signIn("palyer1"+i,"p1"+i+"@gmail.com","1",birthdate);
+        controller.signIn("palyer2"+i,"p2"+i+"@gmail.com","1",birthdate);
         controller.signIn("palyer3"+i,"p3"+i+"@gmail.com","1",birthdate);
         controller.signIn("palyer4"+i,"p4"+i+"@gmail.com","1",birthdate);
         controller.signIn("palyer5"+i,"p5"+i+"@gmail.com","1",birthdate);
@@ -348,23 +577,60 @@ public class SystemManagerTest {
         controller.signIn("palyer10"+i,"p10"+i+"@gmail.com","1",birthdate);
         controller.signIn("coach"+i,"coach"+i+"@gmail.com","1",birthdate);
         controller.signIn("manager"+i,"manager"+i+"@gmail.com","1",birthdate);
+    }
+    private void addTeamsWithoutPlayers(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, PasswordDontMatchException, NoEnoughMoney {
+        for(int i=0 ; i< mumOfTeams ; i++){
+            addTeam(i);
+        }
+        for(int i=0; i<mumOfTeams; i++){
+            controller.addTeamToLeagueInSeason("league","2020","team"+i);
+        }
+    }
+    private void addTeamsToLeagueSeason(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, PasswordDontMatchException, NoEnoughMoney {
+        for(int i=0 ; i< mumOfTeams ; i++){
+            addTeam(i);
+        }
+    }
+    private void addPlayers(int i) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, ObjectNotExist, IncorrectInputException, NoEnoughMoney, AlreadyExistException {
+        controller.logIn("owner"+i+"@gmail.com","1");
+
+        controller.setMoneyToAccount("team"+i,10000);
+        controller.addPlayer("p0"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p1"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p2"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p3"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p4"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p5"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p6"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p7"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p8"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p9"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addPlayer("p10"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.logOut();
+    }
+    private void addTeam(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectAlreadyExist, ObjectNotExist, NoEnoughMoney {
         controller.signIn("owner"+i,"owner"+i+"@gmail.com","1",birthdate);
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team"+i,"owner"+i+"@gmail.com");
         controller.logOut();
-        controller.logIn("owner"+i+"@gmail.com","1");
-
-        controller.setMoneyToAccount("team"+i,10000);
-        controller.addPlayer("p0"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p1"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p2"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p3"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p4"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p5"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p6"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p7"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p8"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p9"+i+"@gmail.com","team",1993,10,12,"df");
-        controller.addPlayer("p10"+i+"@gmail.com","team",1993,10,12,"df");
     }
+    private void enterReferee(int numOfReferees) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
+        for(int i=0; i<numOfReferees; i++)
+        controller.signIn("referee"+i, "referee"+i+"@gmail.com", "123", birthdate);
+    }
+    private void addRefereesToLeagueInSeason(int numOfReferees) throws DontHavePermissionException, IncorrectInputException, MemberAlreadyExistException, MemberNotExist, AlreadyExistException, PasswordDontMatchException {
+
+        controller.logIn("admin@gmail.com", "123");
+        for(int i=0 ; i<numOfReferees/2;i++)
+            controller.addReferee("referee"+i+"@gmail.com", false);
+        for(int i=numOfReferees/2 ; i<numOfReferees;i++)
+            controller.addReferee("referee"+i+"@gmail.com", true);
+        controller.logOut();
+
+        controller.logIn("dani@gmail.com", "123");
+        for(int i=0 ; i<numOfReferees;i++)
+            controller.addRefereeToLeagueInSeason("league","2020","referee"+i+"@gmail.com");
+        controller.logOut();
+    }
+
 }

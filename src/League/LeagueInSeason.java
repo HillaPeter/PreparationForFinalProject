@@ -7,6 +7,7 @@ import Users.MainReferee;
 import Users.Referee;
 import Game.Team;
 import Users.SecondaryReferee;
+import Exception.AlreadyExistException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -139,5 +140,21 @@ public class LeagueInSeason {
 
     public HashSet<Game>getGames(){
         return this.games;
+    }
+
+    public void addTeam(Team team) throws AlreadyExistException {
+        if (this.teams == null ){
+            this.teams = new LinkedList<Team>();
+        }
+        else if(this.teams.contains(team)){
+            throw new AlreadyExistException();
+        }
+        else{
+            this.teams.add(team);
+        }
+    }
+
+    public ASchedulingPolicy getSchedulePolicy() {
+        return this.schedulingPolicy;
     }
 }

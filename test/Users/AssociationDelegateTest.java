@@ -1,9 +1,7 @@
 package Users;
 
 import Exception.*;
-import League.IScorePolicy;
-import League.ScorePolicy;
-import League.Season;
+import League.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,6 +10,7 @@ import system.SystemController;
 
 import java.util.Date;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 
 public class AssociationDelegateTest {
@@ -228,13 +227,11 @@ public class AssociationDelegateTest {
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
+        /* try to change scheduling policy with league and season valid - result should be positive*/
         /* policy number 1*/
         controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other twice");
 
-
-        /* try to change scheduling policy with league and season valid - result should be positive*/
-        //todo --- i dont know how to check this........
-
+        assertThat(controller.getSchedulingPolicyInLeagueInSeason("league","2020"),instanceOf(SchedulingPolicyAllTeamsPlayTwice.class));
     }
     @Test
     public void insertSchedulingPolicy2() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
@@ -242,11 +239,52 @@ public class AssociationDelegateTest {
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
+        /* try to change scheduling policy with league and season valid - result should be positive*/
         /* policy number 2*/
         controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
 
+        assertThat(controller.getSchedulingPolicyInLeagueInSeason("league","2020"),instanceOf(SchedulingPolicyAllTeamsPlayOnce.class));
 
-        /* try to change scheduling policy with league and season valid - result should be positive*/
-        //todo ---  i dont know how to check this........
+    }
+    @Test
+    public void insertSchedulingPolicyPermission() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
+        thrown.expect(DontHavePermissionException.class);
+        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+
+        controller.logOut();
+        /* try to change scheduling policy without login - result should be negative*/
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
+    }
+    @Test
+    public void insertSchedulingPolicyLeagueException() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
+       thrown.expect(ObjectNotExist.class);
+        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+
+        /* try to change scheduling policy with incorrect league - result should be negative*/
+        controller.setSchedulingPolicyToLeagueInSeason("league11","2020","All teams play each other once");
+    }
+    @Test
+    public void insertSchedulingPolicySeasonException() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
+        thrown.expect(ObjectNotExist.class);
+        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+
+        /* try to change scheduling policy with incorrect season - result should be negative*/
+        controller.setSchedulingPolicyToLeagueInSeason("league","20","All teams play each other once");
+    }
+    @Test
+    public void insertSchedulingPolicyPolicyException() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
+        thrown.expect(IncorrectInputException.class);
+        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+
+        /* try to change scheduling policy with incorrect policy - result should be negative*/
+        controller.setSchedulingPolicyToLeagueInSeason("league","2020","Allther once");
     }
 }
