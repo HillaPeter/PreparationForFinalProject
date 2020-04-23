@@ -3,14 +3,20 @@ package system;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Exception.AlreadyExistException;
+import Exception.DontHavePermissionException;
+import Exception.MemberNotExist;
+import Exception.ObjectNotExist;
 import Game.Game;
 import Game.Team;
-import League.*;
+import League.ASchedulingPolicy;
+import League.League;
+import League.Season;
 import Users.*;
-import Exception.*;
-import sun.applet.Main;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class DBController {
 
@@ -28,7 +34,8 @@ public class DBController {
             return db.getRoles();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Team> getTeams(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner)
@@ -43,56 +50,64 @@ public class DBController {
             return db.getLeagues();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager)
             return db.getReferees();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner)
             return db.getFans();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Player> getPlayers(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner)
             return db.getPlayers();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Owner> getOwners(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner)
             return db.getOwners();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Manager> getManagers(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner)
             return db.getManagers();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Coach> getCoaches(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner)
             return db.getCoaches();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Member> getMembers(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner)
             return db.getMembers();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, ASchedulingPolicy> getSchedulingPolicies(Role role) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager) {
@@ -107,21 +122,24 @@ public class DBController {
             return db.getSeasons();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, SystemManager> getSystemManagers(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager)
             return db.getSystemManagers();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, AssociationDelegate> getAssociationDelegate(Role role) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager)
             return db.getAssociationDelegate();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public Role getMember(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner || role instanceof Guest) {
@@ -132,10 +150,10 @@ public class DBController {
             } else {
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public Team getTeam(Role role, String teamName) throws DontHavePermissionException, ObjectNotExist {
         if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner) {
@@ -144,10 +162,10 @@ public class DBController {
             } else {
                 throw new ObjectNotExist("the team id is not exist");
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public League getLeague(Role role, String leagueId) throws ObjectNotExist, DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager) {
@@ -156,10 +174,10 @@ public class DBController {
             } else {
                 throw new ObjectNotExist("the league id is not exist");
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public Season getSeason(Role role, String seasonId) throws ObjectNotExist, DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager) {
@@ -169,10 +187,10 @@ public class DBController {
                 throw new ObjectNotExist("the league id is not exist");
             }
 
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public LinkedList<Member> getMembers(Role role, LinkedList<String> idMember) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner) {
@@ -185,18 +203,18 @@ public class DBController {
                 list.add(member);
             }
             return list;
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner) {
             return db.getOwnersAndFans();
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public Owner getOwner(Role role, String idOwner) throws ObjectNotExist, DontHavePermissionException, MemberNotExist {
         if (role instanceof SystemManager || role instanceof Owner) {
@@ -207,10 +225,10 @@ public class DBController {
             } else {
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     /***************************************delete function function******************************************/
 
@@ -220,10 +238,10 @@ public class DBController {
                 throw new MemberNotExist();
             db.removeRole(id);
             return;
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public void deleteReferee(Role role, String id) throws DontHavePermissionException, MemberNotExist {
         if (role instanceof SystemManager || role instanceof MainReferee || role instanceof SecondaryReferee) {
@@ -233,22 +251,19 @@ public class DBController {
                 throw new MemberNotExist();
 
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public void deleteFan(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner || role instanceof Fan) {
             if (db.existFan(id)) {
                 db.removeRole(id);
-            }
-            else
-                {
+            } else {
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
         }
     }
@@ -261,8 +276,7 @@ public class DBController {
             } else {
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
         }
     }
@@ -272,20 +286,20 @@ public class DBController {
             if (!db.existLeague(leagueName))
                 throw new ObjectNotExist("");
             db.removeLeague(leagueName);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public void removeSeason(Role role, String year) throws ObjectNotExist, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
             if (!db.existSeason(year))
                 throw new ObjectNotExist("");
             db.removeSeason(year);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public void removeTeam(Role role, String name) throws ObjectNotExist, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner) {
@@ -293,8 +307,7 @@ public class DBController {
             if (!db.existTeam(name))
                 throw new ObjectNotExist("");
             db.removeTeam(name);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
         }
     }
@@ -306,10 +319,10 @@ public class DBController {
             } else {
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public void deleteAssociationDelegate(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
@@ -318,10 +331,10 @@ public class DBController {
             } else {
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public void deleteSystemManager(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof SystemManager) {
@@ -331,10 +344,10 @@ public class DBController {
 
                 throw new MemberNotExist();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
     /***************************************add function******************************************/
     public void addAssociationDelegate(Role role, AssociationDelegate associationDelegate) throws
@@ -344,72 +357,73 @@ public class DBController {
                 throw new AlreadyExistException();
             db.addAssociationDelegate(associationDelegate);
             return;
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
     public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
-       // if (!(role instanceof Guest || role instanceof Fan) {
-      //      throw new DontHavePermissionException();
-      //  }
+        // if (!(role instanceof Guest || role instanceof Fan) {
+        //      throw new DontHavePermissionException();
+        //  }
         if (db.existMember(fan.getUserMail()))
             throw new AlreadyExistException();
         db.addFan(fan);
     }
 
-    public void addSeason(Role role,Season season) throws AlreadyExistException, DontHavePermissionException {
+    public void addSeason(Role role, Season season) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
             if (db.existSeason(season.getYear()))
                 throw new AlreadyExistException();
             db.addSeason(season);
-        }
-        else {
-            throw new DontHavePermissionException();
-        }     }
 
-    public void addLeague(Role role,League league) throws AlreadyExistException, DontHavePermissionException {
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void addLeague(Role role, League league) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
             if (db.existLeague(league.getName()))
-            throw new AlreadyExistException();
-        db.addLeague(league);
-        }
-        else {
+                throw new AlreadyExistException();
+            db.addLeague(league);
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public void addManager(Role role,Manager manager) throws AlreadyExistException, DontHavePermissionException {
+    public void addManager(Role role, Manager manager) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner) {
 
             if (db.existMember(manager.getUserMail()))
-            throw new AlreadyExistException();
-        db.addManager(manager);
-        }
-        else {
+                throw new AlreadyExistException();
+            db.addManager(manager);
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public void addPlayer(Role role,Player player) throws AlreadyExistException, DontHavePermissionException {
+    public void addPlayer(Role role, Player player) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner) {
 
             if (db.existMember(player.getUserMail()))
-            throw new AlreadyExistException();
-        db.addPlayer(player);
-        }
-        else {
+                throw new AlreadyExistException();
+            db.addPlayer(player);
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public void addCoach(Role role,Coach coach) throws AlreadyExistException, DontHavePermissionException {
+    public void addCoach(Role role, Coach coach) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner) {
 
             if (db.existMember(coach.getUserMail()))
-            throw new AlreadyExistException();
-        db.addCoach(coach);
-        }
-        else {
+                throw new AlreadyExistException();
+            db.addCoach(coach);
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
     public void addOwner(Role role, Owner owner) throws AlreadyExistException, DontHavePermissionException {
 
@@ -421,42 +435,39 @@ public class DBController {
         db.addOwner(owner);
     }
 
-    public void addSystemManager(Role role,SystemManager systemManager) throws AlreadyExistException, DontHavePermissionException {
-        if (role instanceof SystemManager ) {
+    public void addSystemManager(Role role, SystemManager systemManager) throws AlreadyExistException, DontHavePermissionException {
+        if (role instanceof SystemManager) {
 
             if (db.existMember(systemManager.getUserMail()))
-            throw new AlreadyExistException();
-        db.addSystemManager(systemManager);
-        }
-        else {
-            throw new DontHavePermissionException();
-        }     }
-
-    public void addTeam(Role role,Team team) throws AlreadyExistException, DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner) {
-
-            if (db.existTeam(team.getName()))
-            throw new AlreadyExistException();
-        db.addTeam(team);
-        }
-        else {
+                throw new AlreadyExistException();
+            db.addSystemManager(systemManager);
+        } else {
             throw new DontHavePermissionException();
         }
     }
 
-    public void addReferee(Role role,Referee referee) throws DontHavePermissionException, AlreadyExistException {
+    public void addTeam(Role role, Team team) throws AlreadyExistException, DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof Owner) {
+
+            if (db.existTeam(team.getName()))
+                throw new AlreadyExistException();
+            db.addTeam(team);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void addReferee(Role role, Referee referee) throws DontHavePermissionException, AlreadyExistException {
         if (role instanceof SystemManager || role instanceof MainReferee || role instanceof SecondaryReferee) {
-            if(!db.existRefree(referee.getUserMail())) {
+            if (!db.existRefree(referee.getUserMail())) {
                 db.addReferee(referee);
-            }
-            else
-            {
+            } else {
                 throw new AlreadyExistException();
             }
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
 
     public void addSchedulingPolicies(Role role, ASchedulingPolicy policy) throws DontHavePermissionException {
@@ -469,65 +480,64 @@ public class DBController {
     /***************************************remove function******************************************/
 
     /********************************************exist function***********************************/
-    public boolean existReferee(Role role,String refereeId) throws DontHavePermissionException {
-        if (role instanceof SystemManager ) {
+    public boolean existReferee(Role role, String refereeId) throws DontHavePermissionException {
+        if (role instanceof SystemManager) {
             return db.existRefree(refereeId);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public boolean existFan(Role role,String fanId) throws DontHavePermissionException {
-        if (role instanceof SystemManager  || role instanceof Owner ||role instanceof AssociationDelegate) {
+    public boolean existFan(Role role, String fanId) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof Owner || role instanceof AssociationDelegate) {
             return db.existFan(fanId);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public boolean existTeam(Role role,String teamName) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner ) {
+    public boolean existTeam(Role role, String teamName) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof Owner) {
 
             return db.existTeam(teamName);
-    }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public boolean existMember(Role role,String id) throws DontHavePermissionException {
-        if (role instanceof SystemManager  || role instanceof Owner || role instanceof AssociationDelegate) {
+    public boolean existMember(Role role, String id) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof Owner || role instanceof AssociationDelegate) {
 
             return db.existMember(id);
-    }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public boolean existAssociationDelegate(Role role,String id) throws DontHavePermissionException {
-        if (role instanceof SystemManager  || role instanceof AssociationDelegate) {
+    public boolean existAssociationDelegate(Role role, String id) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof AssociationDelegate) {
 
             return db.existAssociationDelegate(id);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
-        }     }
+        }
+    }
 
-    public boolean existSystemManager(Role role,String id) throws DontHavePermissionException {
-       // if (role instanceof SystemManager ) {
+    public boolean existSystemManager(Role role, String id) throws DontHavePermissionException {
+        // if (role instanceof SystemManager ) {
 
-            return db.existSystemManager(id);
-       // }
-       // else {
-      //      throw new DontHavePermissionException();
-       // }
-}
+        return db.existSystemManager(id);
+        // }
+        // else {
+        //      throw new DontHavePermissionException();
+        // }
+    }
 
-    public boolean existOwner(Role role,String ownerId) throws DontHavePermissionException {
-        if (role instanceof SystemManager  || role instanceof Owner) {
+    public boolean existOwner(Role role, String ownerId) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof Owner) {
 
             return db.existOwner(ownerId);
-        }
-        else {
+        } else {
             throw new DontHavePermissionException();
         }
     }
@@ -543,6 +553,6 @@ public class DBController {
 
 
     public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
-       return db.getLeague(league).getLeagueInSeason(db.getSeason(season)).getGames();
+        return db.getLeague(league).getLeagueInSeason(db.getSeason(season)).getGames();
     }
 }

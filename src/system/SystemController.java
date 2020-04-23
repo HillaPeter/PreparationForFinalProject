@@ -635,7 +635,7 @@ public class SystemController {
      * @param leagueName
      * @throws AlreadyExistException
      */
-    public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException {
+    public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException, DontHavePermissionException {
         try {
             ((AssociationDelegate) connectedUser).setLeague(leagueName);
         } catch (IncorrectInputException incorrectInput) {
@@ -643,7 +643,7 @@ public class SystemController {
         } catch (AlreadyExistException alreadyExist) {
             throw new AlreadyExistException();
         } catch (Exception e) {
-
+            throw new DontHavePermissionException();
         }
     }
 
@@ -657,15 +657,20 @@ public class SystemController {
         }
     }
 
-    public HashMap<String, League> getLeagues() {
-        HashMap<String, League> leagues=new HashMap<String, League>();
+    public HashMap<String, League> getLeagues() throws DontHavePermissionException {
+
         try{
-            leagues = dbController.getLeagues(this.connectedUser);
-            throw new DontHavePermissionException();
+            HashMap<String, League> leagues = dbController.getLeagues(this.connectedUser);
+            return leagues;
         }
         catch(Exception e){
+            throw new DontHavePermissionException();
+
         }
-        return leagues;
+    }
+
+    public League getLeague(String league) throws DontHavePermissionException, ObjectNotExist {
+        return dbController.getLeague(this.connectedUser, league);
     }
 
     public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league, String season) throws DontHavePermissionException {

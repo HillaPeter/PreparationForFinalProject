@@ -49,10 +49,11 @@ public class AssociationDelegate extends Member {
         LeagueInSeason leagueInSeason = new LeagueInSeason(league, season);
         league.addLeagueInSeason(leagueInSeason);
         season.addLeagueInSeason(leagueInSeason);
-        dbController.removeLeague(this ,league.getName());
-        dbController.addLeague(this ,league);
-        dbController.removeSeason(this ,season.getYear());
+//        dbController.removeLeague(this ,league.getName());
+//        dbController.addLeague(this ,league);
+//      dbController.removeSeason(this ,season.getYear());
         dbController.addSeason(this ,season);
+
         //todo
     }
 

@@ -1,7 +1,8 @@
 package League;
 
+import Exception.ObjectNotExist;
+
 import java.util.HashMap;
-import Exception.*;
 
 public class League {
     private String name;
@@ -13,10 +14,11 @@ public class League {
     }
 
     public LeagueInSeason getLeagueInSeason(Season season) throws ObjectNotExist {
+
         if(leagueInSeasons.containsKey(season))
              return leagueInSeasons.get(season);
         else
-            throw new ObjectNotExist(season.getYear());
+           return null;
     }
 
     public String getName() {

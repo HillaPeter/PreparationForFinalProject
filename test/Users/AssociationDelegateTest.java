@@ -9,6 +9,7 @@ import org.junit.rules.ExpectedException;
 import system.SystemController;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
@@ -38,14 +39,16 @@ public class AssociationDelegateTest {
 
         /* try to add league with valid details -result should be positive */
         controller.setLeague("league");
+
     }
     @Test
-    public void setLeagueAlreadyExistPermission() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException {
+    public void setLeagueAlreadyExistPermission() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
         thrown.expect(DontHavePermissionException.class);
 
         /* try to add league who without logIn -result should be negative */
 
         controller.setLeague("league");
+        assertTrue(controller.getLeagues().containsKey("league"));
     }
     @Test
     public void setLeagueAlreadyExistException() throws AlreadyExistException, IncorrectInputException, MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
@@ -65,12 +68,13 @@ public class AssociationDelegateTest {
         controller.logIn("dani@gmail.com","123");
         controller.setLeague("league");
 
-
         /* try to setLeagueByYear with valid details -result should be positive */
         controller.setLeagueByYear("league","2020");
 //       check if season is connect to league
         boolean contains= false;
-        for (Season s: controller.getLeagues().get("league").getSeasons().keySet()) {
+        League league = controller.getLeague("league");
+        HashMap<Season, LeagueInSeason> leagueInSeasons = league.getSeasons();
+        for (Season s: leagueInSeasons.keySet()) {
             if(s.getYear().equals("2020")){
                 contains = true;
             }

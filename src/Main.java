@@ -519,7 +519,7 @@ public class Main {
         return seasonToreturn;
     }
 
-    private static String chooseLeague() {
+    private static String chooseLeague() throws DontHavePermissionException {
         HashMap<String, League> leagues = controller.getLeagues();
         System.out.println("Choose league id");
         for (String leagueId : leagues.keySet()) {
@@ -1340,18 +1340,20 @@ public class Main {
                     break;
 
                 case "2":
-                    System.out.println("Please choose a specific league (only letters)");
+
                     try {
                         HashMap<String, League> leagues = controller.getLeagues();
+                        System.out.println("These are the leagues: ");
                         for (String league : leagues.keySet()) {
                             System.out.println("League: " + league);
                         }
+                        System.out.println("Please choose a specific league (only letters)");
                         String specificLeague = scanInput.nextLine();
                         System.out.println("Please write the year of this league");
                         String year = scanInput.nextLine();
                         try {
-                            //score policy
                             controller.setLeagueByYear(specificLeague, year);
+                            //score policy
                             System.out.println("Please write the points for a winning team");
                             String sWinning = scanInput.nextLine();
                             System.out.println("Please write the points for a draw game");

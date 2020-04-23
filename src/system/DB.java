@@ -3,14 +3,14 @@ package system;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
-import Game.Game;
+import Exception.ObjectNotExist;
 import Game.Team;
-import League.*;
+import League.ASchedulingPolicy;
+import League.League;
+import League.Season;
 import Users.*;
-import Exception.*;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class DB {
 
@@ -45,6 +45,7 @@ public class DB {
     }
     public void addSeason(Season season) {
         seasons.put(season.getYear(), season);
+        System.out.println("Daniel - if the league is exists??? " + leagues.size());
     }
     /***************************************Getters******************************************/
 
@@ -263,7 +264,7 @@ public class DB {
         return this.seasons.containsKey(year);
     }
     public boolean existLeague(String name){
-        return this.seasons.containsKey(name);
+        return this.leagues.containsKey(name);
     }
     public boolean existTeam(String name){
         return this.teams.containsKey(name);
