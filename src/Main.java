@@ -24,8 +24,8 @@ public class Main {
     public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
 /****************************************************menu******************************************************/
         //  controller.initSystem();
-        //controller = new SystemController("System Controller");
-        //startMenu();
+        controller = new SystemController("System Controller");
+        startMenu();
         /****shachar tests******/
         //must write the path in the main
         //dbController = new DBController();
@@ -36,6 +36,7 @@ public class Main {
         //  Main main = new Main();
         // main.hillaPeterFunctionForTesting();
         //startMenu();
+
     }
 
 
@@ -1824,6 +1825,8 @@ public class Main {
         }
     }
 
+
+    /** Tests for fan- Hilla**/
     public static void fanTest(){
         ArrayList<Transaction> trans = new ArrayList<>();
         Field field = new Field ("Blumfield");
@@ -1832,6 +1835,7 @@ public class Main {
         maccabi.addNewFollower(fan);
         Field field2 = new Field ("Teddy");
         maccabi.addField(field2);
+        System.out.println("finished successfully!!!");
     }
 
 

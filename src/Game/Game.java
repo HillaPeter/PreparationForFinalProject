@@ -84,6 +84,7 @@ public class Game extends Observable {
     }
 
     public void notifyFollowers (String message){
+        setChanged();
         notifyObservers(message);
     }
 
