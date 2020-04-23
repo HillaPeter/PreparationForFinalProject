@@ -11,10 +11,7 @@ import Users.*;
 import Exception.*;
 import javafx.util.Pair;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 public class SystemController {
     private String name;
@@ -726,8 +723,13 @@ public class SystemController {
     public void addSchedulingPolicy(String policyName) throws IncorrectInputException, DontHavePermissionException {
         ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
-    public HashSet<Game> getGames(String league , String season) throws ObjectNotExist {
-        return ((SystemManager)this.connectedUser).getGames(league,season);
+    public HashSet<Game> getGames(String league , String season) throws ObjectNotExist, DontHavePermissionException {
+        if (connectedUser instanceof SystemManager || connectedUser instanceof Fan) {
+            return ((SystemManager) this.connectedUser).getGames(league, season);
+        }
+        else {
+            throw new DontHavePermissionException();
+        }
     }
     /*************************************** function for Referee ******************************************/
 
@@ -767,10 +769,10 @@ public class SystemController {
         }
     }
 
-    public void updateGameEvent(Game game, int timeInGame, EventInGame event, Date date, String description){
+    public void updateGameEvent(Game game, int timeInGame, EventInGame event, Date date, String description, ArrayList<Player> players){
         if (connectedUser instanceof MainReferee) {
             MainReferee mainReferee = (MainReferee) connectedUser;
-            mainReferee.updateGameEvent(game, timeInGame, event, date, description);
+            mainReferee.updateGameEvent(game, timeInGame, event, date, description, players);
         } else {
 
         }
@@ -810,6 +812,23 @@ public class SystemController {
         }
     }
 
+    public void addFollowerToTeam(Team team) throws DontHavePermissionException {
+        if (connectedUser instanceof Fan) {
+            Fan fan = (Fan) connectedUser;
+            team.addNewFollower(fan);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void addFollowerToGame(Game game) throws DontHavePermissionException {
+        if (connectedUser instanceof Fan) {
+            Fan fan = (Fan) connectedUser;
+            game.addFollower(fan);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
 
     /*************************************************************************************************************/
 

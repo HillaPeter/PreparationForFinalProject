@@ -2,13 +2,11 @@ package Game;
 
 import Asset.*;
 import Exception.*;
+import Users.Fan;
 import Users.Owner;
 import jdk.internal.org.objectweb.asm.tree.analysis.SourceValue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Team {
     private String name;
@@ -22,6 +20,7 @@ public class Team {
     private HashSet<Field> trainingFields; // list of all fields that the group training at
     private Boolean status; //true=> team is open , false=>team is closed
     private double points; //points of this team
+    private PersonalPage personalPage;
 
     public Team(String name, Account account, Field homeField) {
         this.name = name;
@@ -73,6 +72,7 @@ public class Team {
             TeamMember member = list.get(i);
             member.addTeam(this);
         }
+
     }
 
     private void updateTheTeamListManager(LinkedList<Manager> list) {
@@ -135,6 +135,8 @@ return newHash;
     public HashSet<Owner> getOwners() {
         return owners;
     }
+
+    public HashSet<Game> getGames () {return games;}
 
     public HashSet<Player> getPlayers() {
         return players;
@@ -239,28 +241,33 @@ return newHash;
     public void addManager(Manager someone) {
         if (someone != null && !this.managers.contains(someone))
             this.managers.add(someone);
+        personalPage.notifyFollowers("The team " + name + " has new manager");
     }
 
     public void addOwner(Owner someone) {
         if (someone != null && !this.owners.contains(someone))
             this.owners.add(someone);
+        personalPage.notifyFollowers("The team " + name + " has new owner");
     }
 
     public void addCoach(Coach someone) {
         if (someone != null && !this.coaches.contains(someone))
             this.coaches.add(someone);
+        personalPage.notifyFollowers("The team " + name + " has new coach");
     }
 
     public void addPlayer(Player someone) {
         if (someone != null && !this.players.contains(someone)){
             this.players.add(someone);
         }
+        personalPage.notifyFollowers("The team " + name + " has new player");
     }
 
     public void addField(Field field) {
         if (field != null && !this.trainingFields.contains(field)){
             this.trainingFields.add(field);
         }
+        personalPage.notifyFollowers("The team " + name + " has new field");
     }
 
 
@@ -284,6 +291,7 @@ return newHash;
 
     public void addGame(Game game) {
         games.add(game);
+        personalPage.notifyFollowers("The team " + name + " has new game");
     }
 
     public int getGamesSize() {
@@ -304,6 +312,10 @@ return newHash;
                 return owner;
         }
         return null;
+    }
+
+    public void addNewFollower (Fan newFollower){
+        personalPage.addFollower(newFollower);
     }
 }
 

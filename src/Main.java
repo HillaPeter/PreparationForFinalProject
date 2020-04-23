@@ -1545,6 +1545,7 @@ public class Main {
                     break;
                 }
                 case "2": {
+                    try{
                     LinkedList<Game> editableGames = controller.getEditableGames();
                     if (editableGames.size() == 0) {
                         System.out.println("There are not games you can edit.");
@@ -1557,9 +1558,8 @@ public class Main {
                     System.out.println("Please insert the number of the game you want to update");
                     String gameNumber = scanInput.nextLine();
                     int gameIndex = Integer.parseInt(gameNumber) - 1;
-                    if (gameIndex >= editableGames.size()) {
-                        System.out.println("game not exist");
-                        break;
+                    if (gameIndex >= editableGames.size()|| gameIndex<0) {
+                        throw new IncorrectInputException();
                     }
                     Game game = editableGames.get(gameIndex);
                     System.out.println("enter the time in the game the event happened: ");
@@ -1594,14 +1594,49 @@ public class Main {
                             break;
                         }
                         default: {
-                            System.out.println("illegal type of event.");
-                            break;
+                            throw new IncorrectInputException();
                         }
                     }
                     System.out.println("please insert a description of the event");
                     String description = scanInput.nextLine();
-                    controller.updateGameEvent(game, timeInGame, event, new Date(), description);
+                    System.out.println("There are players involved in thr event?");
+                    System.out.println("Insert 1 for Yes or 2 for No");
+                    int morePlayers = scanInput.nextInt();
+                    ArrayList<Player> players = new ArrayList<>();
+                    while(morePlayers == 1){
+                        System.out.println("Which team the player belongs to?");
+                        System.out.println("Insert 1 for the team " + game.getHostTeam().getName() +" or 2 for the team "+ game.getVisitorTeam().getName());
+                        int team = scanInput.nextInt();
+                        ArrayList<Player> teamPlayers = new ArrayList<>();
+                        if(team == 1){
+                            teamPlayers.addAll(game.getHostTeam().getPlayers());
+                        }
+                        else if (team == 2 ){
+                            teamPlayers.addAll(game.getVisitorTeam().getPlayers());
+                        }
+                        else {
+                            throw new IncorrectInputException();
+                        }
+                        System.out.println("please choose the number of the player:");
+                        int i=0;
+                        for (Player player: teamPlayers){
+                            System.out.println(i+1+ ". " + player.getName());
+                        }
+                        int playerIndex = scanInput.nextInt();
+                        if (playerIndex-1<0 || playerIndex>teamPlayers.size()){
+                            throw new IncorrectInputException();
+                        }
+                        players.add(teamPlayers.get(playerIndex));
+                        System.out.println("There are more players involved in thr event?");
+                        System.out.println("Insert 1 for Yes or other character for No");
+                        morePlayers = scanInput.nextInt();
+                    }
+                    controller.updateGameEvent(game, timeInGame, event, new Date(), description, players);
                     break;
+                    }
+                    catch (IncorrectInputException e){
+                        System.out.println(e.getStackTrace());
+                    }
                 }
                 case "3": {
                     try {
@@ -1619,7 +1654,9 @@ public class Main {
                         System.out.println("you are not allowed to get a referee's schedule");
                     }
                 }
-
+                case "LogOut":{
+                    controller.logOut();
+                }
 
             }
         }
@@ -1675,6 +1712,9 @@ public class Main {
                         System.out.println("you are not allowed to get a referee's schedule");
                     }
                 }
+                case "LogOut":{
+                    controller.logOut();
+                }
             }
         }
     }
@@ -1687,7 +1727,7 @@ public class Main {
             System.out.println("write \"1\" to update personal details");
             System.out.println("write \"2\" to send a complaint");
             System.out.println("write \"3\" to follow a team");
-            System.out.println("write \"4\" to follow a player");
+            System.out.println("write \"4\" to follow a game");
             System.out.println("\nwrite \"LogOut\" if you want to finish. \n");
             input = "";
             while (input.equals("")) {
@@ -1727,12 +1767,57 @@ public class Main {
                         System.out.println("Please enter the team name:");
                         String teamName = scanInput.nextLine();
                         Team team = controller.getTeamByName(teamName);
-
+                        controller.addFollowerToTeam(team);
                         break;
                     }
-                    catch(Exception e){
-
+                    catch(ObjectNotExist e){
+                        System.out.println("The team is not exist.");
                     }
+                    catch (DontHavePermissionException e){
+                        System.out.println("you dont have a permission to follow a team");
+                    }
+                }
+                case "4":{
+                    try{
+                        System.out.println("Please enter the league name:");
+                        String leagueName = scanInput.nextLine();
+                        System.out.println("Please enter the season year");
+                        String seasonYear = scanInput.nextLine();
+                        HashSet<Game> games = controller.getGames(leagueName,seasonYear);
+                        if (games.size()==0){
+                            System.out.println("There are no games in this League and season");
+                            break;
+                        }
+                        ArrayList<Game> gamesList = new ArrayList<>();
+                        gamesList.addAll(games);
+                        System.out.println("The games are:");
+                        for (int i=0; i<gamesList.size(); i++){
+                            System.out.println("" + gamesList.get(i).getHostTeam().getName() + " Vs. " + gamesList.get(i).getVisitorTeam() + "at" + gamesList.get(i).getField().getName() + " in " + gamesList.get(i).getDateAndTimeString());
+                        }
+                        int gameIndex = scanInput.nextInt();
+                        if (gameIndex-1<0 || gameIndex>gamesList.size()){
+                            throw new IncorrectInputException();
+                        }
+                        controller.addFollowerToGame(gamesList.get(gameIndex));
+                        System.out.println("Insert the number of the game you would like to follow");
+                        System.out.println();
+                        break;
+                    }
+                    catch(ObjectNotExist e){
+                        System.out.println("The team is not exist.");
+                    }
+                    catch (DontHavePermissionException e){
+                        System.out.println("you dont have a permission to follow a team");
+                    }
+                    catch (IncorrectInputException e){
+                        System.out.println("Incorrect input");
+                    }
+                    catch (Exception e){
+                        System.out.println("The league or the season doesn't exist");
+                    }
+                }
+                case "LogOut":{
+                    controller.logOut();
                 }
 
             }

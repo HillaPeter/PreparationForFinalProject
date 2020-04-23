@@ -9,14 +9,12 @@ import system.DBController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 
-public class Fan extends Member {
+public class Fan extends Member implements Observer {
 
     private DBController dbController;
-
+    private ArrayList<String> updates;
 
     public Fan(String name, String mail, String password, Date birthDate) {
         super(name, mail, password, birthDate);
@@ -70,4 +68,9 @@ public class Fan extends Member {
         }
     }
 
+    @Override
+    // the arg is the message recieved from the observable
+    public void update(Observable o, Object message) {
+        updates.add("new update:" + message.toString());
+    }
 }

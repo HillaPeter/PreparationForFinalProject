@@ -7,8 +7,10 @@ import Users.Referee;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Game {
+public class Game extends Observable {
     private String id;
     private Calendar dateAndTime; //
     private Team hostTeam;
@@ -46,6 +48,7 @@ public class Game {
 
     public void addEvent (Event event){
         this.eventLog.addEvent(event);
+        notifyFollowers("new event in the game:" + event.toString());
     }
 
     public String getDateString() {
@@ -75,5 +78,12 @@ public class Game {
         return field;
     }
 
+    public void addFollower (Observer follower){
+        addObserver(follower);
+    }
+
+    public void notifyFollowers (String message){
+        notifyObservers(message);
+    }
 
 }
