@@ -54,6 +54,9 @@ public class SystemManagerTest {
         HashSet<Game> games = controller.getGameSchedule();
         int amountOfGames = 190; // 20 Choose 2 (???)
         assertTrue(games.size() == amountOfGames );
+
+
+
         //todo - check if the list inside leagueInSeason, check if we get enough games (190)
         //todo - check if all teams status==true, check if each team play in 38 games - 19*2
         //todo - check if team.games.contains(game) i dont know how to check this........
@@ -330,7 +333,6 @@ public class SystemManagerTest {
         for(int i=0 ; i< mumOfTeams ; i++){
             addTeam(i);
         }
-
     }
 
     private void addTeam(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectAlreadyExist, ObjectNotExist, NoEnoughMoney {

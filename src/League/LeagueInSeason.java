@@ -136,4 +136,8 @@ public class LeagueInSeason {
     public ScorePolicy getScorePolicy() {
         return (ScorePolicy)this.scorePolicy;
     }
+
+    public HashSet<Game>getGames(){
+        return this.games;
+    }
 }

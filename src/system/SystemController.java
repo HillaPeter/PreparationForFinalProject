@@ -726,6 +726,9 @@ public class SystemController {
     public void addSchedulingPolicy(String policyName) throws IncorrectInputException, DontHavePermissionException {
         ((AssociationDelegate)connectedUser).addSchedulingPolicy(policyName);
     }
+    public HashSet<Game> getGames(String league , String season) throws ObjectNotExist {
+        return ((SystemManager)this.connectedUser).getGames(league,season);
+    }
     /*************************************** function for Referee ******************************************/
 
     /** secondary and main referee **/

@@ -105,7 +105,7 @@ public class SystemManager extends Member {
             ASchedulingPolicy schedulingPolicy = leagueInSeason.getPolicy();
             Set <Game> games=schedulingPolicy.setGamesOfTeams(teams, leagueInSeason);
             leagueInSeason.addGames(games);
-            dbController.addGames(this,games);
+            //dbController.addGames(this,games);
         }
     }
 
@@ -517,4 +517,7 @@ public class SystemManager extends Member {
     }
 
 
+    public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
+        return this.dbController.getGames(league,season);
+    }
 }

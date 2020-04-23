@@ -10,10 +10,7 @@ import Users.*;
 import Exception.*;
 import sun.applet.Main;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class DBController {
 
@@ -38,7 +35,8 @@ public class DBController {
             return db.getTeams();
         else {
             throw new DontHavePermissionException();
-        }    }
+        }
+    }
 
     public HashMap<String, League> getLeagues(Role role) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager)
@@ -158,7 +156,6 @@ public class DBController {
             } else {
                 throw new ObjectNotExist("the league id is not exist");
             }
-
         }
         else {
             throw new DontHavePermissionException();
@@ -532,16 +529,20 @@ public class DBController {
         }
         else {
             throw new DontHavePermissionException();
-        }     }
-
-    public void addGames(Role role,Set<Game> games) throws DontHavePermissionException {
-        if (role instanceof SystemManager) {
-            db.addGames(games);
-        }
-        else {
-            throw new DontHavePermissionException();
         }
     }
 
+//    public void addGames(Role role,Set<Game> games) throws DontHavePermissionException {
+//        if (role instanceof SystemManager) {
+//            db.addGames(games);
+//        }
+//        else {
+//            throw new DontHavePermissionException();
+//        }
+//    }
 
+
+    public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
+       return db.getLeague(league).getLeagueInSeason(db.getSeason(season)).getGames();
+    }
 }

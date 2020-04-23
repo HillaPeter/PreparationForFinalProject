@@ -20,7 +20,6 @@ public class DB {
     private HashMap<String, Role> roles; // hash map <mail,role> - maybe users instead roles??
     private HashMap<String, Team> teams;
     private HashMap<String, ASchedulingPolicy> schedulingPolicies;
-    private HashMap<String, Game> games;
 
     //  private HashMap<Member,String> passwordValidation;
 
@@ -55,18 +54,12 @@ public class DB {
 
     public HashMap<String, Team> getTeams() { return teams; }
 
-    public League getLeague(String leagueId) throws ObjectNotExist {
-        if(leagues.containsKey(leagueId))
-            return leagues.get(leagueId);
-        else
-            throw new ObjectNotExist(leagueId);
+    public League getLeague(String leagueId) {
+        return leagues.get(leagueId);
     }
 
-    public Season getSeason(String seasonId) throws ObjectNotExist {
-        if(seasons.containsKey(seasonId))
-            return seasons.get(seasonId);
-        else
-            throw new ObjectNotExist(seasonId);
+    public Season getSeason(String seasonId) {
+        return seasons.get(seasonId);
     }
 
 
@@ -379,12 +372,12 @@ public class DB {
     }
 
 
-    public void addGames(Set<Game> game) {
-        for (Game gameToAdd:game
-             ) {
-            games.put(gameToAdd.getId() , gameToAdd);
-        }
-    }
+//    public void addGames(Set<Game> game) {
+//        for (Game gameToAdd:game
+//             ) {
+//            games.put(gameToAdd.getId() , gameToAdd);
+//        }
+//    }
 
     /*
     public HashMap<String, Referee> getMainReferee() {
