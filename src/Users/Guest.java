@@ -1,10 +1,10 @@
 package Users;
-import java.util.Date;
-import java.util.regex.Pattern;
-
 import Exception.*;
 import system.DBController;
 import system.SecurityMachine;
+
+import java.util.Date;
+import java.util.regex.Pattern;
 
 public class Guest extends Role{
     private DBController dbController;
@@ -26,8 +26,8 @@ public class Guest extends Role{
         if (! checkPasswordValue(password)) {
             throw new IncorrectPasswordInputException();
         }
-        String encriptPassword = securityMachine.encrypt(password);
-        Fan newMember = new Fan(userName, userMail, encriptPassword, birthDate );
+        String encryptPassword = securityMachine.encrypt(password);
+        Fan newMember = new Fan(userName, userMail, encryptPassword, birthDate );
         dbController.addFan(this,newMember);
         return newMember;
     }
