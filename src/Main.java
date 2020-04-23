@@ -3,13 +3,13 @@ import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
 import Exception.*;
-import Game.Game;
-import Game.Team;
+import Game.*;
 import Users.*;
 import javafx.util.Pair;
 import system.SystemController;
 import League.*;
 import Game.EventInGame;
+import Asset.*;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -24,8 +24,8 @@ public class Main {
     public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
 /****************************************************menu******************************************************/
         //  controller.initSystem();
-        controller = new SystemController("System Controller");
-        startMenu();
+        //controller = new SystemController("System Controller");
+        //startMenu();
         /****shachar tests******/
         //must write the path in the main
         //dbController = new DBController();
@@ -1823,4 +1823,16 @@ public class Main {
             }
         }
     }
+
+    public static void fanTest(){
+        ArrayList<Transaction> trans = new ArrayList<>();
+        Field field = new Field ("Blumfield");
+        Team maccabi = new Team("Maccabi tel aviv", new Account(trans,100),field );
+        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date());
+        maccabi.addNewFollower(fan);
+        Field field2 = new Field ("Teddy");
+        maccabi.addField(field2);
+    }
+
+
 }

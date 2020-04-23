@@ -19,6 +19,7 @@ public class Fan extends Member implements Observer {
     public Fan(String name, String mail, String password, Date birthDate) {
         super(name, mail, password, birthDate);
         dbController = new DBController();
+        updates = new ArrayList<>();
     }
 
 
