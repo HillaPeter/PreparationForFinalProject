@@ -600,6 +600,58 @@ public class SystemController {
     }
 
 
+    /**
+     * owner:
+     * update role details
+     * @param teamName
+     * @param mailId
+     * @param role
+     * @throws NoEnoughMoney
+     * @throws ObjectNotExist
+     * @throws AccountNotExist
+     * @throws IncorrectInputException
+     * @throws DontHavePermissionException
+     * @throws MemberNotExist
+     * @throws AlreadyExistException
+     */
+    public void updatePlayerRole(String teamName, String mailId,String role) throws NoEnoughMoney, ObjectNotExist, AccountNotExist, IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
+       if(role==null || role.equals(""))
+           throw new IncorrectInputException();
+        if (dbController.getRoles(this.connectedUser).containsKey(mailId))
+            if (dbController.getPlayers(this.connectedUser).containsKey(mailId))
+                if(dbController.getPlayers(this.connectedUser).get(mailId).getRole().equals(role))
+                  throw new AlreadyExistException();
+        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+            throw new ObjectNotExist("");
+
+        ((Owner) connectedUser).updatePlayerRole(teamName, mailId,role);
+    }
+
+    /**
+     * owner:
+     * update home field
+     * @param teamName
+     * @param makeHomeField
+     * @throws NoEnoughMoney
+     * @throws ObjectNotExist
+     * @throws AccountNotExist
+     * @throws IncorrectInputException
+     * @throws DontHavePermissionException
+     * @throws MemberNotExist
+     * @throws AlreadyExistException
+     */
+    public void updateHomeField(String teamName,String makeHomeField) throws ObjectNotExist, DontHavePermissionException, AlreadyExistException {
+        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+            throw new ObjectNotExist("");
+        if(dbController.getTeams(this.connectedUser).get(teamName).getTrainingFields().contains(makeHomeField))
+            throw new AlreadyExistException();
+        if(dbController.getTeams(this.connectedUser).get(teamName).getHomeField().getNameOfField().equals(makeHomeField))
+            throw new AlreadyExistException();
+        ((Owner) connectedUser).updateHomeField(teamName, makeHomeField);
+    }
+
+
+
     /********Getters for Owner & System manager********/
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
         if (connectedUser instanceof Owner) {

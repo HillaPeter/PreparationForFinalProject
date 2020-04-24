@@ -11,6 +11,7 @@ public class Player extends TeamMember{
   //  private Team team;//maybe just one team
 
 
+
     public Player(String name, String userMail, String password, Date birthDate, String role) {
         super(name, userMail, password,birthDate);
 
@@ -30,5 +31,13 @@ public class Player extends TeamMember{
         ) {
             team.get(strTeam).removePlayer(this);
         }
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 }

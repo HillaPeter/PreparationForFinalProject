@@ -435,6 +435,51 @@ public class Owner extends Member {
     }
 
 
+    /**
+     * owner update the role of player
+     * @param teamName
+     * @param mailId
+     * @param role
+     * @throws DontHavePermissionException
+     */
+    public void updatePlayerRole(String teamName, String mailId,String role) throws DontHavePermissionException {
+        Team team = dbController.getTeams(this).get(teamName);
+        HashSet<Player> players = team.getPlayers();
+        for (Player player : players) {
+            //found the manager to remove
+            if (player.getUserMail().equals(mailId)) {
+                player.setRole(role);
+
+                HashMap<String, Team> teams = dbController.getTeams(this);
+                teams.replace(teamName, team);
+                break;
+            }
+        }
+
+    }
+
+    /**
+     * owner update home field
+     * @param teamName
+     * @param makeHomeField
+     * @throws DontHavePermissionException
+     */
+    public void updateHomeField(String teamName,String makeHomeField) throws DontHavePermissionException {
+        Team team = dbController.getTeams(this).get(teamName);
+        HashSet<Field> fields=team.getTrainingFields();
+
+        Field field=new Field(makeHomeField);
+        if(fields.contains(field)){
+            team.setHomeField(field);
+        }else{
+            fields.add(field);
+        }
+        team.setTrainingFields(fields);
+
+        HashMap<String, Team> teams = dbController.getTeams(this);
+        teams.replace(teamName, team);
+    }
+
     /****************************************** setters *********************************************/
     public void setMoneyToAccount(String teamName, double amount) throws ObjectNotExist {
         if (!this.teams.containsKey(teamName)) {

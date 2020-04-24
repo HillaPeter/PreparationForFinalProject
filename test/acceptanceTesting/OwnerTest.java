@@ -1016,4 +1016,93 @@ public class OwnerTest {
         controller.addOutCome("team","tt",1001);
     }
 
+    /******************************************updatePlayerRole******************************************/
+
+    @Test
+    public void updatePlayerRole() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+
+        controller.logIn("owner@gmail.com","1");
+        /* try to add to player new role */
+        controller.updatePlayerRole("team","p0@gmail.com,","newRole");
+    }
+
+    @Test
+    public void updateInvalidPlayerRole() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(IncorrectInputException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+
+        /* try to add to player new role */
+        controller.updatePlayerRole("team","p0@gmail.com,","");
+    }
+
+    @Test
+    public void updatePlayerRoleInvalidTeam() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(ObjectNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+        controller.logIn("owner@gmail.com","1");
+
+        /* try to add to player new role */
+        controller.updatePlayerRole("teammmm","p0@gmail.com,","sdf");
+    }
+
+    /******************************************updateHomeField******************************************/
+
+    @Test
+    public void updateHomeField() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+
+
+        controller.logIn("owner@gmail.com","1");
+        controller.addField("team","Terner");
+
+        /* try to add to player new role */
+        controller.updateHomeField("team","SamiOfer");
+    }
+
+    @Test
+    public void updateHomeFieldAlreadyExists() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(AlreadyExistException.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+
+
+        controller.logIn("owner@gmail.com","1");
+        controller.addField("team","Terner");
+
+        /* try to add to player new role */
+        controller.updateHomeField("team","Terner");
+    }
+
+    @Test
+    public void updateHomeFieldNotValidTeam() throws DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, AlreadyExistException, ObjectNotExist, PasswordDontMatchException, IncorrectInputException, NoEnoughMoney, AccountNotExist {
+        thrown.expect(ObjectNotExist.class);
+        /* init */
+        controller.logIn("admin@gmail.com","123");
+        controller.addTeam("team","owner@gmail.com");
+        controller.logOut();
+
+
+        controller.logIn("owner@gmail.com","1");
+        controller.addField("team","Terner");
+
+        /* try to add to player new role */
+        controller.updateHomeField("teamssss","Terner");
+    }
+
 }
