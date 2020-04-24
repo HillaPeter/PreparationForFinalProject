@@ -270,6 +270,8 @@ public class Main {
                         e.printStackTrace();
                     } catch (AlreadyExistException e) {
                         e.printStackTrace();
+                    } catch (NotReadyToDelete notReadyToDelete) {
+                        notReadyToDelete.printStackTrace();
                     }
                     break;
                 }
@@ -335,6 +337,12 @@ public class Main {
                         controller.removeOwner(id);
                     } catch (DontHavePermissionException e) {
                         System.out.println("you don't have the permission to remove owner");
+                    } catch (IncorrectInputException e) {
+                        e.printStackTrace();
+                    } catch (NotReadyToDelete notReadyToDelete) {
+                        notReadyToDelete.printStackTrace();
+                    } catch (MemberNotExist memberNotExist) {
+                        memberNotExist.printStackTrace();
                     }
                     break;
                 }
@@ -400,6 +408,12 @@ public class Main {
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove System Manager");
                                     //    input="Exit";
+                                } catch (IncorrectInputException e) {
+                                    e.printStackTrace();
+                                } catch (NotReadyToDelete notReadyToDelete) {
+                                    notReadyToDelete.printStackTrace();
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
                                 }
                                 break;
                             }

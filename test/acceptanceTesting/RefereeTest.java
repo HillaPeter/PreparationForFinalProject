@@ -1,4 +1,4 @@
-package Domain.Users.acceptanceTesting;
+package acceptanceTesting;
 
 import org.junit.Before;
 import org.junit.Rule;

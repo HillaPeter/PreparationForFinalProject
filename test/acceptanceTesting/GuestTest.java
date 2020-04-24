@@ -1,7 +1,8 @@
-package Domain.Users.acceptanceTesting;
+package acceptanceTesting;
 
 import Domain.Users.Fan;
 import Domain.Users.Member;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import Exception.*;
@@ -30,7 +31,7 @@ public class GuestTest {
         Member newMember = controller.signIn("noa", "noa2@gmail.com", "123", birthdate);
         assertNotNull(newMember);
         assertThat(newMember, instanceOf(Fan.class));
-        assertNotEquals(newMember.getPassword() , "123");
+        Assert.assertNotEquals(newMember.getPassword() , "123");
         controller.logIn("admin@gmail.com", "123");
         assertTrue(sizeBefore+1 == controller.getRoles().size());
     }
@@ -64,7 +65,7 @@ public class GuestTest {
         /*try to log in with correct details - result should be positive*/
         Member member = controller.logIn("noa@gmail.com","123");
         assertNotNull(member);
-        assertEquals("noa",member.getName());
+        Assert.assertEquals("noa",member.getName());
         assertThat(fan, instanceOf(Fan.class));
     }
     @Test

@@ -22,10 +22,11 @@ public abstract class ASchedulingPolicy {
         List<List<Fixture>> rounds = fixtureGenerator.getFixtures(teams, isTwice);
         Calendar dateAndTime = new GregorianCalendar(year, 0, 1, 20, 30, 0);
 
+
         for(int i = 0; i < rounds.size(); ++i) {
             List<Fixture> round = rounds.get(i);
-            List<Referee> mainReferees = (ArrayList<Referee>)leagueInSeason.getMainReferee().values();
-            List<Referee> secondaryReferees =(ArrayList<Referee>)leagueInSeason.getSecondaryReferee().values();
+            List<Referee> mainReferees = leagueInSeason.getMainReferee();
+            List<Referee> secondaryReferees =leagueInSeason.getSecondaryReferee();
             for(Fixture fixture: round) {
                 Game game = new Game(dateAndTime.toString()+""+fixture.getHomeTeam().toString() , dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), mainReferees.get(i),secondaryReferees.get(i), leagueInSeason);
                 mainReferees.remove(i);

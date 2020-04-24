@@ -40,9 +40,10 @@ public class SystemManager extends Member {
         try {
             if (dbController.existAssociationDelegate(this, id)) {
                 if (inputAreLegal(id)) {
-
+                    AssociationDelegate temp=dbController.getAssociationDelegate(this , id);
+                    Fan newFan=new Fan(temp.getName(),temp.getUserMail(), temp.getPassword(), temp.getBirthDate());
                     dbController.deleteAssociationDelegate(this, id);
-
+                    dbController.addFan(temp,newFan);
                 } else {
                     throw new IncorrectInputException();
                 }
@@ -55,8 +56,7 @@ public class SystemManager extends Member {
         return false;
     }
 
-    public boolean removeOwner(String ownerId) {
-        try {
+    public boolean removeOwner(String ownerId) throws IncorrectInputException, NotReadyToDelete, MemberNotExist, DontHavePermissionException {
             if (dbController.existOwner(this, ownerId)) {
                 if (inputAreLegal(ownerId)) {
                     Owner owner = (Owner) dbController.getMember(this, ownerId);
@@ -72,12 +72,7 @@ public class SystemManager extends Member {
             } else {
                 throw new MemberNotExist();
             }
-        } catch (Exception e) {
-
         }
-        return false;
-    }
-
     public void viewSystemInformation(String path) {
         print(readLineByLine(path));
     }
@@ -97,7 +92,7 @@ public class SystemManager extends Member {
         {
             throw new IncorrectInputException("need to be even teams to scheduling");
         }
-        else if(notEnoughReferee(leagueInSeason , teams.size()))
+        else if(notEnoughReferee(leagueInSeason , teams.size())==false)
         {
             throw new IncorrectInputException("not enough refree for scheduling games");
         }
@@ -109,29 +104,11 @@ public class SystemManager extends Member {
         }
     }
 
-    private void setReferee(Set<Game> games , LeagueInSeason leagueInSeason) throws DontHavePermissionException {
-        HashMap<String,Referee> mainReferees=leagueInSeason.getMainReferee();
-        HashMap<String,Referee> secondaryReferees=leagueInSeason.getSecondaryReferee();
-        boolean check1=false;//main
-        boolean check2=false;//secondary
-            for (Game game : games
-            ) {
-                while(check1==false || check2== false) {
-                    if (check1 == false) {
-                 //   check1 = game.addReferee(secondaryReferees.get(Math.random() * mainReferees.size()));
-                }
-                if (check2 == false) {
-                 //   check2 = game.addReferee(mainReferees.get(Math.random() * mainReferees.size()));
-                }
-            }
-        }
-    }
-
     private boolean notEnoughReferee( LeagueInSeason leagueInSeason , int numOfTeams) throws DontHavePermissionException {
         HashMap<String,Referee> refereeHashMap=leagueInSeason.getReferees();
-        if(refereeHashMap.size()<3) {
-            return false;
-        }
+       // if(refereeHashMap.size()<) {
+       //     return false;
+      //  }
         int counterMain=0;
         int counterSecondary=0;
 
@@ -146,20 +123,19 @@ public class SystemManager extends Member {
                 counterSecondary++;
             }
         }
-        if (counterSecondary<numOfTeams)
+        if (counterSecondary<numOfTeams/2)
         {
             return false;
         }
-        if (counterMain<numOfTeams)
+        if (counterMain<numOfTeams/2)
         {
             return false;
         }
         return true;
     }
 
-    public boolean removeSystemManager(String id) {
-        try {
-            if (dbController.existSystemManager(this, id)) {
+    public boolean removeSystemManager(String id) throws MemberNotExist, IncorrectInputException, NotReadyToDelete, DontHavePermissionException {
+        if (dbController.existSystemManager(this, id)) {
                 if (inputAreLegal(id)) {
                     if (dbController.getSystemManagers(this).size() > 1 && !(this.getUserMail().equals(id))) {
                         dbController.deleteSystemManager(this, id);
@@ -173,11 +149,8 @@ public class SystemManager extends Member {
             } else {
                 throw new MemberNotExist();
             }
-        } catch (Exception e) {
-
         }
-        return false;
-    }
+
 
     public boolean removeReferee(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException, IncorrectInputException {
         if (dbController.existReferee(this, id)) {
@@ -255,7 +228,7 @@ public class SystemManager extends Member {
         }
     }
 
-    public boolean removeMember(String id) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
+    public boolean removeMember(String id) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException, NotReadyToDelete {
             if (inputAreLegal(id)) {
                 if (dbController.existMember(this, id)) {
                     Role role=dbController.getMember(this,id);

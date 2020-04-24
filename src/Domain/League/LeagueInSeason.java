@@ -9,10 +9,7 @@ import Domain.Game.Team;
 import Domain.Users.SecondaryReferee;
 import Exception.AlreadyExistException;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class LeagueInSeason {
     private HashSet<Game> games;
@@ -114,22 +111,22 @@ public class LeagueInSeason {
             this.games.add(game);
         }
     }
-    public HashMap<String, Referee> getMainReferee() {
-        HashMap<String , Referee> toReturn=new HashMap<>();
+    public List< Referee> getMainReferee() {
+        List<Referee> toReturn=new LinkedList<>();
         for (String role:referees.keySet()
         ) {
             if(referees.get(role) instanceof MainReferee)
-                toReturn.put(((MainReferee) referees.get(role)).getUserMail() , (MainReferee)referees.get(role));
+                toReturn.add((MainReferee)referees.get(role));
         }
         return toReturn;
     }
 
-    public HashMap<String, Referee> getSecondaryReferee() {
-        HashMap<String , Referee> toReturn=new HashMap<>();
+    public List<Referee> getSecondaryReferee() {
+        List<Referee> toReturn=new LinkedList<>();
         for (String role:referees.keySet()
         ) {
             if(referees.get(role) instanceof SecondaryReferee)
-                toReturn.put(((SecondaryReferee) referees.get(role)).getUserMail() , (SecondaryReferee)referees.get(role));
+                toReturn.add( (SecondaryReferee)referees.get(role));
         }
         return toReturn;
     }

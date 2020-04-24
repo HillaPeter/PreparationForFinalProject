@@ -1,4 +1,4 @@
-package Domain.Users.acceptanceTesting;
+package acceptanceTesting;
 
 import Domain.League.*;
 import Exception.*;

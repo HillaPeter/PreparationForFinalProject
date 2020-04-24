@@ -1,26 +1,22 @@
-package Domain.Users.unitTesting;
+package unitTesting;
 
-import Exception.*;
 import Domain.Game.Game;
 import Domain.Game.Team;
-
-import Domain.Users.Fan;
-import Domain.Users.MainReferee;
-import Domain.Users.Owner;
-import Domain.Users.SecondaryReferee;
+import Domain.Users.*;
+import Exception.*;
+import Service.SystemController;
 import javafx.util.Pair;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import Service.SystemController;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
+
 
 public class SystemManagerTesting {
     SystemController controller = new SystemController("");
@@ -45,7 +41,7 @@ public class SystemManagerTesting {
     /*******************************************************************************/
 
     @Test
-    public void removeOwnerWIthTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
+    public void removeOwnerWIthTeam() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, NotReadyToDelete {
         thrown.expect(NotReadyToDelete.class);
 
         controller.logIn("admin@gmail.com", "123");
@@ -75,7 +71,7 @@ public class SystemManagerTesting {
 
     /*******************************************************************************/
     @Test
-    public void removeSystemManager() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
+    public void removeSystemManager() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, NotReadyToDelete {
         controller.logIn("admin@gmail.com", "123");
         int sizeBefore = this.controller.getSystemManager().size();
         controller.addSystemManager("systemManager@gmail.com");
@@ -85,22 +81,22 @@ public class SystemManagerTesting {
         controller.removeSystemManager("systemManager@gmail.com");
         assertFalse(controller.getSystemManager().containsKey("systemManager@gmail.com"));
         assertEquals(sizeBefore, controller.getSystemManager().size());
-        assertTrue(controller.getRoles().get("systemManager@gmail.com") instanceof Fan);
+       // assertTrue(controller.getSystemManager().get("systemManager@gmail.com") instanceof Domain.Users.Fan);
 
     }
 
     @Test
-    public void removeSystemManagerTheLastOne() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
+    public void removeSystemManagerTheLastOne() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, NotReadyToDelete {
         thrown.expect(NotReadyToDelete.class);
 
         controller.logIn("admin@gmail.com", "123");
-        int sizeBefore = this.controller.getRoles().size();
+        int sizeBefore = this.controller.getSystemManager().size();
 
         /* try to remove system manager - result should be positive */
 
         controller.removeSystemManager("admin@gmail.com");
         assertTrue(controller.getSystemManager().containsKey("admin@gmail.com"));
-        assertEquals(sizeBefore, controller.getRoles().size());
+        assertEquals(sizeBefore, controller.getSystemManager().size());
     }
 
     /*******************************************************************************/
@@ -114,9 +110,10 @@ public class SystemManagerTesting {
         /* try to remove association deligate - result should be positive */
 
         controller.removeAssociationDelegate("association@gmail.com");
-        assertFalse(controller.getRoles().containsKey("association@gmail.com"));
+        assertTrue(controller.getRoles().containsKey("association@gmail.com"));
         assertEquals(sizeBefore, controller.getRoles().size());
-        assertTrue(controller.getRoles().get("association@gmail.com") instanceof Fan);
+        assertThat(controller.getRoles().get("association@gmail.com"), instanceOf(Fan.class));
+
     }
     /*******************************************************************************/
     @Test
@@ -129,53 +126,7 @@ public class SystemManagerTesting {
 
         controller.addAssociationDelegate("association@gmail.com");
         assertTrue(controller.getRoles().containsKey("association@gmail.com"));
-        assertEquals(sizeBefore+1, controller.getRoles().size());
-    }
-
-    /*******************************************************************************/
-    @Test
-    public void schedulingGames1() throws PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, NoEnoughMoney, AlreadyExistException, MemberNotExist, MemberAlreadyExistException {
-        /* init - enter league , season , schedulePolicy  */
-        controller.signIn("associateDelegite", "dani@gmail.com", "123", birthdate);
-        controller.logIn("admin@gmail.com", "123");
-        controller.addAssociationDelegate("dani@gmail.com");
-        controller.logOut();
-
-        controller.logIn("dani@gmail.com", "123");
-        controller.setLeague("league");
-        controller.setLeagueByYear("league","2020");
-        controller.setSchedulingPolicyToLeagueInSeason("league","2020","All teams play each other once");
-        controller.logOut();
-
-        /*init - add 20 Teams ,referees to league in season */
-        addTeamsCorrectly(20);
-        enterReferee(20);
-        addTeamsToLeagueSeason(20);
-        addRefereesToLeagueInSeason(20);
-
-        controller.logIn("admin@gmail.com", "123");
-
-        /* try to scheduling game with correct input - teams with 11 players - result should be positive */
-        controller.schedulingGames("2020","league");
-
-        HashSet<Game> games = controller.getGames("league","2020");
-        int amountOfGames = 190; // 20 Choose 2 (???)
-        assertTrue(games.size() == amountOfGames );
-        //check if all teams status==true
-        // && check if each team play in 38 games - 19*2
-        // && check if team.games.contains(game)
-        for (Game game: games) {
-            assertTrue(game.getHostTeam().getStatus());
-            assertTrue(game.getHostTeam().getGamesSize() == 38);
-            assertTrue(game.getHostTeam().getGames().contains(game));
-
-            assertTrue(game.getVisitorTeam().getStatus());
-            assertTrue(game.getVisitorTeam().getGamesSize() == 38);
-            assertTrue(game.getVisitorTeam().getGames().contains(game));
-
-            assertTrue(game.getReferees().size() == 2);
-            assertNotNull(game.getField());
-        }
+        assertEquals(sizeBefore, controller.getRoles().size());
     }
 
     /*******************************************************************************/
@@ -190,7 +141,7 @@ public class SystemManagerTesting {
         assertTrue(controller.getTeams().containsKey("test"));
         assertEquals(sizeBeforeT + 1, controller.getTeams().size());
         assertTrue(( this.controller.getRoles().get("owner@gmail.com")) instanceof Owner);
-        assertTrue(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("newTeam"));
+        assertTrue(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("test"));
     }
 
     @Test
@@ -206,19 +157,19 @@ public class SystemManagerTesting {
         assertTrue(controller.getTeams().containsKey("test"));
         assertEquals(sizeBeforeT + 1, controller.getTeams().size());
         assertTrue(( this.controller.getRoles().get("owner@gmail.com")) instanceof Owner);
-        assertTrue(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("newTeam"));
+        assertTrue(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("test"));
 
         controller.addTeam("test", "owner@gmail.com");
         assertTrue(controller.getTeams().containsKey("test"));
         assertEquals(sizeBeforeT + 1, controller.getTeams().size());
         assertTrue(( this.controller.getRoles().get("owner@gmail.com")) instanceof Owner);
-        assertTrue(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("newTeam"));
+        assertTrue(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("test"));
 
     }
 
     @Test
     public void addNewTeamNoOwner() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
-        thrown.expect(ObjectAlreadyExist.class);
+        thrown.expect(ObjectNotExist.class);
 
         controller.logIn("admin@gmail.com", "123");
         int sizeBeforeT = this.controller.getTeams().size();
@@ -229,7 +180,7 @@ public class SystemManagerTesting {
         assertFalse(controller.getTeams().containsKey("test"));
         assertEquals(sizeBeforeT , controller.getTeams().size());
         assertFalse(( this.controller.getRoles().get("owner@gmail.com")) instanceof Owner);
-        assertFalse(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("newTeam"));
+        assertFalse(((Owner) this.controller.getRoles().get("owner@gmail.com")).getTeams().containsKey("test"));
     }
 
     @Test
@@ -261,30 +212,30 @@ public class SystemManagerTesting {
         /* try to remove referee who already exist in the system - result should be positive*/
         controller.removeReferee("referee@gmail.com");
         assertEquals(sizeBefore, controller.getRoles().size());
-        assertTrue(controller.getRoles().get("referee@gmail.com") instanceof Fan);
+        assertThat(controller.getRoles().get("referee@gmail.com"), instanceOf(Fan.class));
+
     }
 
     @Test
-    public void removeRefereeWithFutureGame() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException {
+    public void removeRefereeWithFutureGame() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException, ObjectNotExist {
         thrown.expect(IncorrectInputException.class);
 
         controller.logIn("admin@gmail.com", "123");
         int sizeBefore = controller.getRoles().size();
 
         controller.addReferee("referee@gmail.com", false);
-      //  Referee referee=controller.getReferee("referee@gmail.com");
-      //  referee.addGame(new Game(null , null , null , null , null , null, null, null));
+        Referee referee=controller.getReferee("referee@gmail.com");
+        referee.addGame(new Game(null , null , null , null , null , null, null, null));
         /* try to remove referee who already exist in the system - result should be positive*/
         controller.removeReferee("referee@gmail.com");
-        assertEquals(sizeBefore+1, controller.getRoles().size());
-        assertFalse(controller.getRoles().get("referee@gmail.com") instanceof Fan);
+        assertEquals(sizeBefore, controller.getRoles().size());
+        assertThat(controller.getRoles().get("referee@gmail.com"), instanceOf(Fan.class));
+
     }
 
     /*******************************************************************************/
     @Test
     public void addRefereeSecondary() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException, MemberAlreadyExistException {
-        controller.signIn("referee", "referee@gmail.com", "1", birthdate);
-
         controller.logIn("admin@gmail.com", "123");
         int sizeBefore = controller.getRoles().size();
 
@@ -297,8 +248,6 @@ public class SystemManagerTesting {
     }
     @Test
     public void addRefereeMain() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException, MemberAlreadyExistException {
-        controller.signIn("referee", "referee@gmail.com", "1", birthdate);
-
         controller.logIn("admin@gmail.com", "123");
         int sizeBefore = controller.getRoles().size();
 
@@ -381,7 +330,7 @@ public class SystemManagerTesting {
 
     /*******************************************************************************/
     @Test
-    public void removeMemberReferee() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException {
+    public void removeMemberReferee() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException, NotReadyToDelete {
         /*init*/
         controller.logIn("admin@gmail.com", "123");
 
@@ -395,7 +344,7 @@ public class SystemManagerTesting {
         assertEquals(size - 1, controller.getRoles().size());
     }
     @Test
-    public void removeMemberSystemManager() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException {
+    public void removeMemberSystemManager() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException, NotReadyToDelete {
         /*init*/
         controller.logIn("admin@gmail.com", "123");
 
@@ -409,7 +358,7 @@ public class SystemManagerTesting {
         assertEquals(size - 1, controller.getRoles().size());
     }
     @Test
-    public void removeMemberFan() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException {
+    public void removeMemberFan() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException, NotReadyToDelete {
         /*init*/
         controller.signIn("fan" , "fan@gmail.com" , "123" ,birthdate);
         controller.logIn("admin@gmail.com", "123");

@@ -342,6 +342,10 @@ public class DB {
         return associationDelegateHashMap;
     }
 
+    public AssociationDelegate getAssociationDelegate(String id) {
+        return (AssociationDelegate)roles.get(id);
+    }
+
     public HashMap<String, SystemManager> getSystemManagers() {
         HashMap<String , SystemManager> systemManagerHashMap=new HashMap<>();
         return systemManagers;

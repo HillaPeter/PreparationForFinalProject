@@ -1,4 +1,4 @@
-package Domain.Users.acceptanceTesting;
+package acceptanceTesting;
 
 import Domain.Asset.Field;
 import Domain.Game.Team;

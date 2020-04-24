@@ -121,7 +121,7 @@ public class SystemController {
         }
     }
 
-    public boolean removeOwner(String ownerId) throws DontHavePermissionException {
+    public boolean removeOwner(String ownerId) throws DontHavePermissionException, IncorrectInputException, NotReadyToDelete, MemberNotExist {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeOwner(ownerId);
@@ -130,10 +130,19 @@ public class SystemController {
         }
     }
 
-    public boolean removeSystemManager(String id) throws DontHavePermissionException {
+    public boolean removeSystemManager(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, NotReadyToDelete {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeSystemManager(id);
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public Referee getReferee(String s) throws DontHavePermissionException, ObjectNotExist {
+        if (connectedUser instanceof SystemManager) {
+            SystemManager systemManager = (SystemManager) connectedUser;
+           return dbController.getReferee(systemManager,s);
         } else {
             throw new DontHavePermissionException();
         }
@@ -199,7 +208,7 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean removeMember(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException {
+    public boolean removeMember(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException, NotReadyToDelete {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeMember(id);
@@ -837,13 +846,8 @@ public class SystemController {
     }
 
     public Team getTeamByName (String teamName) throws DontHavePermissionException, ObjectNotExist {
-        if (connectedUser instanceof Fan) {
-            Fan fan = (Fan) connectedUser;
-            Team team = dbController.getTeam(fan, teamName);
+            Team team = dbController.getTeam(connectedUser, teamName);
             return team;
-        } else {
-            throw new DontHavePermissionException();
-        }
     }
 
     public void addFollowerToTeam(Team team) throws DontHavePermissionException {
@@ -949,6 +953,8 @@ public class SystemController {
             throw new DontHavePermissionException();
         }
     }
+
+
 
     /**********shachar test*************/
     /*

@@ -1,5 +1,9 @@
-package Domain.Users.acceptanceTesting;
+package acceptanceTesting;
 
+import DataBase.DB;
+import Domain.Game.Team;
+import Domain.League.LeagueInSeason;
+import Domain.League.Season;
 import Exception.*;
 import Domain.Game.Game;
 import Domain.Users.Fan;
@@ -503,7 +507,7 @@ public class SystemManagerTest {
 
     /*******************************************************************************/
     @Test
-    public void removeMember() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException {
+    public void removeMember() throws MemberNotExist, PasswordDontMatchException, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException, NotReadyToDelete {
         /*init*/
         controller.signIn("member", "member@gmail.com", "123", birthdate);
         controller.logIn("admin@gmail.com", "123");
@@ -520,7 +524,7 @@ public class SystemManagerTest {
     }
 
     @Test
-    public void removeMemberNoPermissionException() throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException {
+    public void removeMemberNoPermissionException() throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException, NotReadyToDelete {
         thrown.expect(DontHavePermissionException.class);
 
         /* try to remove member without login  - result should be negative */
@@ -528,7 +532,7 @@ public class SystemManagerTest {
     }
 
     @Test
-    public void removeMemberNotExist() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException {
+    public void removeMemberNotExist() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException, IncorrectInputException, AlreadyExistException, NotReadyToDelete {
         thrown.expect(MemberNotExist.class);
         /* init */
         controller.logIn("admin@gmail.com", "123");
@@ -553,13 +557,12 @@ public class SystemManagerTest {
     @Test
     public void readLineByLine() {
     }
-
-
     private void addTeamsCorrectly(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
         for(int i=0 ; i< mumOfTeams ; i++){
             addUsers(i);
             addTeam(i);
             addPlayers(i);
+            addFieldToTeam(i);
         }
     }
     private void addUsers(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
@@ -582,12 +585,15 @@ public class SystemManagerTest {
             addTeam(i);
         }
         for(int i=0; i<mumOfTeams; i++){
+            controller.logIn("dani@gmail.com", "123");
             controller.addTeamToLeagueInSeason("league","2020","team"+i);
         }
     }
     private void addTeamsToLeagueSeason(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, PasswordDontMatchException, NoEnoughMoney {
         for(int i=0 ; i< mumOfTeams ; i++){
-            addTeam(i);
+            controller.logIn("dani@gmail.com", "123");
+            controller.addTeamToLeagueInSeason("league","2020","team"+i);
+            controller.logOut();
         }
     }
     private void addPlayers(int i) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, ObjectNotExist, IncorrectInputException, NoEnoughMoney, AlreadyExistException {
@@ -605,6 +611,13 @@ public class SystemManagerTest {
         controller.addPlayer("p8"+i+"@gmail.com","team"+i,1993,10,12,"df");
         controller.addPlayer("p9"+i+"@gmail.com","team"+i,1993,10,12,"df");
         controller.addPlayer("p10"+i+"@gmail.com","team"+i,1993,10,12,"df");
+        controller.addCoach("team"+i ,"coach"+i+"@gmail.com" );
+        controller.addManager("team"+i , "manager"+i+"@gmail.com");
+        controller.logOut();
+    }
+    private void addFieldToTeam(int i) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, ObjectNotExist, IncorrectInputException, NoEnoughMoney, AlreadyExistException, ObjectAlreadyExist {
+        controller.logIn("owner"+i+"@gmail.com","1");
+        controller.addField("team"+i,"f"+i);
         controller.logOut();
     }
     private void addTeam(int i) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectAlreadyExist, ObjectNotExist, NoEnoughMoney {
@@ -615,7 +628,7 @@ public class SystemManagerTest {
     }
     private void enterReferee(int numOfReferees) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
         for(int i=0; i<numOfReferees; i++)
-        controller.signIn("referee"+i, "referee"+i+"@gmail.com", "123", birthdate);
+            controller.signIn("referee"+i, "referee"+i+"@gmail.com", "123", birthdate);
     }
     private void addRefereesToLeagueInSeason(int numOfReferees) throws DontHavePermissionException, IncorrectInputException, MemberAlreadyExistException, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectNotExist {
 
@@ -631,5 +644,4 @@ public class SystemManagerTest {
             controller.addRefereeToLeagueInSeason("league","2020","referee"+i+"@gmail.com");
         controller.logOut();
     }
-
 }

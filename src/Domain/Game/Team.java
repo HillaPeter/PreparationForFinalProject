@@ -34,6 +34,7 @@ public class Team {
         trainingFields=new HashSet<>();
         games=new HashSet<>();
         personalPage = new PersonalPage();
+        this.status=true;
     }
 
     public Team(String name, Account account,Owner owner) {
@@ -48,10 +49,12 @@ public class Team {
         trainingFields=new HashSet<>();
         games=new HashSet<>();
         personalPage = new PersonalPage();
+        this.status=true;
 
     }
 
     public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) throws AlreadyExistException, DontHavePermissionException {
+       this.status=true;
         this.name = teamName;
         this.account = account;
         this.coaches = new HashSet<>();

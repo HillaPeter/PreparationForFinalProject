@@ -141,6 +141,14 @@ public class DBController {
         }
     }
 
+    public AssociationDelegate getAssociationDelegate(Role role , String id) throws DontHavePermissionException {
+        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+            return db.getAssociationDelegate(id);
+        else {
+            throw new DontHavePermissionException();
+        }
+    }
+
     public Role getMember(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner || role instanceof Guest) {
             if (db.existMember(id)) {
@@ -156,7 +164,7 @@ public class DBController {
     }
 
     public Team getTeam(Role role, String teamName) throws DontHavePermissionException, ObjectNotExist {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner) {
+        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner || role instanceof Fan) {
             if (db.existTeam(teamName)) {
                 return db.getTeam(teamName);
             } else {
@@ -185,6 +193,21 @@ public class DBController {
                 return db.getSeason(seasonId);
             } else {
                 throw new ObjectNotExist("the league id is not exist");
+            }
+
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
+
+    public Referee getReferee(Role role, String s) throws ObjectNotExist, DontHavePermissionException {
+        if (role instanceof AssociationDelegate || role instanceof SystemManager) {
+            if (db.existRefree(s)) {
+                return db.getReferee(s);
+            }
+            else {
+                throw new ObjectNotExist("the referee is not exist");
             }
 
         } else {
@@ -555,4 +578,5 @@ public class DBController {
     public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
         return db.getLeague(league).getLeagueInSeason(db.getSeason(season)).getGames();
     }
+
 }

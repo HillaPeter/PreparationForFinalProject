@@ -1,12 +1,12 @@
-package Domain.Users.unitTesting;
-import Exception.*;
+package unitTesting;
 
+import Exception.*;
 import Domain.Users.Fan;
+import Service.SystemController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import Service.SystemController;
 
 import java.util.Date;
 import java.util.LinkedList;
