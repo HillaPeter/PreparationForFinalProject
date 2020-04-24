@@ -133,7 +133,7 @@ public class AssociationDelegate extends Member {
     public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league, String season) throws DontHavePermissionException, ObjectNotExist {
         HashMap<String, Referee> referees = new HashMap<>();
         try {
-            HashMap<String, Referee> allRefereesInTheSystem = dbController.getReferees(this);
+            HashMap<String, Referee> allRefereesInTheSystem = dbController.getReferees();
             League leagueObj = dbController.getLeague(this, league);
             Season seasonObj = dbController.getSeason(this, season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
@@ -159,7 +159,7 @@ public class AssociationDelegate extends Member {
      */
     public void addRefereeToLeagueInSeason(String league, String season, String refereeName) throws ObjectNotExist, ObjectAlreadyExist, DontHavePermissionException {
 
-        HashMap<String, Referee> referees = dbController.getReferees(this);
+        HashMap<String, Referee> referees = dbController.getReferees();
         Referee referee = referees.get(refereeName);
         League leagueObj = dbController.getLeague(this, league);
         Season seasonObj = dbController.getSeason(this, season);

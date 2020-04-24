@@ -53,12 +53,12 @@ public class DBController {
         }
     }
 
-    public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+    public HashMap<String, Referee> getReferees() {
+      // if (role instanceof AssociationDelegate || role instanceof SystemManager)
             return db.getReferees();
-        else {
-            throw new DontHavePermissionException();
-        }
+        //else {
+        //    throw new DontHavePermissionException();
+        //}
     }
 
     public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
@@ -210,7 +210,7 @@ public class DBController {
 
 
     public Referee getReferee(Role role, String s) throws ObjectNotExist, DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager) {
+//        if (role instanceof AssociationDelegate || role instanceof SystemManager) {
             if (db.existRefree(s)) {
                 return db.getReferee(s);
             }
@@ -218,9 +218,9 @@ public class DBController {
                 throw new ObjectNotExist("the referee is not exist");
             }
 
-        } else {
-            throw new DontHavePermissionException();
-        }
+//        } else {
+//            throw new DontHavePermissionException();
+//        }
     }
 
     public LinkedList<Member> getMembers(Role role, LinkedList<String> idMember) throws MemberNotExist, DontHavePermissionException {

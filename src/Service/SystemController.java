@@ -140,12 +140,12 @@ public class SystemController {
     }
 
     public Referee getReferee(String s) throws DontHavePermissionException, ObjectNotExist {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-           return dbController.getReferee(systemManager,s);
-        } else {
-            throw new DontHavePermissionException();
-        }
+//        if (connectedUser instanceof SystemManager) {
+//            SystemManager systemManager = (SystemManager) connectedUser;
+           return dbController.getReferee(connectedUser,s);
+//        } else {
+//            throw new DontHavePermissionException();
+//        }
     }
 
     public void addSystemManager(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
@@ -874,8 +874,8 @@ public class SystemController {
         return dbController.getFans(role);
     }
 
-    public HashMap<String, Referee> getReferees(Role role) throws DontHavePermissionException {
-        return dbController.getReferees(role);
+    public HashMap<String, Referee> getReferees() {
+        return dbController.getReferees();
     }
 
     public HashMap<String, Player> getPlayers(Role role) throws DontHavePermissionException {

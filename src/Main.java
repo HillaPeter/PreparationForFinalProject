@@ -548,7 +548,7 @@ public class Main {
     }
 
     private static String removeRefree() throws DontHavePermissionException {
-        HashMap<String, Referee> refrees = controller.getReferees(member);
+        HashMap<String, Referee> refrees = controller.getReferees();
         System.out.println("Choose id to remove referee");
         for (String refere : refrees.keySet()) {
             System.out.println(refere);

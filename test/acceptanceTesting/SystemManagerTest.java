@@ -554,9 +554,6 @@ public class SystemManagerTest {
     }
 
     /*******************************************************************************/
-    @Test
-    public void readLineByLine() {
-    }
     private void addTeamsCorrectly(int mumOfTeams) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
         for(int i=0 ; i< mumOfTeams ; i++){
             addUsers(i);
