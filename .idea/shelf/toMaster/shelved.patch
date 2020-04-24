@@ -1,0 +1,69 @@
+Index: src/Game/Game.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Game;\r\n\r\nimport Asset.Field;\r\nimport League.LeagueInSeason;\r\nimport Users.Referee;\r\n\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.Calendar;\r\nimport java.util.HashSet;\r\n\r\npublic class Game {\r\n    private Calendar dateAndTime; //\r\n    private Team hostTeam;\r\n    private Team visitorTeam;\r\n    private String time; //hours:minutes\r\n    private Field field;\r\n    private String result;\r\n    private EventLog eventLog;\r\n    private LeagueInSeason leagueInSeason;\r\n    private HashSet<Referee> referees;\r\n\r\n    public Game(Calendar dateAndTime,Team hostTeam, Team visitorTeam, Field field, LeagueInSeason leagueInSeason) {\r\n        this.dateAndTime = dateAndTime;\r\n        this.hostTeam = hostTeam;\r\n        this.visitorTeam = visitorTeam;\r\n        this.field = field;\r\n        this.result = \"\";\r\n        this.eventLog = new EventLog(this);\r\n        this.leagueInSeason=leagueInSeason;\r\n    }\r\n\r\n    public void removeReferee(Referee referee) {\r\n        referees.remove(referee);\r\n        //put new referee after the delete\r\n    }\r\n\r\n    public boolean isRefereeInTheGame(Referee referee){\r\n        return referees.contains(referee);\r\n    }\r\n\r\n    public void addEvent (Event event){\r\n        this.eventLog.addEvent(event);\r\n    }\r\n\r\n    public String getDateString() {\r\n        String ans = \"\" + dateAndTime.get(Calendar.YEAR) + \"-\" +  dateAndTime.get(Calendar.MONTH) + \"-\" + dateAndTime.get(Calendar.DAY_OF_MONTH);\r\n        return ans;\r\n    }\r\n    public Calendar getDateCalendar() {\r\n        return dateAndTime;\r\n    }\r\n\r\n    public Team getHostTeam() {\r\n        return hostTeam;\r\n    }\r\n\r\n    public Team getVisitorTeam() {\r\n        return visitorTeam;\r\n    }\r\n\r\n\r\n    public String getDateAndTimeString(){\r\n        SimpleDateFormat sdf = new SimpleDateFormat(\"yyyy MMM dd HH:mm:ss\");\r\n        String ans = sdf.format(dateAndTime.getTime());\r\n        return ans;\r\n    }\r\n\r\n    public Field getField() {\r\n        return field;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/Game/Game.java	(revision 0c0de928d9588bb130a3e1f8b04576bf9806bf59)
++++ src/Game/Game.java	(date 1587403109110)
+@@ -12,7 +12,6 @@
+     private Calendar dateAndTime; //
+     private Team hostTeam;
+     private Team visitorTeam;
+-    private String time; //hours:minutes
+     private Field field;
+     private String result;
+     private EventLog eventLog;
+Index: src/League/ASchedulingPolicy.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//\r\n// Source code recreated from a .class file by IntelliJ IDEA\r\n// (powered by Fernflower decompiler)\r\n//\r\n\r\npackage League;\r\n\r\nimport Game.Game;\r\nimport Game.Team;\r\nimport java.util.Calendar;\r\nimport java.util.GregorianCalendar;\r\nimport java.util.HashSet;\r\nimport java.util.Iterator;\r\nimport java.util.List;\r\nimport java.util.Set;\r\n\r\npublic abstract class ASchedulingPolicy {\r\n    public ASchedulingPolicy() {\r\n    }\r\n\r\n    protected Set<Game> setGamesOfTeams(List<Team> teams, LeagueInSeason leagueInSeason, boolean isTwice) {\r\n        int year = Integer.parseInt(leagueInSeason.getSeason().getYear());\r\n        Set<Game> games = new HashSet();\r\n        FixtureGenerator fixtureGenerator = new FixtureGenerator();\r\n        List<List<Fixture>> rounds = fixtureGenerator.getFixtures(teams, isTwice);\r\n        Calendar dateAndTime = new GregorianCalendar(year, 0, 1, 20, 30, 0);\r\n        Calendar time = new GregorianCalendar();\r\n        time.set(10, 3);\r\n\r\n        for(int i = 0; i < rounds.size(); ++i) {\r\n            List<Fixture> round = (List)rounds.get(i);\r\n            Iterator var12 = round.iterator();\r\n\r\n            while(var12.hasNext()) {\r\n                Fixture fixture = (Fixture)var12.next();\r\n                Game game = new Game(dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);\r\n                games.add(game);\r\n            }\r\n\r\n            dateAndTime.set(5, 7);\r\n        }\r\n\r\n        Iterator var15 = games.iterator();\r\n\r\n        while(var15.hasNext()) {\r\n            Game gameTest = (Game)var15.next();\r\n            System.out.println(\"Team1: \" + gameTest.getHostTeam().getName() + \" Team2: \" + gameTest.getVisitorTeam().getName() + \" Date: \" + gameTest.getDateAndTimeString() + \" Field: \" + gameTest.getField().getNameOfField());\r\n        }\r\n\r\n        return games;\r\n    }\r\n\r\n    public abstract String getNameOfPolicy();\r\n\r\n    public abstract Set<Game> setGamesOfTeams(List<Team> var1, LeagueInSeason var2);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/League/ASchedulingPolicy.java	(revision 0c0de928d9588bb130a3e1f8b04576bf9806bf59)
++++ src/League/ASchedulingPolicy.java	(date 1587403048932)
+@@ -7,12 +7,8 @@
+ 
+ import Game.Game;
+ import Game.Team;
+-import java.util.Calendar;
+-import java.util.GregorianCalendar;
+-import java.util.HashSet;
+-import java.util.Iterator;
+-import java.util.List;
+-import java.util.Set;
++
++import java.util.*;
+ 
+ public abstract class ASchedulingPolicy {
+     public ASchedulingPolicy() {
+@@ -29,24 +25,18 @@
+ 
+         for(int i = 0; i < rounds.size(); ++i) {
+             List<Fixture> round = (List)rounds.get(i);
+-            Iterator var12 = round.iterator();
+ 
+-            while(var12.hasNext()) {
+-                Fixture fixture = (Fixture)var12.next();
++            for(Fixture fixture: round) {
+                 Game game = new Game(dateAndTime, fixture.getHomeTeam(), fixture.getAwayTeam(), fixture.getHomeTeam().getHomeField(), leagueInSeason);
+                 games.add(game);
+             }
+ 
+-            dateAndTime.set(5, 7);
++            dateAndTime.add(Calendar.DAY_OF_MONTH, 7);
+         }
+ 
+-        Iterator var15 = games.iterator();
+-
+-        while(var15.hasNext()) {
+-            Game gameTest = (Game)var15.next();
++        for(Game gameTest : games) {
+             System.out.println("Team1: " + gameTest.getHostTeam().getName() + " Team2: " + gameTest.getVisitorTeam().getName() + " Date: " + gameTest.getDateAndTimeString() + " Field: " + gameTest.getField().getNameOfField());
+         }
+-
+         return games;
+     }
+ 
