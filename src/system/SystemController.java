@@ -655,6 +655,9 @@ public class SystemController {
         } catch (AlreadyExistException alreadyExist) {
             throw new AlreadyExistException();
         }
+        catch (Exception e){
+            throw new DontHavePermissionException();
+        }
     }
 
     public HashMap<String, League> getLeagues() throws DontHavePermissionException {
@@ -673,23 +676,28 @@ public class SystemController {
         return dbController.getLeague(this.connectedUser, league);
     }
 
-    public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league, String season) throws DontHavePermissionException {
+    public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league, String season) throws DontHavePermissionException, ObjectNotExist {
         HashMap<String, Referee> referees = new HashMap<>();
         try {
             referees = ((AssociationDelegate) connectedUser).getRefereesDoesntExistInTheLeagueAndSeason(league, season);
 
+        }catch(ObjectNotExist objectNotExist){
+            throw new ObjectNotExist("");
         } catch (Exception e) {
             throw new DontHavePermissionException();
         }
         return referees;
     }
 
-    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd) {
+    public void addRefereeToLeagueInSeason(String league, String season, String refereeToAdd) throws DontHavePermissionException, ObjectNotExist {
         try{
             ((AssociationDelegate)connectedUser).addRefereeToLeagueInSeason(league, season, refereeToAdd);
         }
+        catch(ObjectNotExist objectNotExist){
+            throw new ObjectNotExist("");
+        }
         catch(Exception e){
-
+            throw new DontHavePermissionException();
         }
 
     }
@@ -711,9 +719,22 @@ public class SystemController {
         return seasons;
     }
 
-    public void changeScorePolicy(String league, String season, String sWinning, String sDraw, String sLosing) throws ObjectNotExist, IncorrectInputException {
-        ((AssociationDelegate)connectedUser).changeScorePolicy(league, season, sWinning, sDraw, sLosing);
+    public void changeScorePolicy(String league, String season, String sWinning, String sDraw, String sLosing) throws ObjectNotExist, IncorrectInputException, DontHavePermissionException {
+       try {
+           ((AssociationDelegate) connectedUser).changeScorePolicy(league, season, sWinning, sDraw, sLosing);
+       }
+
+       catch(ObjectNotExist objectNotExist){
+           throw new ObjectNotExist("");
+       }
+       catch(IncorrectInputException incorrectInput){
+           throw new IncorrectInputException();
+       }
+       catch(Exception e){
+           throw new DontHavePermissionException();
+       }
     }
+
     public IScorePolicy getScorePolicy(String league, String season) throws DontHavePermissionException, ObjectNotExist {
         if(this.connectedUser instanceof AssociationDelegate)
             return ((AssociationDelegate)connectedUser).getScorePolicy(league, season);
@@ -870,7 +891,19 @@ public class SystemController {
     }
 
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist, DontHavePermissionException {
-        ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
+        try{
+            ((AssociationDelegate)connectedUser).setSchedulingPolicyToLeagueInSeason(specificLeague, year, policy);
+        }
+        catch(IncorrectInputException incorrectInput){
+            throw new IncorrectInputException();
+        }
+        catch(ObjectNotExist objectNotExist){
+            throw new ObjectNotExist("");
+        }
+        catch(Exception e){
+            throw new DontHavePermissionException();
+        }
+
     }
     public ASchedulingPolicy getSchedulingPolicyInLeagueInSeason(String league , String seson) throws DontHavePermissionException, ObjectNotExist {
         if(this.connectedUser instanceof AssociationDelegate){

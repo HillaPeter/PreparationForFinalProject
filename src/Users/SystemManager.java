@@ -3,12 +3,14 @@ package Users;
 import Asset.Coach;
 import Asset.Manager;
 import Asset.Player;
+import Exception.*;
 import Game.Account;
 import Game.Game;
 import Game.Team;
-import League.Season;
+import League.ASchedulingPolicy;
 import League.League;
 import League.LeagueInSeason;
+import League.Season;
 import javafx.util.Pair;
 import system.DBController;
 
@@ -16,8 +18,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
-import League.ASchedulingPolicy;
-import Exception.*;
 
 
 public class SystemManager extends Member {
@@ -29,8 +29,8 @@ public class SystemManager extends Member {
         this.dbController = dbController;
     }
 
-    private boolean inputAreLegal(String refreeId) {
-        if (refreeId.contains("@") && refreeId.contains(".")) {
+    private boolean inputAreLegal(String refereeId) {
+        if (refereeId.contains("@") && refereeId.contains(".")) {
             return true;
         }
         return false;
@@ -492,7 +492,7 @@ public class SystemManager extends Member {
     public void addAssociationDelegate(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
         if (this.dbController.getFans(this).containsKey(id)) {
             Member member = (Member) this.dbController.getMember(this, id);
-            AssociationDelegate newA_D = new AssociationDelegate(member.getName(), member.getUserMail(), member.getPassword(), member.getBirthDate());
+            AssociationDelegate newA_D = new AssociationDelegate(member.getName(), member.getUserMail(), member.getPassword(), member.getBirthDate(), dbController);
             this.dbController.deleteRole(this, id);
             this.dbController.addAssociationDelegate(this, newA_D);
         }

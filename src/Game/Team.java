@@ -1,12 +1,14 @@
 package Game;
 
 import Asset.*;
-import Exception.*;
+import Exception.AlreadyExistException;
+import Exception.DontHavePermissionException;
 import Users.Fan;
 import Users.Owner;
-import jdk.internal.org.objectweb.asm.tree.analysis.SourceValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class Team {
     private String name;
@@ -19,7 +21,6 @@ public class Team {
     private HashSet<Game> games;
     private HashSet<Field> trainingFields; // list of all fields that the group training at
     private Boolean status; //true=> team is open , false=>team is closed
-    private double points; //points of this team
     private PersonalPage personalPage;
 
     public Team(String name, Account account, Field homeField) {
