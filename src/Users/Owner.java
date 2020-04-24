@@ -311,6 +311,9 @@ public class Owner extends Member {
         for(Field field:allFields){
             if(field.getName().equals(fieldName)){
                 allFields.remove(field);
+                if(teamName.equals(team.getHomeField().getNameOfField())){
+                    team.setHomeField(null);
+                }
                 team.setTrainingFields(allFields);
                 HashMap<String, Team> teams = dbController.getTeams(this);
                 teams.replace(teamName, team);

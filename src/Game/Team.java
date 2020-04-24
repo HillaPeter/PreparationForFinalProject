@@ -163,8 +163,6 @@ return newHash;
             if (field.getNameOfField().equals(name))
                 return field;
         }
-        if (homeField!=null && homeField.getNameOfField().equals(name))
-            return homeField;
         return null;
     }
     public Account getAccount() {
@@ -269,6 +267,9 @@ return newHash;
     public void addField(Field field) {
         if (field != null && !this.trainingFields.contains(field)){
             this.trainingFields.add(field);
+        }
+        if(homeField==null){
+            homeField=field;
         }
         personalPage.notifyFollowers("The team " + name + " has new field");
     }
