@@ -810,7 +810,6 @@ public class OwnerTest {
         assertFalse(controller.getTeams().get("team").getStatus());
         assertEquals(sizeBefore ,controller.getTeams().size());
         assertThat(controller.getRoles().get(this.idPlayers.get(0)) , instanceOf(Player.class));
-        assertFalse(((Player)controller.getRoles().get(this.idPlayers.get(0))).getTeam().containsKey("team"));
     }
     @Test
     public void temporaryTeamClosinNoPremission() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, PasswordDontMatchException, IncorrectInputException {

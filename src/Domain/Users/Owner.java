@@ -387,22 +387,9 @@ public class Owner extends Member {
     public void temporaryTeamClosing(String teamName) throws DontHavePermissionException {
         Team team = dbController.getTeams(this).get(teamName);
         team.setStatus(false);
-        dbController.getTeams(this).replace(teamName, team);
-        HashSet<Player> players=team.getPlayers();
-        for(Player p:players){
-            HashMap<String, Team> allTeams=p.getTeam();
-            allTeams.remove(teamName);
-        }
-        HashSet<Coach> coaches=team.getCoaches();
-        for(Coach c:coaches){
-            HashMap<String, Team> allTeams=c.getTeam();
-            allTeams.remove(teamName);
-        }
-        HashSet<Manager> managers=team.getManagers();
-        for(Manager m:managers){
-            HashMap<String, Team> allTeams=m.getTeam();
-            allTeams.remove(teamName);
-        }
+        //update team
+        HashMap<String, Team> teams = dbController.getTeams(this);
+        teams.replace(teamName, team);
     }
 
     /**
@@ -411,25 +398,12 @@ public class Owner extends Member {
      * @param teamName
      */
     public void reopenClosedTeam(String teamName) throws DontHavePermissionException {
-        ;
+
         Team team = dbController.getTeams(this).get(teamName);
         team.setStatus(true);
-        dbController.getTeams(this).replace(teamName, team);
-        HashSet<Player> players=team.getPlayers();
-        for(Player p:players){
-            HashMap<String, Team> allTeams=p.getTeam();
-            allTeams.put(teamName,team);
-        }
-        HashSet<Coach> coaches=team.getCoaches();
-        for(Coach c:coaches){
-            HashMap<String, Team> allTeams=c.getTeam();
-            allTeams.put(teamName,team);
-        }
-        HashSet<Manager> managers=team.getManagers();
-        for(Manager m:managers){
-            HashMap<String, Team> allTeams=m.getTeam();
-            allTeams.put(teamName,team);
-        }
+
+        HashMap<String, Team> teams = dbController.getTeams(this);
+        teams.replace(teamName, team);
     }
 
     /**

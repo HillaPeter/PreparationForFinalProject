@@ -591,7 +591,7 @@ public class SystemController {
             throw new IncorrectInputException();
         if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
             throw new ObjectNotExist("");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam() < 0)
+        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-amount < 0)
             throw new NoEnoughMoney();
         if (dbController.getTeams(this.connectedUser).get(teamName).getAccount() == null)
             throw new AccountNotExist();
