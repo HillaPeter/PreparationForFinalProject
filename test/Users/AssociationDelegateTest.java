@@ -17,16 +17,16 @@ import static org.junit.Assert.*;
 public class AssociationDelegateTest {
     Date birthdate=new Date(1993,10,12);
     SystemController controller= new SystemController("test");
-    AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123", birthdate);
+    //AssociationDelegate a_s_Test = new AssociationDelegate("dani" , "dani@gmail.com","123", birthdate);
 
     public AssociationDelegateTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
     }
 
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
-        controller.signIn(a_s_Test.getName(),a_s_Test.getUserMail(),a_s_Test.getPassword(), a_s_Test.getBirthDate());
+        controller.signIn("dani","dani@gmail.com","123", birthdate);
         controller.logIn("admin@gmail.com","123");
-        controller.addAssociationDelegate(this.a_s_Test.getUserMail());
+        controller.addAssociationDelegate("dani@gmail.com");
         controller.logOut();
     }
     @Rule
@@ -114,7 +114,7 @@ public class AssociationDelegateTest {
     @Test
     public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, MemberAlreadyExistException {
         /* init - add referee , add league, add season */
-        controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
+        controller.signIn("referee","referee@gmail.com","123", birthdate);
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
         controller.logOut();
@@ -135,7 +135,7 @@ public class AssociationDelegateTest {
 
     }
     @Test
-    public void addRefereeToLeagueInSeasonPermission() {
+    public void addRefereeToLeagueInSeasonPermission() throws DontHavePermissionException, ObjectNotExist {
         thrown.expect(DontHavePermissionException.class);
         controller.addRefereeToLeagueInSeason("league","season","referee");
     }
@@ -144,7 +144,7 @@ public class AssociationDelegateTest {
         thrown.expect(ObjectNotExist.class);
         /* init - add referee */
         controller.logOut();
-        controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
+        controller.signIn("referee","referee@gmail.com","123", birthdate);
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
         controller.logOut();
@@ -161,7 +161,7 @@ public class AssociationDelegateTest {
         thrown.expect(ObjectNotExist.class);
         /* init - add referee , add league */
         controller.logOut();
-        controller.signIn("referee","referee@gmail.com","123", a_s_Test.getBirthDate());
+        controller.signIn("referee","referee@gmail.com","123",birthdate);
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee@gmail.com",false);
         controller.logOut();
@@ -178,14 +178,14 @@ public class AssociationDelegateTest {
     /************************************** changeScorePolicy *****************************************/
     @Test
     public void changeScorePolicy() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, AlreadyExistException, IncorrectInputException, ObjectNotExist {
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
         
         /* try to change score policy with league and season valid - result should be positive*/
         controller.changeScorePolicy("league","2020","3","1","0");
 
-        ScorePolicy policy = (ScorePolicy)controller.getScorePolicy("leage","2020");
+        ScorePolicy policy = (ScorePolicy)controller.getScorePolicy("league","2020");
         assertTrue(policy.getScoreToDrawGame() == Double.parseDouble("1"));
         assertTrue(policy.getScoreToLosingTeam() == Double.parseDouble("0"));
         assertTrue(policy.getScoreToWinningTeam() == Double.parseDouble("3"));
@@ -194,7 +194,7 @@ public class AssociationDelegateTest {
     public void changeScorePolicyNotPermission() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, AlreadyExistException, IncorrectInputException, ObjectNotExist {
         thrown.expect(DontHavePermissionException.class);
         /* init */
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
         controller.logOut();
@@ -206,7 +206,7 @@ public class AssociationDelegateTest {
     public void changeScorePolicyLeagueNotExist() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, AlreadyExistException, IncorrectInputException, ObjectNotExist {
         thrown.expect(ObjectNotExist.class);
         /* init */
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -217,7 +217,7 @@ public class AssociationDelegateTest {
     public void changeScorePolicyPolicySeasonNotExist() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException, AlreadyExistException, IncorrectInputException, ObjectNotExist {
         thrown.expect(ObjectNotExist.class);
         /* init */
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -227,7 +227,7 @@ public class AssociationDelegateTest {
     /*******************************************************************************/
     @Test
     public void insertSchedulingPolicy1() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -239,7 +239,7 @@ public class AssociationDelegateTest {
     }
     @Test
     public void insertSchedulingPolicy2() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -253,7 +253,7 @@ public class AssociationDelegateTest {
     @Test
     public void insertSchedulingPolicyPermission() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
         thrown.expect(DontHavePermissionException.class);
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -264,7 +264,7 @@ public class AssociationDelegateTest {
     @Test
     public void insertSchedulingPolicyLeagueException() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
        thrown.expect(ObjectNotExist.class);
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -274,7 +274,7 @@ public class AssociationDelegateTest {
     @Test
     public void insertSchedulingPolicySeasonException() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
         thrown.expect(ObjectNotExist.class);
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 
@@ -284,7 +284,7 @@ public class AssociationDelegateTest {
     @Test
     public void insertSchedulingPolicyPolicyException() throws IncorrectInputException, ObjectNotExist, AlreadyExistException, DontHavePermissionException, ObjectAlreadyExist, MemberNotExist, NoEnoughMoney, PasswordDontMatchException {
         thrown.expect(IncorrectInputException.class);
-        controller.logIn(a_s_Test.getUserMail(), "123");
+        controller.logIn("dani@gmail.com", "123");
         controller.setLeague("league");
         controller.setLeagueByYear("league","2020");
 

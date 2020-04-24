@@ -1,20 +1,15 @@
 package Users;
 
-import Asset.Coach;
-import Asset.Manager;
-import Asset.Player;
+import Exception.*;
 import Game.Game;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import Exception.*;
 import org.junit.rules.ExpectedException;
-import system.DBController;
 import system.SystemController;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
@@ -618,7 +613,7 @@ public class SystemManagerTest {
         for(int i=0; i<numOfReferees; i++)
         controller.signIn("referee"+i, "referee"+i+"@gmail.com", "123", birthdate);
     }
-    private void addRefereesToLeagueInSeason(int numOfReferees) throws DontHavePermissionException, IncorrectInputException, MemberAlreadyExistException, MemberNotExist, AlreadyExistException, PasswordDontMatchException {
+    private void addRefereesToLeagueInSeason(int numOfReferees) throws DontHavePermissionException, IncorrectInputException, MemberAlreadyExistException, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectNotExist {
 
         controller.logIn("admin@gmail.com", "123");
         for(int i=0 ; i<numOfReferees/2;i++)
