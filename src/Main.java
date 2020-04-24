@@ -414,6 +414,8 @@ public class Main {
                                     notReadyToDelete.printStackTrace();
                                 } catch (MemberNotExist memberNotExist) {
                                     memberNotExist.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
                                 }
                                 break;
                             }

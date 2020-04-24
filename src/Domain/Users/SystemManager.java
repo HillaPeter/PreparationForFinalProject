@@ -134,11 +134,14 @@ public class SystemManager extends Member {
         return true;
     }
 
-    public boolean removeSystemManager(String id) throws MemberNotExist, IncorrectInputException, NotReadyToDelete, DontHavePermissionException {
+    public boolean removeSystemManager(String id) throws MemberNotExist, IncorrectInputException, NotReadyToDelete, DontHavePermissionException, AlreadyExistException {
         if (dbController.existSystemManager(this, id)) {
                 if (inputAreLegal(id)) {
                     if (dbController.getSystemManagers(this).size() > 1 && !(this.getUserMail().equals(id))) {
+                        SystemManager systemManager=dbController.getSystemManagers(this, id);
+                        Fan fan=new Fan(systemManager.getName(),systemManager.getUserMail(),systemManager.getPassword(),systemManager.getBirthDate());
                         dbController.deleteSystemManager(this, id);
+                        dbController.addFan(this,fan);
                         return true;
                     } else {
                         throw new NotReadyToDelete("this is the only system manager in the system. you can't delete him");

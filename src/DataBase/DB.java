@@ -360,6 +360,10 @@ public class DB {
         return systemManagerHashMap;
     */}
 
+    public SystemManager getSystemManagers(String id) {
+       return systemManagers.get(id);
+    }
+
     public boolean existOwner(String ownerId) {
         if( roles.containsKey(ownerId) && roles.get(ownerId) instanceof Owner)
             return true;

@@ -133,6 +133,14 @@ public class DBController {
         }
     }
 
+    public SystemManager getSystemManagers(Role role , String id) throws DontHavePermissionException {
+        if (role instanceof SystemManager)
+            return db.getSystemManagers(id);
+        else {
+            throw new DontHavePermissionException();
+        }
+    }
+
     public HashMap<String, AssociationDelegate> getAssociationDelegate(Role role) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof SystemManager)
             return db.getAssociationDelegate();

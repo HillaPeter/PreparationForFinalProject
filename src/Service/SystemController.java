@@ -130,7 +130,7 @@ public class SystemController {
         }
     }
 
-    public boolean removeSystemManager(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, NotReadyToDelete {
+    public boolean removeSystemManager(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, NotReadyToDelete, AlreadyExistException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeSystemManager(id);
