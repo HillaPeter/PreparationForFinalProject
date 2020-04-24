@@ -1,0 +1,40 @@
+package Domain.Users.acceptanceTesting;
+
+import Domain.Asset.Field;
+import Domain.Game.Team;
+import Domain.League.*;
+
+import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
+
+
+public class SchedulingPolicyTest {
+
+    @Test
+    public void setGamesOfTeamsTest (){
+        ASchedulingPolicy policy = new SchedulingPolicyAllTeamsPlayTwice();
+        List<Team> teams = generateTeams(10);
+        Season season = new Season("2000");
+        League league = new League("league  A");
+        LeagueInSeason leagueInSeason = new LeagueInSeason(league, season);
+        policy.setGamesOfTeams(teams, leagueInSeason);
+    }
+
+
+
+    private List<Team> generateTeams(int n){
+        List<Team> teams = new LinkedList<>();
+        for(int i = 1; i <=n ; i++){
+            teams.add(generateTeam("team "+i,"field "+i));
+        }
+        return teams;
+    }
+
+
+    private Team generateTeam(String name, String fieldName) {
+        Field field = new Field(fieldName);
+        return new Team(name,null,field);
+    }
+}

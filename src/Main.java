@@ -1,15 +1,17 @@
 
-import Asset.Coach;
-import Asset.Manager;
-import Asset.Player;
+import Domain.Asset.Coach;
+import Domain.Asset.Field;
+import Domain.Asset.Manager;
+import Domain.Asset.Player;
+import Domain.Game.*;
+import Domain.League.ASchedulingPolicy;
+import Domain.League.League;
+import Domain.League.LeagueInSeason;
+import Domain.League.Season;
+import Domain.Users.*;
 import Exception.*;
-import Game.*;
-import Users.*;
 import javafx.util.Pair;
-import system.SystemController;
-import League.*;
-import Game.EventInGame;
-import Asset.*;
+import Service.SystemController;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -488,7 +490,7 @@ public class Main {
     }
 
     private static String removeSystemManager() throws DontHavePermissionException {
-        HashMap<String, SystemManager> systemmanagers = controller.getSystemManager(member);
+        HashMap<String, SystemManager> systemmanagers = controller.getSystemManager();
         System.out.println("Choose id to remove system manager");
         for (String systemmanager : systemmanagers.keySet()) {
             System.out.println(systemmanager);
