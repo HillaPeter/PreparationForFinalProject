@@ -112,10 +112,10 @@ public class SystemController {
     }
     /*************************************** function for system manager******************************************/
 
-    public boolean removeAssociationDelegate(String id) throws DontHavePermissionException {
+    public void removeAssociationDelegate(String id) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.removeAssociationDelegate(id);
+            systemManager.removeAssociationDelegate(id);
         } else {
             throw new DontHavePermissionException();
         }
