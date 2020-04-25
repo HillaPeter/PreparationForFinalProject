@@ -4,7 +4,7 @@ import Domain.Asset.Player;
 import Domain.Game.EventInGame;
 import Domain.Game.Game;
 import Domain.Game.Event;
-import Exception.IncorrectInputException;
+import Exception.*;
 
 import java.util.*;
 
@@ -26,23 +26,21 @@ public class MainReferee extends Referee {
 
 
     // the details which didn't update will be recieved as ""
-    public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws IncorrectInputException {
-        if (newName == null || newMail ==null || newPassword == null || newTraining == null){
+    public void updateDetails(String newName, String newMail,String newTraining) throws IncorrectInputException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
+        if (newName == null || newMail ==null ||newTraining == null){
             throw new IncorrectInputException("");
         }
+        super.dbController.deleteReferee(this, super.getUserMail());
         if (newName != ""){
             super.setName(newName);
         }
         if (newMail != ""){
             super.setUserMail(newMail);
         }
-        if (newPassword != ""){
-            super.setPassword(newPassword);
-        }
         if (newTraining != ""){
             super.training = newTraining;
         }
-        //todo - delete and add again to the DB
+        super.dbController.addReferee(this, this);
     }
 
 

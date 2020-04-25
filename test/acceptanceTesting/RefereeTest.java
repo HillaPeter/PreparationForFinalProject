@@ -83,7 +83,7 @@ public class RefereeTest {
         Member member= controller.logIn("referee0@gmail.com","123");
 
         /*try to update details after login with correct values- result should be positive */
-        controller.updateDetails("newName" ,"newMail@gmail.com", "1234","training");
+        controller.updateDetails("newName" ,"newMail@gmail.com","training");
 
         String encryptPass = securityMachine.encrypt("1234");
 
@@ -101,7 +101,7 @@ public class RefereeTest {
         Member member = controller.logIn("referee0@gmail.com","123");
 
         /*try to update details after login with incorrect values- result should be negative */
-        controller.updateDetails("12344" ,"referee@gmail.com", "newMail@gmail.com","1234");
+        controller.updateDetails("12344" ,"referee@gmail.com", "training");
 
         assertNotNull(controller.getReferees().get("referee@gmail.com"));
         assertEquals(member.getName() , controller.getReferees().get("referee@gmail.com").getName());
@@ -113,7 +113,7 @@ public class RefereeTest {
         /* init */
 
         /*try to update details without login- result should be negative */
-        controller.updateDetails("newName" ,"referee@gmail.com", "newMail@gmail.com","1234");
+        controller.updateDetails("newName" ,"referee@gmail.com", "training");
     }
     /*******************************************************************************/
 

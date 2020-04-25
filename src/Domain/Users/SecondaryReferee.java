@@ -16,8 +16,8 @@ public class SecondaryReferee extends Referee {
         super(fan.getName(),fan.getUserMail(), fan.getPassword() , "" , fan.getBirthDate());
     }
 
-    public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws IncorrectInputException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
-        if (newName == null || newMail ==null || newPassword == null || newTraining == null){
+    public void updateDetails(String newName, String newMail,String newTraining) throws IncorrectInputException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
+        if (newName == null || newMail ==null ||newTraining == null){
             throw new IncorrectInputException("");
         }
         super.dbController.deleteReferee(this, super.getUserMail());
@@ -26,9 +26,6 @@ public class SecondaryReferee extends Referee {
         }
         if (newMail != ""){
             super.setUserMail(newMail);
-        }
-        if (newPassword != ""){
-            super.setPassword(newPassword);
         }
         if (newTraining != ""){
             super.training = newTraining;

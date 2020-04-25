@@ -1614,11 +1614,9 @@ public class Main {
                         String newName = scanInput.nextLine();
                         System.out.println("Insert your new mail: \n");
                         String newMail = scanInput.nextLine();
-                        System.out.println("Insert your new password: \n");
-                        String newPassword = scanInput.nextLine();
                         System.out.println("Insert your new training: \n");
                         String newTraining = scanInput.nextLine();
-                        controller.updateDetails(newName, newMail, newPassword, newTraining);
+                        controller.updateDetails(newName, newMail,newTraining);
                     } catch (Exception e) {
                         System.out.println("One or more of the details are illegal.");
                     }
@@ -1760,11 +1758,9 @@ public class Main {
                         String newName = scanInput.nextLine();
                         System.out.println("Insert your new mail: \n");
                         String newMail = scanInput.nextLine();
-                        System.out.println("Insert your new password: \n");
-                        String newPassword = scanInput.nextLine();
                         System.out.println("Insert your new training: \n");
                         String newTraining = scanInput.nextLine();
-                        controller.updateDetails(newName, newMail, newPassword, newTraining);
+                        controller.updateDetails(newName, newMail,newTraining);
                     } catch (IncorrectInputException e) {
                         System.out.println("One or more of the details are illegal.");
                     } catch (Exception e) {
@@ -1797,7 +1793,7 @@ public class Main {
     }
 
     /***********************************************Fan**************************************************/
-    private static void fanMenu() throws DontHavePermissionException {
+    private static void fanMenu(){
         String input = "";
         while (!input.equals("ExitAll")) {
             System.out.println("choose one of the following options:\n");
@@ -1819,9 +1815,7 @@ public class Main {
                         String newName = scanInput.nextLine();
                         System.out.println("Insert your new mail: \n");
                         String newMail = scanInput.nextLine();
-                        System.out.println("Insert your new password: \n");
-                        String newPassword = scanInput.nextLine();
-                        controller.updatePersonalDetails(newName, newPassword, newMail);
+                        controller.updatePersonalDetails(newName,newMail);
                     } catch (IncorrectInputException e) {
                         System.out.println("One or more of the details are illegal.");
                     } catch (Exception e) {
@@ -1895,20 +1889,6 @@ public class Main {
         }
     }
 
-
-    /**
-     * Tests for fan- Hilla
-     **/
-    public static void fanTest() {
-        ArrayList<Transaction> trans = new ArrayList<>();
-        Field field = new Field("Blumfield");
-        Team maccabi = new Team("Maccabi tel aviv", new Account(trans, 100), field);
-        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date());
-        maccabi.addNewFollower(fan);
-        Field field2 = new Field("Teddy");
-        maccabi.addField(field2);
-        System.out.println("finished successfully!!!");
-    }
 
 
 }

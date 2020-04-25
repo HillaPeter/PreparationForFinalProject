@@ -830,14 +830,14 @@ public class SystemController {
 
     /** secondary and main referee **/
 
-    public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
+    public void updateDetails(String newName, String newMail,String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof MainReferee) {
             MainReferee referee = (MainReferee) connectedUser;
-            referee.updateDetails(newName, newMail, newPassword, newTraining);
+            referee.updateDetails(newName, newMail,newTraining);
         }
         else if (connectedUser instanceof SecondaryReferee) {
             SecondaryReferee referee = (SecondaryReferee) connectedUser;
-            referee.updateDetails(newName, newMail, newPassword, newTraining);
+            referee.updateDetails(newName, newMail,newTraining);
         }
         else {
             throw new DontHavePermissionException();
@@ -879,10 +879,10 @@ public class SystemController {
 
     /*************************************** function for Fan ******************************************/
 
-    public void updatePersonalDetails(String newName, String newPassword, String newMail) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
+    public void updatePersonalDetails(String newName,String newMail) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
-            fan.updatePersonalDetails(newName, newPassword, newMail);
+            fan.updatePersonalDetails(newName, newMail);
         } else {
             throw new DontHavePermissionException();
         }
@@ -905,7 +905,7 @@ public class SystemController {
     public void addFollowerToTeam(Team team) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
-            team.addNewFollower(fan);
+            fan.followTeam(team);
         } else {
             throw new DontHavePermissionException();
         }
@@ -914,7 +914,7 @@ public class SystemController {
     public void addFollowerToGame(Game game) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
-            game.addFollower(fan);
+            fan.followGame(game);
         } else {
             throw new DontHavePermissionException();
         }
