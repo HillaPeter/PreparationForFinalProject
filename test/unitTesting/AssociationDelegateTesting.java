@@ -1,9 +1,7 @@
 package unitTesting;
 
-import Domain.Game.Team;
 import Domain.League.SchedulingPolicyAllTeamsPlayTwice;
 import Domain.League.ScorePolicy;
-import Domain.League.Season;
 import Exception.*;
 import Service.SystemController;
 import org.junit.Before;
@@ -23,25 +21,26 @@ public class AssociationDelegateTesting {
 
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
-        controller.signIn("AssociationDelegate", "Daniel@gmail.com", "abc", birthDate);
-        controller.addAssociationDelegate("Daniel@gmail.com");
-        controller.logIn("associationDelegate@gmail.com", "abc");
+        controller.signIn("dani","associationDelegate@gmail.com","abc", birthDate);
+        controller.logIn("admin@gmail.com","123");
+        controller.addAssociationDelegate("associationDelegate@gmail.com");
+        controller.logOut();
     }
 
 
-    @Test
-    public void insertSchedulingPolicyTest() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
-        controller.logIn("associationDelegate@gmail.com", "abc");
-        String league = "women league";
-        String season = "2020";
-        String sPolicy = "All teams play each other once";
-        //check if it is used
-    }
+//    @Test
+//    public void insertSchedulingPolicyTest() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
+//        controller.logIn("associationDelegate@gmail.com", "abc");
+//        String league = "women league";
+//        String season = "2020";
+//        String sPolicy = "All teams play each other once";
+//        //check if it is used
+//    }
 
     @Test
     public void changeScorePolicyTest() throws ObjectNotExist, IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
-        //controller.logIn("associationDelegate@gmail.com", "abc");
-        String league = "women league";
+        controller.logIn("associationDelegate@gmail.com", "abc");
+        String league = "womenLeagueG";
         controller.setLeague(league);
         String season = "2020";
         controller.setLeagueByYear(league, season);
@@ -50,28 +49,37 @@ public class AssociationDelegateTesting {
         String sLosing = "2";
         controller.changeScorePolicy(league, season, sWinning, sDraw, sLosing);
         ScorePolicy scorePolicy = (ScorePolicy) controller.getScorePolicy(league, season);
-        assertEquals(scorePolicy.getScoreToWinningTeam(),sWinning);
-        assertEquals(scorePolicy.getScoreToDrawGame(),sDraw);
-        assertEquals(scorePolicy.getScoreToLosingTeam(),sLosing);
+        double win = Double.parseDouble(sWinning);
+        double draw = Double.parseDouble(sDraw);
+        double lose = Double.parseDouble(sLosing);
+        double delta = 0.0001;
+        assertEquals(scorePolicy.getScoreToWinningTeam(),win, delta);
+        assertEquals(scorePolicy.getScoreToDrawGame(),draw, delta);
+        assertEquals(scorePolicy.getScoreToLosingTeam(),lose, delta);
     }
 
 
     @Test
-    public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist {
-        String league = "women league";
+    public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, MemberNotExist, PasswordDontMatchException, MemberAlreadyExistException {
+        controller.signIn("referee","referee@gmail.com","123", birthDate);
+        controller.logIn("admin@gmail.com","123");
+        controller.addReferee("referee@gmail.com",false);
+        controller.logOut();
+        controller.logIn("associationDelegate@gmail.com", "abc");
+        String league = "womenLeagueA";
         controller.setLeague(league);
         String season = "2020";
         controller.setLeagueByYear(league, season);
-        String refereeName = "Noa";
+        String refereeName = "referee@gmail.com";
         controller.addRefereeToLeagueInSeason(league, season, refereeName);
-        Season seasonObj = new Season(season);
-        assertTrue(controller.getLeague(league).getLeagueInSeason(seasonObj).getReferees().containsKey(refereeName));
+        assertTrue(controller.getRefereesInLeagueInSeason(league,season).containsKey(refereeName));
 
     }
 
     @Test(expected = ObjectNotExist.class)
-    public void addRefereeToLeagueInSeasonTrowException() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist {
-        String league = "women league";
+    public void addRefereeToLeagueInSeasonTrowException() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, ObjectNotExist, MemberNotExist, PasswordDontMatchException {
+        controller.logIn("associationDelegate@gmail.com", "abc");
+        String league = "womenLeagueE";
         controller.setLeague(league);
         String season = "2020";
         controller.setLeagueByYear(league, season);
@@ -80,46 +88,25 @@ public class AssociationDelegateTesting {
     }
 
     @Test
-    public void setSchedulingPolicyToLeagueInSeasonTest() throws ObjectNotExist, IncorrectInputException, DontHavePermissionException {
-        String league = "women league";
+    public void setSchedulingPolicyToLeagueInSeasonTest() throws ObjectNotExist, IncorrectInputException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException, AlreadyExistException {
+        controller.logIn("associationDelegate@gmail.com", "abc");
+        String league = "womenLeagueA";
+        controller.setLeague(league);
         String season = "2020";
+        controller.setLeagueByYear(league, season);
         String policyName = "All teams play each other twice";
         controller.setSchedulingPolicyToLeagueInSeason(league, season, policyName);
         assertThat(controller.getSchedulingPolicyInLeagueInSeason(league,season),instanceOf(SchedulingPolicyAllTeamsPlayTwice.class));
     }
 
     @Test(expected = IncorrectInputException.class)
-    public void setSchedulingPolicyToLeagueInSeasonTestThrownException() throws ObjectNotExist, IncorrectInputException, DontHavePermissionException {
-        String league = "women league";
+    public void setSchedulingPolicyToLeagueInSeasonTestThrownException() throws ObjectNotExist, IncorrectInputException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+        controller.logIn("associationDelegate@gmail.com", "abc");
+        String league = "womenLeagueC";
         String season = "2020";
         String policyName = "All teams play each other every day";
         controller.setSchedulingPolicyToLeagueInSeason(league, season, policyName);
     }
 
-    @Test
-    public void addTeamToLeagueInSeasonTest() throws DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, MemberNotExist {
-        String league = "women league";
-        controller.setLeague(league);
-        String season = "2020";
-        controller.setLeagueByYear(league, season);
-        String teamName = "QueenB";
-        controller.addTeam(teamName, "Noa");
-        Team team = controller.getTeams().get(teamName);
-        controller.addTeamToLeagueInSeason(league, season, teamName);
-        Season seasonObj = new Season(season);
-        assertTrue(controller.getLeague(league).getLeagueInSeason(seasonObj).getTeams().contains(team));
-
-    }
-
-    @Test (expected = AlreadyExistException.class)
-    public void addTeamToLeagueInSeasonTestThrownException() throws DontHavePermissionException, IncorrectInputException, ObjectNotExist, ObjectAlreadyExist, AlreadyExistException, MemberNotExist {
-        String league = "women league";
-        controller.setLeague(league);
-        String season = "2020";
-        controller.setLeagueByYear(league, season);
-        String teamName = "QueenB";
-        controller.addTeamToLeagueInSeason(league, season, teamName);
-        controller.addTeamToLeagueInSeason(league, season, teamName);
-    }
 }
 

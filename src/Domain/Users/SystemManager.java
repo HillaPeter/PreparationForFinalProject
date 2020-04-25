@@ -177,13 +177,13 @@ public class SystemManager extends Member {
         }
     }
 
-    public boolean addReferee(String id, boolean ifMainRefree) throws IncorrectInputException, MemberAlreadyExistException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
+    public boolean addReferee(String id, boolean ifMainReferee) throws IncorrectInputException, MemberAlreadyExistException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
         if (inputAreLegal(id)) {
             if (!dbController.existReferee(this, id)) {
                 if (dbController.existFan(this, id)) {
                     Fan fan = (Fan) dbController.getMember(this, id);
                     Referee referee = null;
-                    if (ifMainRefree) {
+                    if (ifMainReferee) {
                         referee = new MainReferee(fan);
                     } else {
                         referee = new SecondaryReferee(fan);
