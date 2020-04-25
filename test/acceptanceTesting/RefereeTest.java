@@ -85,14 +85,14 @@ public class RefereeTest {
         /*try to update details after login with correct values- result should be positive */
         controller.updateDetails("newName" ,"newMail@gmail.com","training");
 
-        String encryptPass = securityMachine.encrypt("1234");
+        //String encryptPass = securityMachine.encrypt("1234");
 
 
         assertNotNull(controller.getReferee("newMail@gmail.com"));
         assertNotNull(controller.getRoles().get("newMail@gmail.com"));
         assertEquals("newName",controller.getReferees().get("newMail@gmail.com").getName());
         assertEquals("newMail@gmail.com",controller.getReferees().get("newMail@gmail.com").getUserMail());
-        assertEquals(encryptPass,controller.getReferees().get("newMail@gmail.com").getPassword());
+        //assertEquals(encryptPass,controller.getReferees().get("newMail@gmail.com").getPassword());
     }
     @Test
     public void updateDetailsIncorrectName() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException {

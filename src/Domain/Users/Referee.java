@@ -28,16 +28,6 @@ public abstract class Referee extends Member{
         games.add(game);
     }
 
-    public void deleteTheGames()
-    {
-        /*
-        for (Game game:games
-             ) {
-            game.removeReferee(this);
-        }
-        */
-    }
-
 
     public boolean hadGames()
     {
