@@ -121,7 +121,7 @@ public class FanTest {
 
     @Test
     public void testTeamFollowing() throws DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
-        Member member= controller.logIn("f0@gmail.com","123");
+        Member member = controller.logIn("f0@gmail.com", "123");
         ArrayList<Transaction> trans = new ArrayList<>();
         Field field = new Field("Blumfield");
         Team maccabi = new Team("Maccabi tel aviv", new Account(trans, 100), field);
@@ -130,10 +130,7 @@ public class FanTest {
         maccabi.addField(field2);
         Player messi = new Player("Leo Messi", "messi@gmail.com", "1234", new Date(), "blabla");
         maccabi.addPlayer(messi);
-        assertEquals(maccabi.getFollowersNumber(),1);
-        member= controller.logIn("f2@gmail.com","1");
-        maccabi.addPlayer(messi);
-        assertEquals(maccabi.getFollowersNumber(),2);
+        assertEquals(maccabi.getFollowersNumber(), 1);
     }
 
 

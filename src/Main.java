@@ -22,10 +22,14 @@ public class Main {
     static Role member;
     static String path;
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
 /****************************************************menu******************************************************/
         //  controller.initSystem();
         controller = new SystemController("System Controller");
+        controller.signIn("owner" , "owner@gmail.com" , "123" , new Date(1995,6,7));
+        controller.signIn("owner" , "player@gmail.com" , "123" , new Date(1995,6,7));
+        controller.signIn("owner" , "manager@gmail.com" , "123" , new Date(1995,6,7));
+
         startMenu();
         /****shachar tests******/
         //must write the path in the main
@@ -643,7 +647,7 @@ public class Main {
         try {
             Team team;
             String input = "";
-            while (!input.equals("Exit")) {
+            while (!input.equals("ExitAll")) {
                 System.out.println("choose one of the following options:\n");
                 System.out.println("write \"1\" Add Asset");
                 System.out.println("write \"2\" Remove Asset");
@@ -662,58 +666,76 @@ public class Main {
                 }
                 switch (input) {
                     case "1": {
+                        while (!input.equals("Exit"))
+                        {
                         System.out.println("What asset do you want to add? choose by index");
                         System.out.println("Press \"1.\" for Team manager");
                         System.out.println("Press \"2.\" for Coach");
                         System.out.println("Press \"3.\" for Player");
                         System.out.println("Press \"4.\" for Field");
                         System.out.println("\nwrite \"Exit\" if you want to finish. \n");
-                        input = scanInput.nextLine();
-                        while (!input.equals("Exit")) {
+                        input = "";
+                            while (input.equals("")) {
+                                input = scanInput.nextLine();
+                            }
                             switch (input) {
                                 case "1": {
                                     addTeamManager();
+                                    break;
                                 }
                                 case "2": {
                                     addTeamCoach();
+                                    break;
                                 }
                                 case "3": {
                                     addTeamPlayer();
+                                    break;
                                 }
                                 case "4": {
                                     addTeamField();
+                                    break;
                                 }
                                 case "Exit": {
+                                    break;
                                 }
                             }
                         }
+                        break;
                     }//case 1- add asset
                     case "2": {
-                        System.out.println("What asset do you want to remove? choose by index");
+                        while (!input.equals("Exit")) {
+                            System.out.println("What asset do you want to remove? choose by index");
                         System.out.println("Press \"1.\" for Team manager");
                         System.out.println("Press \"2.\" for Coach");
                         System.out.println("Press \"3.\" for Player");
                         System.out.println("Press \"4.\" for Field");
                         System.out.println("\nwrite \"Exit\" if you want to finish. \n");
-                        input = scanInput.nextLine();
-                        while (!input.equals("Exit")) {
-                            switch (input) {
+                        input = "";
+                            while (input.equals("")) {
+                                input = scanInput.nextLine();
+                            }                            switch (input) {
                                 case "1": {
                                     removeTeamManager();
+                                    break;
                                 }
                                 case "2": {
                                     removeTeamCoach();
+                                    break;
                                 }
                                 case "3": {
                                     removeTeamPlayer();
+                                    break;
                                 }
                                 case "4": {
                                     removeTeamField();
+                                    break;
                                 }
                                 case "Exit": {
+                                    break;
                                 }
                             }
                         }
+                        break;
                     }//removeAsset
                     case "3": {
                         addTeamManager();
@@ -829,7 +851,9 @@ public class Main {
                         }
                     }
                     case "logOut": {
-                        // member = (Member) controller.logOut();
+                        controller.logOut();
+                        member = null;//(Role) controller.logOut();
+                        input = "ExitAll";
                         break;
                     }
                 }
@@ -897,7 +921,7 @@ public class Main {
     }
 
     private static void addTeamPlayer() throws IncorrectInputException, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException, NoEnoughMoney {
-        System.out.println("Choose role by mail to make him coach");
+        System.out.println("Choose role by mail to make him player");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
         for (String mailId : allRoles.keySet()) {
@@ -990,7 +1014,7 @@ public class Main {
 
     private static void removeTeamPlayer() throws DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
-        System.out.println("Choose team name to remove coach");
+        System.out.println("Choose team name to remove player");
         for (String teamName : teams.keySet()) {
             System.out.println(teamName);
         }
@@ -998,7 +1022,7 @@ public class Main {
         String teamName = scanInput.nextLine();
         Team team = teams.get(teamName);
 
-        System.out.println("Choose role to delete him from being coach");
+        System.out.println("Choose role to delete him from being player");
         HashSet<Player> players = team.getPlayers();
         for (Player p : players) {
             System.out.println(p.getUserMail());
@@ -1863,8 +1887,10 @@ public class Main {
                 }
                 case "LogOut": {
                     controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input = "ExitAll";
+                    break;
                 }
-
             }
         }
     }
