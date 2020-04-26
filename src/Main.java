@@ -1735,6 +1735,9 @@ public class Main {
                 }
                 case "LogOut": {
                     controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input = "ExitAll";
+                    break;
                 }
 
             }
@@ -1791,6 +1794,9 @@ public class Main {
                 }
                 case "LogOut": {
                     controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input = "ExitAll";
+                    break;
                 }
             }
         }
