@@ -234,7 +234,7 @@ public class Owner extends Member {
         for (Manager manager : managers) {
             //found the manager to remove
             if (manager.getUserMail().equals(mailInput)) {
-                Fan fan = new Fan(manager.getName(), manager.getUserMail(), manager.getPassword(), manager.getBirthDate());
+                Fan fan = new Fan(manager.getName(), manager.getUserMail(), manager.getPassword(), manager.getBirthDate(), dbController);
                 team.removeManager(manager);
                 dbController.deleteRole(this, mailInput);
 
@@ -264,7 +264,7 @@ public class Owner extends Member {
         for (Coach coach : coaches) {
             //found the manager to remove
             if (coach.getUserMail().equals(mailInput)) {
-                Fan fan = new Fan(coach.getName(), coach.getUserMail(), coach.getPassword(), coach.getBirthDate());
+                Fan fan = new Fan(coach.getName(), coach.getUserMail(), coach.getPassword(), coach.getBirthDate(), dbController);
                 team.removeCoach(coach);
                 dbController.deleteRole(this, mailInput);
                 dbController.addFan(this, fan);
@@ -289,7 +289,7 @@ public class Owner extends Member {
         for (Player player : players) {
             //found the manager to remove
             if (player.getUserMail().equals(mailInput)) {
-                Fan fan = new Fan(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate());
+                Fan fan = new Fan(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate(), dbController);
                 team.removePlayer(player);
                 dbController.getPlayers(this).remove(player);
                 dbController.deleteRole(this, mailInput);

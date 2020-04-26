@@ -62,7 +62,7 @@ public class DBController implements DAO{
     }
 
     public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner)
+        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner ||role instanceof Fan)
             return db.getFans();
         else {
             throw new DontHavePermissionException();

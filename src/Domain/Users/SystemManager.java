@@ -41,7 +41,7 @@ public class SystemManager extends Member {
         if (dbController.existAssociationDelegate(this, id)) {
             if (inputAreLegal(id)) {
                 AssociationDelegate temp = dbController.getAssociationDelegate(this, id);
-                Fan newFan = new Fan(temp.getName(), temp.getUserMail(), temp.getPassword(), temp.getBirthDate());
+                Fan newFan = new Fan(temp.getName(), temp.getUserMail(), temp.getPassword(), temp.getBirthDate(), dbController);
                 dbController.deleteAssociationDelegate(this, id);
                 dbController.addFan(temp, newFan);
             } else {
@@ -94,7 +94,7 @@ public class SystemManager extends Member {
             if (inputAreLegal(id)) {
                 if (dbController.getSystemManagers(this).size() > 1 && !(this.getUserMail().equals(id))) {
                     SystemManager systemManager=dbController.getSystemManagers(this, id);
-                    Fan fan=new Fan(systemManager.getName(),systemManager.getUserMail(),systemManager.getPassword(),systemManager.getBirthDate());
+                    Fan fan=new Fan(systemManager.getName(),systemManager.getUserMail(),systemManager.getPassword(),systemManager.getBirthDate(),dbController);
                     dbController.deleteSystemManager(this, id);
                     dbController.addFan(this,fan);
                     return true;
@@ -128,7 +128,7 @@ public class SystemManager extends Member {
                 }
                 else {
                     dbController.deleteReferee(this, id);
-                    Fan newFan = new Fan(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate());
+                    Fan newFan = new Fan(referee.getName(), referee.getUserMail(), referee.getPassword(), referee.getBirthDate(), dbController);
                     dbController.addFan(this, newFan);
                     return true;
                 }
@@ -218,9 +218,9 @@ public class SystemManager extends Member {
                     Fan fan = (Fan) dbController.getMember(this, id);
                     Referee referee = null;
                     if (ifMainReferee) {
-                        referee = new MainReferee(fan);
+                        referee = new MainReferee(fan, dbController);
                     } else {
-                        referee = new SecondaryReferee(fan);
+                        referee = new SecondaryReferee(fan, dbController);
                     }
                     dbController.deleteFan(this, id);
                     dbController.addReferee(this, referee);
@@ -534,7 +534,7 @@ public class SystemManager extends Member {
         for (Owner owner : allTheOwnerOfTheGroup
         ) {
             if (owner.getTeams().size() == 0) {
-                Fan newFan = new Fan(owner.getName(), owner.getUserMail(), owner.getPassword(), owner.getBirthDate());
+                Fan newFan = new Fan(owner.getName(), owner.getUserMail(), owner.getPassword(), owner.getBirthDate(), dbController);
                 dbController.deleteOwner(this, owner.getUserMail());
                 dbController.addFan(this, newFan);
             }

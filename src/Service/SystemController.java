@@ -830,6 +830,16 @@ public class SystemController {
 
     /** secondary and main referee **/
 
+    /**
+     * the function allows the referee to update his own details.
+     * @param newName
+     * @param newMail
+     * @param newTraining
+     * @throws IncorrectInputException
+     * @throws DontHavePermissionException
+     * @throws MemberNotExist
+     * @throws AlreadyExistException
+     */
     public void updateDetails(String newName, String newMail,String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof MainReferee) {
             MainReferee referee = (MainReferee) connectedUser;
@@ -844,6 +854,13 @@ public class SystemController {
         }
     }
 
+
+    /**
+     * the function allows the referee watch his own schedule
+     * @return hashSet of games on the referee's schedule
+     * @throws DontHavePermissionException
+     */
+
     public HashSet<Game> getGameSchedule() throws DontHavePermissionException {
         if (connectedUser instanceof Referee) {
             Referee referee = (Referee) connectedUser;
@@ -855,6 +872,11 @@ public class SystemController {
 
     /** main referee only **/
 
+    /**
+     * the function allows the referee to watch all the games he can still edit
+     * @return all the referee's editable games.
+     * @throws DontHavePermissionException
+     */
     public LinkedList<Game> getEditableGames () throws DontHavePermissionException {
         if (connectedUser instanceof MainReferee) {
             MainReferee mainReferee = (MainReferee) connectedUser;
@@ -864,6 +886,11 @@ public class SystemController {
         }
     }
 
+    /**
+     * the function allows the referee to update a game event
+     * @return all the referee's editable games.
+     * @throws DontHavePermissionException
+     */
     public void updateGameEvent(Game game, int timeInGame, EventInGame event, Date date, String description, ArrayList<Player> players){
         if (connectedUser instanceof MainReferee) {
             MainReferee mainReferee = (MainReferee) connectedUser;
@@ -873,11 +900,18 @@ public class SystemController {
         }
     }
 
-    public void getGameReport(){
-        //todo
-    }
 
     /*************************************** function for Fan ******************************************/
+
+    /**
+     * the function allows the referee to update his own details.
+     * @param newName
+     * @param newMail
+     * @throws DontHavePermissionException
+     * @throws IncorrectInputException
+     * @throws MemberNotExist
+     * @throws AlreadyExistException
+     */
 
     public void updatePersonalDetails(String newName,String newMail) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof Fan) {
@@ -888,6 +922,13 @@ public class SystemController {
         }
     }
 
+    /**
+     * the function allows the fan send a complaint to the system manager
+     * @param path
+     * @param complaint
+     * @throws DontHavePermissionException
+     */
+
     public void sendComplaint (String path, String complaint) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
@@ -897,10 +938,11 @@ public class SystemController {
         }
     }
 
-    public Team getTeamByName (String teamName) throws DontHavePermissionException, ObjectNotExist {
-            Team team = dbController.getTeam(connectedUser, teamName);
-            return team;
-    }
+    /**
+     * the function sign the fan as a follower of te given team
+     * @param team
+     * @throws DontHavePermissionException
+     */
 
     public void addFollowerToTeam(Team team) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
@@ -911,6 +953,11 @@ public class SystemController {
         }
     }
 
+    /**
+     * the function sign the fan as a follower of te given game
+     * @param game
+     * @throws DontHavePermissionException
+     */
     public void addFollowerToGame(Game game) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
@@ -924,6 +971,10 @@ public class SystemController {
 
     public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
         return dbController.getFans(role);
+    }
+
+    public HashMap<String, Fan> getFans() throws DontHavePermissionException {
+        return dbController.getFans(connectedUser);
     }
 
     public HashMap<String, Referee> getReferees() {
@@ -987,6 +1038,15 @@ public class SystemController {
         return dbController.getOwnersAndFans(role);
     }
 
+    public Team getTeamByName (String teamName) throws DontHavePermissionException, ObjectNotExist {
+        Team team = dbController.getTeam(connectedUser, teamName);
+        return team;
+    }
+
+    public Role getConnectedUser (){
+        return connectedUser;
+    }
+
     /**
      * Associate Dellegite
      * this function add team to league in season
@@ -1006,33 +1066,5 @@ public class SystemController {
         }
     }
 
-
-
-    /**********shachar test*************/
-    /*
-    public void addPlayer(Player player1) throws AlreadyExistException {
-        dbController.addPlayer(player1);
-    }
-
-    public void addCoach(Coach coach1) throws AlreadyExistException {
-        dbController.addCoach(coach1);
-    }
-
-    public void addManager(Manager manager1) throws AlreadyExistException {
-        dbController.addManager(manager1);
-    }
-
-    public void addOwner(Owner owner1) throws AlreadyExistException, DontHavePermissionException {
-        dbController.addOwner(connectedUser,owner1);
-    }
-
-    public void addSystemManager(SystemManager systemManager) throws AlreadyExistException {
-        dbController.addSystemManager(systemManager);
-    }
-
-    public void addFan(Fan fan1) {
-        dbController.addFan(fan1);
-    }
-    */
 
 }

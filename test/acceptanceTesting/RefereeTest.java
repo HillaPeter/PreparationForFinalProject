@@ -85,23 +85,18 @@ public class RefereeTest {
         /*try to update details after login with correct values- result should be positive */
         controller.updateDetails("newName" ,"newMail@gmail.com","training");
 
-        //String encryptPass = securityMachine.encrypt("1234");
-
-
         assertNotNull(controller.getReferee("newMail@gmail.com"));
-        assertNotNull(controller.getRoles().get("newMail@gmail.com"));
         assertEquals("newName",controller.getReferees().get("newMail@gmail.com").getName());
         assertEquals("newMail@gmail.com",controller.getReferees().get("newMail@gmail.com").getUserMail());
-        //assertEquals(encryptPass,controller.getReferees().get("newMail@gmail.com").getPassword());
     }
     @Test
-    public void updateDetailsIncorrectName() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException {
+    public void updateDetailsIncorrectInput() throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException, IncorrectInputException, AlreadyExistException {
        thrown.expect(IncorrectInputException.class);
         /* init */
         Member member = controller.logIn("referee0@gmail.com","123");
 
         /*try to update details after login with incorrect values- result should be negative */
-        controller.updateDetails("12344" ,"referee@gmail.com", "training");
+        controller.updateDetails(null ,"referee@gmail.com", "training");
 
         assertNotNull(controller.getReferees().get("referee@gmail.com"));
         assertEquals(member.getName() , controller.getReferees().get("referee@gmail.com").getName());
@@ -184,7 +179,7 @@ public class RefereeTest {
     private void addRefereesToLeagueInSeason(int numOfReferees) throws DontHavePermissionException, IncorrectInputException, MemberAlreadyExistException, MemberNotExist, AlreadyExistException, PasswordDontMatchException, ObjectNotExist {
 
         controller.logIn("admin@gmail.com", "123");
-        for(int i=0 ; i<numOfReferees/2;i++)
+        for(int i=1 ; i<numOfReferees/2;i++)
             controller.addReferee("referee"+i+"@gmail.com", false);
         for(int i=numOfReferees/2 ; i<numOfReferees;i++)
             controller.addReferee("referee"+i+"@gmail.com", true);

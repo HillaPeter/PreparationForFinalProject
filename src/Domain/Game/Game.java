@@ -88,4 +88,8 @@ public class Game extends Observable {
         notifyObservers(message);
     }
 
+    public int getFollowersNumber(){
+        return countObservers();
+    }
+
 }

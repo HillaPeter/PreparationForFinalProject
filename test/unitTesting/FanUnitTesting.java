@@ -1,4 +1,6 @@
 package unitTesting;
+import DataBase.DB;
+import DataBase.DBController;
 import Domain.Asset.Field;
 import Domain.Asset.Player;
 import Domain.Game.*;
@@ -24,13 +26,15 @@ import static org.junit.Assert.assertThat;
 
 public class FanUnitTesting {
 
+    DBController dbController = new DBController();
+
     @Test
 
     public void testTeamNotifications() {
         ArrayList<Transaction> trans = new ArrayList<>();
         Field field = new Field("Blumfield");
         Team maccabi = new Team("Maccabi tel aviv", new Account(trans, 100), field);
-        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date());
+        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date(), dbController);
         fan.followTeam(maccabi);
         Field field2 = new Field("Teddy");
         maccabi.addField(field2);
@@ -51,7 +55,7 @@ public class FanUnitTesting {
         date.set(Calendar.MONTH, 7);
         date.set(Calendar.DAY_OF_MONTH, 26);
         Game derbi = new Game("derbi" , date ,maccabi, hapoel, field, null, null, null);
-        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date());
+        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date(), dbController);
         fan.followGame(derbi);
         derbi.addEvent(new Event(new Date(), "blabla", EventInGame.FOUL,60, null));
         assertEquals(fan.getUpdates().size(),1);

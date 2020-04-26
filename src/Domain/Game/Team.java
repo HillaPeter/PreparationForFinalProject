@@ -324,5 +324,9 @@ return newHash;
     public void addNewFollower (Fan newFollower){
         personalPage.addFollower(newFollower);
     }
+
+    public int getFollowersNumber(){
+        return personalPage.countObservers();
+    }
 }
 

@@ -106,9 +106,11 @@ public class LeagueInSeason {
     }
 
     public void addGames(Set<Game> games) {
-        for (Game game:games
-             ) {
+        for (Game game:games) {
             this.games.add(game);
+            for(Referee r: game.getReferees()){
+                r.addGame(game);
+            }
         }
     }
     public List< Referee> getMainReferee() {
