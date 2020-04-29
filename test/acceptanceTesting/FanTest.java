@@ -20,11 +20,13 @@ import org.junit.rules.ExpectedException;
 
 public class FanTest {
 
-    private SystemController controller = new SystemController("");
+    private SystemController controller;// = new SystemController("");
     Date birthdate=new Date(1993,10,12);
 
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException, MemberAlreadyExistException, NoEnoughMoney, ObjectNotExist {
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
         addFans(5);
         controller.signIn("referee","referee0@gmail.com","123" ,birthdate);
         controller.logIn("admin@gmail.com","123");
@@ -83,7 +85,7 @@ public class FanTest {
     @Test
     public void testGameFollowing() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
         Member member= controller.logIn("f0@gmail.com","123");
-        DBController dbController = new DBController();
+        DBController dbController =  DBController.getInstance();
         ArrayList<Transaction> transM = new ArrayList<>();
         ArrayList<Transaction> transH = new ArrayList<>();
         Field field = new Field("Blumfield");
@@ -103,7 +105,7 @@ public class FanTest {
     @Test
     public void testGameNotifications() throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
         Member member= controller.logIn("f0@gmail.com","123");
-        DBController dbController = new DBController();
+        DBController dbController = DBController.getInstance();
         ArrayList<Transaction> transM = new ArrayList<>();
         ArrayList<Transaction> transH = new ArrayList<>();
         Field field = new Field("Blumfield");

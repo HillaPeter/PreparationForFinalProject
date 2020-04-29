@@ -57,7 +57,7 @@ public class Owner extends Member {
         //set amount
         account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
-        HashMap<String, Role> roles = dbController.getRoles(this);
+        HashMap<String, Role> roles = dbController.getRoles();
         Role role = roles.get(mailId);
         Manager manager = null;
         if (role instanceof SystemManager) {
@@ -84,7 +84,7 @@ public class Owner extends Member {
             dbController.deleteRole(this, mailId);
             dbController.addManager(this, manager);
             team.addManager(manager);
-            HashMap<String, Team> teams = dbController.getTeams(this);
+            HashMap<String, Team> teams = dbController.getTeams();
             teams.replace(teamName, team);
         }
 
@@ -102,7 +102,7 @@ public class Owner extends Member {
         //set amount
         account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
-        HashMap<String, Role> roles = dbController.getRoles(this);
+        HashMap<String, Role> roles = dbController.getRoles();
         Role role = roles.get(mailId);
         Coach coach = null;
         if (role instanceof SystemManager) {
@@ -129,7 +129,7 @@ public class Owner extends Member {
             dbController.deleteRole(this, mailId);
             dbController.addCoach(this, coach);
             team.addCoach(coach);
-            HashMap<String, Team> teams = dbController.getTeams(this);
+            HashMap<String, Team> teams = dbController.getTeams();
             teams.replace(teamName, team);
         }
     }
@@ -146,7 +146,7 @@ public class Owner extends Member {
         //set amount
         account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
-        HashMap<String, Role> roles = dbController.getRoles(this);
+        HashMap<String, Role> roles = dbController.getRoles();
         Role role = roles.get(mailId);
         Player player=null;
         Date date = new Date(year, month, day);
@@ -175,7 +175,7 @@ public class Owner extends Member {
             dbController.deleteRole(this, mailId);
             dbController.addPlayer(this, player);
             team.addPlayer(player);
-            HashMap<String, Team> teams = dbController.getTeams(this);
+            HashMap<String, Team> teams = dbController.getTeams();
             teams.replace(teamName, team);
         }
 
@@ -207,9 +207,9 @@ public class Owner extends Member {
 
             team.addField(field);
             field.setTeam(team);
-            HashSet<Field> trainingFields = dbController.getTeams(this).get(teamName).getTrainingFields();
+            HashSet<Field> trainingFields = dbController.getTeams().get(teamName).getTrainingFields();
             trainingFields.add(field);
-            HashMap<String, Team> teams = dbController.getTeams(this);
+            HashMap<String, Team> teams = dbController.getTeams();
             teams.replace(teamName, team);
 
         }
@@ -241,7 +241,7 @@ public class Owner extends Member {
                 HashSet<Manager> managersAll= team.getManagers();
                 managersAll.remove(manager);
 
-                HashMap<String, Team> teams = dbController.getTeams(this);
+                HashMap<String, Team> teams = dbController.getTeams();
                 teams.replace(teamName, team);
 
                 dbController.addFan(this, fan);
@@ -258,7 +258,7 @@ public class Owner extends Member {
      */
     public void removeCoach(String teamName, String mailInput) throws MemberNotExist, AlreadyExistException, DontHavePermissionException {
         //gets the team
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         //gets the list of managers
         HashSet<Coach> coaches = team.getCoaches();
         for (Coach coach : coaches) {
@@ -268,7 +268,7 @@ public class Owner extends Member {
                 team.removeCoach(coach);
                 dbController.deleteRole(this, mailInput);
                 dbController.addFan(this, fan);
-                HashMap<String, Team> teams = dbController.getTeams(this);
+                HashMap<String, Team> teams = dbController.getTeams();
                 teams.replace(teamName, team);
                 break;
             }
@@ -283,7 +283,7 @@ public class Owner extends Member {
      */
     public void removePlayer(String teamName, String mailInput) throws MemberNotExist, AlreadyExistException, DontHavePermissionException {
         //gets the team
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         //gets the list of managers
         HashSet<Player> players = team.getPlayers();
         for (Player player : players) {
@@ -291,10 +291,10 @@ public class Owner extends Member {
             if (player.getUserMail().equals(mailInput)) {
                 Fan fan = new Fan(player.getName(), player.getUserMail(), player.getPassword(), player.getBirthDate(), dbController);
                 team.removePlayer(player);
-                dbController.getPlayers(this).remove(player);
+                dbController.getPlayers().remove(player);
                 dbController.deleteRole(this, mailInput);
                 dbController.addFan(this, fan);
-                HashMap<String, Team> teams = dbController.getTeams(this);
+                HashMap<String, Team> teams = dbController.getTeams();
                 teams.replace(teamName, team);
                 break;
             }
@@ -309,8 +309,8 @@ public class Owner extends Member {
      */
     public void removeField(String teamName, String fieldName) throws DontHavePermissionException {
 
-       Team team = dbController.getTeams(this).get(teamName);
-       HashSet<Field> allFields=dbController.getTeams(this).get(teamName).getTrainingFields();
+       Team team = dbController.getTeams().get(teamName);
+       HashSet<Field> allFields=dbController.getTeams().get(teamName).getTrainingFields();
         for(Field field:allFields){
             if(field.getName().equals(fieldName)){
                 allFields.remove(field);
@@ -318,7 +318,7 @@ public class Owner extends Member {
                     team.setHomeField(null);
                 }
                 team.setTrainingFields(allFields);
-                HashMap<String, Team> teams = dbController.getTeams(this);
+                HashMap<String, Team> teams = dbController.getTeams();
                 teams.replace(teamName, team);
                 allFields.remove(field);
                 teams.replace(teamName, team);
@@ -343,7 +343,7 @@ public class Owner extends Member {
         //set amount
         account.setAmountOfTeam(account.getAmountOfTeam() - 50);
 
-        HashMap<String, Role> roles = dbController.getRoles(this);
+        HashMap<String, Role> roles = dbController.getRoles();
         Role role = roles.get(mailId);
         Owner owner=null;
         if (role instanceof SystemManager) {
@@ -373,7 +373,7 @@ public class Owner extends Member {
             dbController.deleteRole(this, mailId);
             dbController.addOwner(this, owner);
             team.addOwner(owner);
-            HashMap<String, Team> teams = dbController.getTeams(this);
+            HashMap<String, Team> teams = dbController.getTeams();
             teams.replace(teamName, team);
         }
 
@@ -385,10 +385,10 @@ public class Owner extends Member {
      * @param teamName
      */
     public void temporaryTeamClosing(String teamName) throws DontHavePermissionException {
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         team.setStatus(false);
         //update team
-        HashMap<String, Team> teams = dbController.getTeams(this);
+        HashMap<String, Team> teams = dbController.getTeams();
         teams.replace(teamName, team);
     }
 
@@ -399,10 +399,10 @@ public class Owner extends Member {
      */
     public void reopenClosedTeam(String teamName) throws DontHavePermissionException {
 
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         team.setStatus(true);
 
-        HashMap<String, Team> teams = dbController.getTeams(this);
+        HashMap<String, Team> teams = dbController.getTeams();
         teams.replace(teamName, team);
     }
 
@@ -414,10 +414,10 @@ public class Owner extends Member {
      * @param amount
      */
     public void addOutCome(String teamName, String description, double amount) throws NoEnoughMoney, DontHavePermissionException {
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         team.addTransaction(description, amount);
         team.getAccount().setAmountOfTeam(team.getAccount().getAmountOfTeam() - amount);
-        dbController.getTeams(this).replace(teamName, team);
+        dbController.getTeams().replace(teamName, team);
     }
 
     /**
@@ -428,10 +428,10 @@ public class Owner extends Member {
      * @param amount
      */
     public void addInCome(String teamName, String description, double amount) throws DontHavePermissionException {
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         team.addTransaction(description, amount);
         team.getAccount().setAmountOfTeam(team.getAccount().getAmountOfTeam() + amount);
-        dbController.getTeams(this).replace(teamName, team);
+        dbController.getTeams().replace(teamName, team);
     }
 
 
@@ -443,14 +443,14 @@ public class Owner extends Member {
      * @throws DontHavePermissionException
      */
     public void updatePlayerRole(String teamName, String mailId,String role) throws DontHavePermissionException {
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         HashSet<Player> players = team.getPlayers();
         for (Player player : players) {
             //found the manager to remove
             if (player.getUserMail().equals(mailId)) {
                 player.setRole(role);
 
-                HashMap<String, Team> teams = dbController.getTeams(this);
+                HashMap<String, Team> teams = dbController.getTeams();
                 teams.replace(teamName, team);
                 break;
             }
@@ -465,7 +465,7 @@ public class Owner extends Member {
      * @throws DontHavePermissionException
      */
     public void updateHomeField(String teamName,String makeHomeField) throws DontHavePermissionException {
-        Team team = dbController.getTeams(this).get(teamName);
+        Team team = dbController.getTeams().get(teamName);
         HashSet<Field> fields=team.getTrainingFields();
 
         Field field=new Field(makeHomeField);
@@ -476,7 +476,7 @@ public class Owner extends Member {
         }
         team.setTrainingFields(fields);
 
-        HashMap<String, Team> teams = dbController.getTeams(this);
+        HashMap<String, Team> teams = dbController.getTeams();
         teams.replace(teamName, team);
     }
 
@@ -494,7 +494,7 @@ public class Owner extends Member {
     }
 
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
-        return dbController.getRoles(this);
+        return dbController.getRoles();
     }
 
     public double getAccountBalance(String teamName) throws ObjectNotExist {

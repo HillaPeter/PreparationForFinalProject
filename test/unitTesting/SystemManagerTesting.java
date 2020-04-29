@@ -19,18 +19,19 @@ import static org.junit.Assert.*;
 
 
 public class SystemManagerTesting {
-    SystemController controller = new SystemController("");
     Date birthdate = new Date(1993, 10, 12);
+ SystemController controller;
 
-    public SystemManagerTesting(){
-
+    public SystemManagerTesting() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
     }
 
 
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException{
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
         controller.signIn("owner", "owner@gmail.com", "1", birthdate);
-        controller.signIn("systemManager","systemManager@gmail.com" ,"1" , birthdate );
+        controller.signIn("systemManager", "systemManager@gmail.com", "1", birthdate);
         controller.signIn("referee", "referee@gmail.com", "123", birthdate);
     }
 

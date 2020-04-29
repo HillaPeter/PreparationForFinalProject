@@ -4,6 +4,7 @@ import DataBase.DBController;
 import Domain.Users.Fan;
 import Domain.Users.Guest;
 import Domain.Users.Member;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import Exception.*;
@@ -17,8 +18,13 @@ import static org.junit.Assert.*;
 public class GuestTesting {
     Date birthdate=new Date(1993,10,12);
     // SystemController controller = new SystemController("test controller");
-    DBController dbController = new DBController();
+    DBController dbController = DBController.getInstance();
     Guest guest = new Guest(dbController,birthdate);
+
+    @Before
+    public void init() {
+        dbController.deleteAll();
+    }
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
 

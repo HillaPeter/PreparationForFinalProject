@@ -3,6 +3,7 @@ package acceptanceTesting;
 import Domain.Users.Fan;
 import Domain.Users.Member;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import Exception.*;
@@ -16,10 +17,16 @@ import static org.junit.Assert.*;
 
 public class GuestTest {
     Date birthdate=new Date(1993,10,12);
-    SystemController controller = new SystemController("test controller");
+    SystemController controller ;//= new SystemController("test controller");
     @Rule
     public final ExpectedException thrown= ExpectedException.none();
 
+    @Before
+    public void init()
+    {
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
+    }
     @Test
     public void signIn() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
         controller.logIn("admin@gmail.com", "123");
