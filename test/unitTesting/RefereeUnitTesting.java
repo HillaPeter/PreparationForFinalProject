@@ -7,6 +7,7 @@ import Domain.Game.Game;
 import Domain.Game.Team;
 import Domain.Game.Transaction;
 import Domain.Users.MainReferee;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -17,8 +18,13 @@ import static org.junit.Assert.assertEquals;
 
 public class RefereeUnitTesting {
 
-    DBController dbController = new DBController();
+    DBController dbController = DBController.getInstance();
 
+    @Before
+    public  void init()
+    {
+        dbController.deleteAll();
+    }
     //test for add games and get schedule
 
     @Test

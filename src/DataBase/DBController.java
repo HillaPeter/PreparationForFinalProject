@@ -22,143 +22,83 @@ public class DBController implements DAO{
 
     private DB db;
 
-    public DBController() {
+    private static final DBController instance = new DBController();
+
+    public static DBController getInstance(){
+        return instance;
+    }
+
+    private DBController() {
         this.db = new DB();
     }
     /***************************************Guest function******************************************/
 
 
     /***************************************Getters******************************************/
-    public HashMap<String, Role> getRoles(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
-            return db.getRoles();
-        else {
-            throw new DontHavePermissionException();
-        }
-    }
+    public HashMap<String, Role> getRoles()  {
+            return db.getRoles(); }
 
-    public HashMap<String, Team> getTeams(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
+    public HashMap<String, Team> getTeams()  {
             return db.getTeams();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, League> getLeagues(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+    public HashMap<String, League> getLeagues()  {
             return db.getLeagues();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
     public HashMap<String, Referee> getReferees() {
-      // if (role instanceof AssociationDelegate || role instanceof SystemManager)
             return db.getReferees();
-        //else {
-        //    throw new DontHavePermissionException();
-        //}
     }
 
-    public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner ||role instanceof Fan)
+    public HashMap<String, Fan> getFans()   {
             return db.getFans();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, Player> getPlayers(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
+    public HashMap<String, Player> getPlayers()   {
             return db.getPlayers();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, Owner> getOwners(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
+    public HashMap<String, Owner> getOwners()   {
             return db.getOwners();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, Manager> getManagers(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
+    public HashMap<String, Manager> getManagers()   {
             return db.getManagers();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, Coach> getCoaches(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
+    public HashMap<String, Coach> getCoaches()  {
             return db.getCoaches();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, Member> getMembers(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner)
+    public HashMap<String, Member> getMembers()  {
             return db.getMembers();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager) {
+    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies()   {
             return db.getSchedulingPolicies();
-        } else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, Season> getSeasons(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+    public HashMap<String, Season> getSeasons()   {
             return db.getSeasons();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, SystemManager> getSystemManagers(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager)
+    public HashMap<String, SystemManager> getSystemManagers()   {
             return db.getSystemManagers();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public SystemManager getSystemManagers(Role role , String id) throws DontHavePermissionException {
-        if (role instanceof SystemManager)
+    public SystemManager getSystemManagers(String id)   {
             return db.getSystemManagers(id);
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public HashMap<String, AssociationDelegate> getAssociationDelegate(Role role) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+    public HashMap<String, AssociationDelegate> getAssociationDelegate()   {
             return db.getAssociationDelegate();
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public AssociationDelegate getAssociationDelegate(Role role , String id) throws DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager)
+    public AssociationDelegate getAssociationDelegate( String id)   {
             return db.getAssociationDelegate(id);
-        else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public Role getMember(Role role, String id) throws MemberNotExist, DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner || role instanceof Guest) {
+    public Role getMember( String id) throws MemberNotExist {
             if (db.existMember(id)) {
                 return db.getMember(id);
             } else if (db.existSystemManager(id)) {
@@ -166,65 +106,47 @@ public class DBController implements DAO{
             } else {
                 throw new MemberNotExist();
             }
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public Team getTeam(Role role, String teamName) throws DontHavePermissionException, ObjectNotExist {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner || role instanceof Fan) {
+    public Team getTeam(String teamName) throws ObjectNotExist {
             if (db.existTeam(teamName)) {
                 return db.getTeam(teamName);
             } else {
                 throw new ObjectNotExist("the team id is not exist");
             }
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public League getLeague(Role role, String leagueId) throws ObjectNotExist, DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager) {
+    public League getLeague(String leagueId) throws ObjectNotExist {
             if (db.existLeague(leagueId)) {
                 return db.getLeague(leagueId);
             } else {
                 throw new ObjectNotExist("the league id is not exist");
             }
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public Season getSeason(Role role, String seasonId) throws ObjectNotExist, DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager) {
+    public Season getSeason(String seasonId) throws ObjectNotExist {
             if (db.existSeason(seasonId)) {
                 return db.getSeason(seasonId);
             } else {
                 throw new ObjectNotExist("the league id is not exist");
             }
 
-        } else {
-            throw new DontHavePermissionException();
         }
+
+    public Fan getFan(String id) throws MemberNotExist {
+        return db.getFan(id);
     }
 
-
-    public Referee getReferee(Role role, String s) throws ObjectNotExist, DontHavePermissionException {
-//        if (role instanceof AssociationDelegate || role instanceof SystemManager) {
+    public Referee getReferee(String s) throws MemberNotExist {
             if (db.existRefree(s)) {
                 return db.getReferee(s);
             }
             else {
-                throw new ObjectNotExist("the referee is not exist");
+                throw new MemberNotExist();
             }
-
-//        } else {
-//            throw new DontHavePermissionException();
-//        }
     }
 
-    public LinkedList<Member> getMembers(Role role, LinkedList<String> idMember) throws MemberNotExist, DontHavePermissionException {
-        if (role instanceof AssociationDelegate || role instanceof SystemManager || role instanceof Owner) {
+    public LinkedList<Member> getMembers(LinkedList<String> idMember) throws MemberNotExist {
             LinkedList<Member> list = new LinkedList<>();
             for (int i = 0; i < idMember.size(); i++) {
                 if (!db.existMember(idMember.get(i))) {
@@ -234,21 +156,13 @@ public class DBController implements DAO{
                 list.add(member);
             }
             return list;
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner) {
+    public HashMap<String, Role> getOwnersAndFans() {
             return db.getOwnersAndFans();
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public Owner getOwner(Role role, String idOwner) throws ObjectNotExist, DontHavePermissionException, MemberNotExist {
-        if (role instanceof SystemManager || role instanceof Owner) {
+    public Owner getOwner(String idOwner) throws MemberNotExist {
             if (db.existOwner(idOwner)) {
                 Owner owner = db.getOwnerOrFan(idOwner);
                 owner.setDb(this);
@@ -256,9 +170,10 @@ public class DBController implements DAO{
             } else {
                 throw new MemberNotExist();
             }
-        } else {
-            throw new DontHavePermissionException();
         }
+
+    public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
+        return db.getLeague(league).getLeagueInSeason(db.getSeason(season)).getGames();
     }
 
     /***************************************delete function function******************************************/
@@ -378,6 +293,10 @@ public class DBController implements DAO{
         } else {
             throw new DontHavePermissionException();
         }
+    }
+
+    public void deleteAll() {
+        db.deleteAll();
     }
 
     /***************************************add function******************************************/
@@ -500,7 +419,6 @@ public class DBController implements DAO{
         }
     }
 
-
     public void addSchedulingPolicies(Role role, ASchedulingPolicy policy) throws DontHavePermissionException {
         if (role instanceof AssociationDelegate || role instanceof Owner || role instanceof SystemManager) {
             db.addSchedulingPolicies(policy);
@@ -508,83 +426,42 @@ public class DBController implements DAO{
             throw new DontHavePermissionException();
         }
     }
-    /***************************************remove function******************************************/
 
     /********************************************exist function***********************************/
-    public boolean existReferee(Role role, String refereeId) throws DontHavePermissionException {
-        if (role instanceof SystemManager) {
+    public boolean existReferee( String refereeId) {
             return db.existRefree(refereeId);
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public boolean existFan(Role role, String fanId) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner || role instanceof AssociationDelegate) {
+    public boolean existFan(String fanId) {
             return db.existFan(fanId);
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public boolean existTeam(Role role, String teamName) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner) {
-
+    public boolean existTeam( String teamName) {
             return db.existTeam(teamName);
-        } else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public boolean existMember(Role role, String id) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner || role instanceof AssociationDelegate) {
-
+    public boolean existMember(String id)  {
             return db.existMember(id);
-        } else {
-            throw new DontHavePermissionException();
-        }
     }
 
-    public boolean existAssociationDelegate(Role role, String id) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof AssociationDelegate) {
+    public boolean existAssociationDelegate(String id)  {
 
             return db.existAssociationDelegate(id);
-        } else {
-            throw new DontHavePermissionException();
         }
-    }
 
-    public boolean existSystemManager(Role role, String id) throws DontHavePermissionException {
-        // if (role instanceof SystemManager ) {
-
+    public boolean existSystemManager( String id)  {
         return db.existSystemManager(id);
-        // }
-        // else {
-        //      throw new DontHavePermissionException();
-        // }
     }
 
-    public boolean existOwner(Role role, String ownerId) throws DontHavePermissionException {
-        if (role instanceof SystemManager || role instanceof Owner) {
+    public boolean existOwner( String ownerId)  {
 
             return db.existOwner(ownerId);
-        } else {
-            throw new DontHavePermissionException();
         }
+
+    public boolean existSeason(String id) {
+        return db.existSeason(id);
     }
 
-//    public void addGames(Role role,Set<Game> games) throws DontHavePermissionException {
-//        if (role instanceof SystemManager) {
-//            db.addGames(games);
-//        }
-//        else {
-//            throw new DontHavePermissionException();
-//        }
-//    }
 
-
-    public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
-        return db.getLeague(league).getLeagueInSeason(db.getSeason(season)).getGames();
-    }
 
 }

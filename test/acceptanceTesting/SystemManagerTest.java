@@ -19,7 +19,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 
 public class SystemManagerTest {
-    SystemController controller = new SystemController("");
+    SystemController controller;// = new SystemController("");
     Date birthdate = new Date(1993, 10, 12);
 
     public SystemManagerTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
@@ -28,6 +28,8 @@ public class SystemManagerTest {
 
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
         controller.signIn("owner", "owner@gmail.com", "1", birthdate);
     }
 

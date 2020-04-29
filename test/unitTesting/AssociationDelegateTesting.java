@@ -16,11 +16,13 @@ import static org.junit.Assert.assertThat;
 
 public class AssociationDelegateTesting {
 
-    SystemController controller = new SystemController("controller Test");
+    SystemController controller ;//= new SystemController("controller Test");
     Date birthDate = new Date(1995, 3, 6);
 
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
         controller.signIn("dani","associationDelegate@gmail.com","abc", birthDate);
         controller.logIn("admin@gmail.com","123");
         controller.addAssociationDelegate("associationDelegate@gmail.com");
