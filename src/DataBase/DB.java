@@ -4,12 +4,13 @@ import Domain.Asset.Coach;
 import Domain.Asset.Manager;
 import Domain.Asset.Player;
 import Domain.Users.*;
-import Exception.ObjectNotExist;
+import Exception.MemberNotExist;
 import Domain.Game.Team;
 import Domain.League.ASchedulingPolicy;
 import Domain.League.League;
 import Domain.League.Season;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class DB {
@@ -33,20 +34,6 @@ public class DB {
         schedulingPolicies = new HashMap<>();
     }
 
-    /********************************Association Delegate Functions********************************/
-    public void removeLeague(String leagueName) {
-        leagues.remove(leagueName);
-    }
-    public void addLeague(League league) {
-        leagues.put(league.getName(), league);
-    }
-    public void removeSeason(String year) {
-        seasons.remove(year);
-    }
-    public void addSeason(Season season) {
-        seasons.put(season.getYear(), season);
-        System.out.println("Daniel - if the league is exists??? " + leagues.size());
-    }
     /***************************************Getters******************************************/
 
     public HashMap<String, League> getLeagues() { return leagues; }
@@ -62,7 +49,6 @@ public class DB {
     public Season getSeason(String seasonId) {
         return seasons.get(seasonId);
     }
-
 
     public Team getTeam(String teamName) { return teams.get(teamName); }
 
@@ -176,7 +162,7 @@ public class DB {
         return toReturn;
     }
 
-    public Owner getOwnerOrFan(String idOwner) throws ObjectNotExist {
+    public Owner getOwnerOrFan(String idOwner) throws MemberNotExist {
         Role role=roles.get(idOwner);
         if(role instanceof Owner)
         {
@@ -188,11 +174,62 @@ public class DB {
             return owner;
         }
         else {
-            throw new ObjectNotExist("object not exist");
+            throw new MemberNotExist();
         }
     }
 
+    public Member getMember(String id){
+        if(roles.containsKey(id))
+            return (Member)this.roles.get(id);
+        return (Member)this.systemManagers.get(id);
+    }
+
+    public HashMap<String,Season> getSeasons() {
+        return seasons;
+    }
+
+    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies(){
+        return schedulingPolicies;
+    }
+
+    public HashMap<String, AssociationDelegate> getAssociationDelegate() {
+        HashMap<String , AssociationDelegate> associationDelegateHashMap=new HashMap<>();
+        for (String str: roles.keySet()
+        ) {
+            if(roles.get(str) instanceof  AssociationDelegate)
+            {
+                associationDelegateHashMap.put(str , (AssociationDelegate)roles.get(str));
+            }
+        }
+        return associationDelegateHashMap;
+    }
+
+    public AssociationDelegate getAssociationDelegate(String id) {
+        return (AssociationDelegate)roles.get(id);
+    }
+
+    public HashMap<String, SystemManager> getSystemManagers() {
+        HashMap<String , SystemManager> systemManagerHashMap=new HashMap<>();
+        return systemManagers;
+        /*
+        for (String str: roles.keySet()
+        ) {
+            if(roles.get(str) instanceof  SystemManager)
+            {
+                systemManagerHashMap.put(str , (SystemManager) roles.get(str));
+            }
+        }
+        return systemManagerHashMap;
+    */}
+
+    public SystemManager getSystemManagers(String id) {
+        return systemManagers.get(id);
+    }
+
     /***************************************delete function******************************************/
+    public void removeLeague(String leagueName) {
+        leagues.remove(leagueName);
+    }
 
     public void removeRole(String id) { roles.remove(id); }
 
@@ -201,7 +238,32 @@ public class DB {
     public void removeAssociationDelegate(String id) {
         roles.remove(id);
     }
+
+    public void removeSeason(String year) {
+        seasons.remove(year);
+    }
+
+    public void removeSystemManager(String id) {
+        systemManagers.remove(id);
+    }
+
+    public void deleteAll() {
+        leagues.clear();
+        seasons.clear();
+        SystemManager systemManager=getSystemManager("admin@gmail.com");
+        systemManagers.clear();
+        systemManagers.put("admin@gmail.com" ,systemManager);// new SystemManager("admin ",  "admin@gmail.com" ,"123" , DBController.getInstance() , new Date(1995,1,1)));
+        roles.clear();
+        teams.clear();
+        schedulingPolicies.clear();
+    }
+
+
     /***************************************add function******************************************/
+
+    public void addLeague(League league) {
+        leagues.put(league.getName(), league);
+    }
 
     /***
      * this function add player to the roles list
@@ -238,6 +300,10 @@ public class DB {
         teams.put(team.getName(), team);
     }
 
+    public void addSchedulingPolicies(ASchedulingPolicy policy) {
+        schedulingPolicies.put(policy.getNameOfPolicy(), policy);
+    }
+
     /**
      * this function add system manager to the system manager list
      *
@@ -245,6 +311,10 @@ public class DB {
      */
     public void addSystemManager(SystemManager systemManager) { systemManagers.put(systemManager.getUserMail(), systemManager); }
 
+    public void addSeason(Season season) {
+        seasons.put(season.getYear(), season);
+        System.out.println("Daniel - if the league is exists??? " + leagues.size());
+    }
 
     /**
      * this function add AssociationDelegate to roles list
@@ -256,6 +326,10 @@ public class DB {
         }
     }
 
+    public void addFan(Fan fan) {
+        roles.put(fan.getUserMail(), fan);
+    }
+
     public void addReferee(Referee referee) {
         roles.put(referee.getUserMail(),referee);
     }
@@ -263,13 +337,14 @@ public class DB {
     public boolean existSeason(String year){
         return this.seasons.containsKey(year);
     }
+
     public boolean existLeague(String name){
         return this.leagues.containsKey(name);
     }
+
     public boolean existTeam(String name){
         return this.teams.containsKey(name);
     }
-    /***************************************Guest function******************************************/
 
     /**
      * this function check if this member exist
@@ -279,22 +354,7 @@ public class DB {
     public boolean existMember(String id) {
         return (this.roles.containsKey(id) || this.systemManagers.containsKey(id));
     }
-    /**
-     * this function add fan to the roles list
-     *
-     * @param fan
-     */
-    public void addFan(Fan fan) {
-        roles.put(fan.getUserMail(), fan);
-    }
 
-    public Member getMember(String id){
-        if(roles.containsKey(id))
-            return (Member)this.roles.get(id);
-        return (Member)this.systemManagers.get(id);
-    }
-
-    /***************************************Exist function*****************************/
     public boolean existRefree(String refreeId) {
         if(roles.containsKey(refreeId)==true && roles.get(refreeId) instanceof Referee)
         {
@@ -312,17 +372,6 @@ public class DB {
     }
 
 
-    public HashMap<String,Season> getSeasons() {
-        return seasons;
-    }
-
-    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies(){
-        return schedulingPolicies;
-    }
-
-    public void addSchedulingPolicies(ASchedulingPolicy policy) {
-        schedulingPolicies.put(policy.getNameOfPolicy(), policy);
-    }
 
     public boolean existSystemManager(String id) {
         if(this.systemManagers.containsKey(id))
@@ -330,39 +379,6 @@ public class DB {
         return false;
     }
 
-    public HashMap<String, AssociationDelegate> getAssociationDelegate() {
-        HashMap<String , AssociationDelegate> associationDelegateHashMap=new HashMap<>();
-        for (String str: roles.keySet()
-             ) {
-            if(roles.get(str) instanceof  AssociationDelegate)
-            {
-                associationDelegateHashMap.put(str , (AssociationDelegate)roles.get(str));
-            }
-        }
-        return associationDelegateHashMap;
-    }
-
-    public AssociationDelegate getAssociationDelegate(String id) {
-        return (AssociationDelegate)roles.get(id);
-    }
-
-    public HashMap<String, SystemManager> getSystemManagers() {
-        HashMap<String , SystemManager> systemManagerHashMap=new HashMap<>();
-        return systemManagers;
-        /*
-        for (String str: roles.keySet()
-        ) {
-            if(roles.get(str) instanceof  SystemManager)
-            {
-                systemManagerHashMap.put(str , (SystemManager) roles.get(str));
-            }
-        }
-        return systemManagerHashMap;
-    */}
-
-    public SystemManager getSystemManagers(String id) {
-       return systemManagers.get(id);
-    }
 
     public boolean existOwner(String ownerId) {
         if( roles.containsKey(ownerId) && roles.get(ownerId) instanceof Owner)
@@ -378,9 +394,7 @@ public class DB {
         return false;
     }
 
-    public void removeSystemManager(String id) {
-        systemManagers.remove(id);
-    }
+
 
 
 //    public void addGames(Set<Game> game) {

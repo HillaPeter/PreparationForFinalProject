@@ -39,7 +39,7 @@ public class Guest extends Role{
      */
     public Member logIn(String userMail, String userPassword) throws MemberNotExist, PasswordDontMatchException, DontHavePermissionException {
         Member existingMember;
-        existingMember = (Member) dbController.getMember(this , userMail);
+        existingMember = (Member) dbController.getMember( userMail);
         checkValidationPassword(existingMember, userPassword);
         return existingMember;
     }

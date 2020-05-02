@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class RefereeTest {
     Date birthdate=new Date(1993,10,12);
-    private SystemController controller = new SystemController("");
+    private SystemController controller;// = new SystemController("");
     private SecurityMachine securityMachine = new SecurityMachine();
     public RefereeTest() throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IncorrectInputException {
     }
@@ -25,6 +25,8 @@ public class RefereeTest {
     /***********************************************************************************************/
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException, MemberAlreadyExistException {
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
         controller.signIn("referee","referee0@gmail.com","123" ,birthdate);
         controller.logIn("admin@gmail.com","123");
         controller.addReferee("referee0@gmail.com",false);

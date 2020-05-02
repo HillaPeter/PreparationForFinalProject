@@ -20,7 +20,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 
 public class OwnerTest {
-    SystemController controller = new SystemController("");
+    SystemController controller;// = new SystemController("");
 
     Date birthdate=new Date(1993,10,12);
     LinkedList<String> idPlayers = new LinkedList<>();
@@ -31,6 +31,8 @@ public class OwnerTest {
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
 
+        controller = new SystemController("");
+        controller.deleteDBcontroller();
         /*add Team*/
         controller.signIn("palyer0","p0@gmail.com","1",birthdate);
         controller.signIn("palyer1","p1@gmail.com","1",birthdate);
@@ -46,6 +48,7 @@ public class OwnerTest {
         controller.signIn("coach","coach@gmail.com","1",birthdate);
         controller.signIn("manager","manager@gmail.com","1",birthdate);
         controller.signIn("owner","owner@gmail.com","1",birthdate);
+        controller.signIn("owner2","owner2@gmail.com","1",birthdate);
 
         idPlayers.add("p0@gmail.com");
         idPlayers.add("p1@gmail.com");
@@ -581,7 +584,7 @@ public class OwnerTest {
         controller.logOut();
 
         /* try to add new manager - without login result should be negative */
-        controller.addManager("team" , "newManager@gmail.com");
+        controller.addManager("team" , "manager@gmail.com");
     }
     @Test
     public void addNewManagerNotExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -649,7 +652,7 @@ public class OwnerTest {
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
-        controller.signIn("owner2","owner2@gmail.com","1",birthdate);
+       // controller.signIn("owner2","owner2@gmail.com","1",birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",1000);
 
@@ -683,7 +686,7 @@ public class OwnerTest {
         controller.logIn("owner@gmail.com","1");
 
         /* try to add new owner who not exist in the system - result should be negative */
-        controller.addNewOwner("team" , "owner2@gmail.com");
+        controller.addNewOwner("team" , "owner3@gmail.com");
     }
     @Test
     public void addNewOwnerTeamAlreadyExist() throws DontHavePermissionException, ObjectNotExist, MemberNotExist, NoEnoughMoney, AlreadyExistException, PasswordDontMatchException, IncorrectInputException, ObjectAlreadyExist {
@@ -709,7 +712,7 @@ public class OwnerTest {
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
-        controller.signIn("owner2","owner2@gmail.com","1",birthdate);
+      //  controller.signIn("owner2","owner2@gmail.com","1",birthdate);
         controller.logIn("owner@gmail.com","1");
 
         /* try to add new owner - invalid team name result should be negative */
@@ -722,7 +725,7 @@ public class OwnerTest {
         controller.logIn("admin@gmail.com","123");
         controller.addTeam("team","owner@gmail.com");
         controller.logOut();
-        controller.signIn("owner","owner2@gmail.com","123", birthdate);
+       // controller.signIn("owner","owner2@gmail.com","123", birthdate);
         controller.logIn("owner@gmail.com","1");
         controller.setMoneyToAccount("team",40);
 

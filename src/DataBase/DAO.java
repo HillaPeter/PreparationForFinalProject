@@ -16,124 +16,117 @@ import Exception.ObjectNotExist;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public interface DAO {
 
     /***************************************Getters******************************************/
 
-    public HashMap<String, Role> getRoles(Role role) throws DontHavePermissionException;
+    HashMap<String, Role> getRoles();
 
-    public HashMap<String, Team> getTeams(Role role) throws DontHavePermissionException;
+    HashMap<String, Member> getMembers();
 
-    public HashMap<String, League> getLeagues(Role role) throws DontHavePermissionException;
+    HashMap<String, Fan> getFans();
 
-    public HashMap<String, Referee> getReferees();
+    HashMap<String, Referee> getReferees();
 
-    public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException;
+    HashMap<String, Owner> getOwners();
 
-    public HashMap<String, Player> getPlayers(Role role) throws DontHavePermissionException;
+    HashMap<String, Player> getPlayers();
 
-    public HashMap<String, Owner> getOwners(Role role) throws DontHavePermissionException;
+    HashMap<String, Manager> getManagers();
 
-    public HashMap<String, Manager> getManagers(Role role) throws DontHavePermissionException;
+    HashMap<String, Coach> getCoaches();
 
-    public HashMap<String, Coach> getCoaches(Role role) throws DontHavePermissionException;
+    HashMap<String, SystemManager> getSystemManagers();
 
-    public HashMap<String, Member> getMembers(Role role) throws DontHavePermissionException;
+    HashMap<String, AssociationDelegate> getAssociationDelegate();
 
-    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies(Role role) throws DontHavePermissionException;
+    HashMap<String, Team> getTeams();
 
-    public HashMap<String, Season> getSeasons(Role role) throws DontHavePermissionException;
+    HashMap<String, League> getLeagues();
 
-    public HashMap<String, SystemManager> getSystemManagers(Role role) throws DontHavePermissionException;
+    HashMap<String, Season> getSeasons();
 
-    public SystemManager getSystemManagers(Role role, String id) throws DontHavePermissionException;
+    HashMap<String, ASchedulingPolicy> getSchedulingPolicies();
 
-    public HashMap<String, AssociationDelegate> getAssociationDelegate(Role role) throws DontHavePermissionException;
+    HashSet<Game> getGames(String league, String season) throws ObjectNotExist;
 
-    public AssociationDelegate getAssociationDelegate(Role role, String id) throws DontHavePermissionException;
+    SystemManager getSystemManagers(String id)throws MemberNotExist;
 
-    public Role getMember(Role role, String id) throws MemberNotExist, DontHavePermissionException;
+    AssociationDelegate getAssociationDelegate(String id)throws MemberNotExist;
 
-    public Team getTeam(Role role, String teamName) throws DontHavePermissionException, ObjectNotExist;
+    Role getMember(String id) throws MemberNotExist;
 
-    public League getLeague(Role role, String leagueId) throws ObjectNotExist, DontHavePermissionException;
+    Team getTeam(String id) throws ObjectNotExist;
 
-    public Season getSeason(Role role, String seasonId) throws ObjectNotExist, DontHavePermissionException;
+    League getLeague(String id) throws ObjectNotExist;
 
-    public HashSet<Game> getGames(String league, String season) throws ObjectNotExist;
+    Season getSeason(String id) throws ObjectNotExist;
 
-    public Referee getReferee(Role role, String s) throws ObjectNotExist, DontHavePermissionException;
+    Fan getFan(String id)throws MemberNotExist;
 
-    public LinkedList<Member> getMembers(Role role, LinkedList<String> idMember) throws MemberNotExist, DontHavePermissionException;
-
-    public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException;
-
-    public Owner getOwner(Role role, String idOwner) throws ObjectNotExist, DontHavePermissionException, MemberNotExist;
+    Referee getReferee(String id) throws MemberNotExist;
 
     /***************************************delete function************************************************/
 
-    public void deleteRole(Role role, String id) throws MemberNotExist, DontHavePermissionException;
+    void deleteRole(Role role, String id) throws MemberNotExist, DontHavePermissionException;
 
-    public void deleteReferee(Role role, String id) throws DontHavePermissionException, MemberNotExist;
+    void deleteReferee(Role role, String id) throws DontHavePermissionException, MemberNotExist;
 
-    public void deleteFan(Role role, String id) throws MemberNotExist, DontHavePermissionException;
+    void deleteFan(Role role, String id) throws MemberNotExist, DontHavePermissionException;
 
-    public void deleteMember(Role role, String id) throws MemberNotExist, DontHavePermissionException;
+    void deleteMember(Role role, String id) throws MemberNotExist, DontHavePermissionException;
 
-    public void removeLeague(Role role, String leagueName) throws ObjectNotExist, DontHavePermissionException;
+    void removeTeam(Role role, String id) throws ObjectNotExist, DontHavePermissionException;
 
-    public void removeSeason(Role role, String year) throws ObjectNotExist, DontHavePermissionException;
+    void deleteOwner(Role role, String id) throws DontHavePermissionException, MemberNotExist;
 
-    public void removeTeam(Role role, String name) throws ObjectNotExist, DontHavePermissionException;
+    void deleteAssociationDelegate(Role role, String id) throws MemberNotExist, DontHavePermissionException;
 
-    public void deleteOwner(Role role, String ownerId) throws DontHavePermissionException, MemberNotExist;
-
-    public void deleteAssociationDelegate(Role role, String id) throws MemberNotExist, DontHavePermissionException;
-
-    public void deleteSystemManager(Role role, String id) throws MemberNotExist, DontHavePermissionException;
+    void deleteSystemManager(Role role, String id) throws MemberNotExist, DontHavePermissionException;
 
     /***************************************add function******************************************/
-    public void addAssociationDelegate(Role role, AssociationDelegate associationDelegate) throws DontHavePermissionException, AlreadyExistException;
+    void addAssociationDelegate(Role role, AssociationDelegate associationDelegate) throws DontHavePermissionException, AlreadyExistException;
 
-    public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException;
+    void addSystemManager(Role role, SystemManager systemManager) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addSeason(Role role, Season season) throws AlreadyExistException, DontHavePermissionException;
+    void addOwner(Role role, Owner owner) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addLeague(Role role, League league) throws AlreadyExistException, DontHavePermissionException;
+    void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addManager(Role role, Manager manager) throws AlreadyExistException, DontHavePermissionException;
+    void addReferee(Role role, Referee referee) throws DontHavePermissionException, AlreadyExistException;
 
-    public void addPlayer(Role role, Player player) throws AlreadyExistException, DontHavePermissionException;
+    void addManager(Role role, Manager manager) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addCoach(Role role, Coach coach) throws AlreadyExistException, DontHavePermissionException;
+    void addPlayer(Role role, Player player) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addOwner(Role role, Owner owner) throws AlreadyExistException, DontHavePermissionException;
+    void addCoach(Role role, Coach coach) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addSystemManager(Role role, SystemManager systemManager) throws AlreadyExistException, DontHavePermissionException;
+    void addTeam(Role role, Team team) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addTeam(Role role, Team team) throws AlreadyExistException, DontHavePermissionException;
+    void addSeason(Role role, Season season) throws AlreadyExistException, DontHavePermissionException;
 
-    public void addReferee(Role role, Referee referee) throws DontHavePermissionException, AlreadyExistException;
-
-    public void addSchedulingPolicies(Role role, ASchedulingPolicy policy) throws DontHavePermissionException;
+    void addLeague(Role role, League league) throws AlreadyExistException, DontHavePermissionException;
 
     /***************************************isExist function******************************************/
 
-    public boolean existReferee(Role role, String refereeId) throws DontHavePermissionException;
+    boolean existReferee(String refereeId);
 
-    public boolean existFan(Role role, String fanId) throws DontHavePermissionException;
+    boolean existFan( String fanId) ;
 
-    public boolean existTeam(Role role, String teamName) throws DontHavePermissionException;
+    boolean existTeam(String teamName);
 
-    public boolean existMember(Role role, String id) throws DontHavePermissionException;
+    boolean existMember(String id);
 
-    public boolean existAssociationDelegate(Role role, String id) throws DontHavePermissionException;
+    boolean existAssociationDelegate(String id);
 
-    public boolean existSystemManager(Role role, String id) throws DontHavePermissionException;
+    boolean existSystemManager(String id);
 
-    public boolean existOwner(Role role, String ownerId) throws DontHavePermissionException;
+    boolean existOwner(String ownerId);
+
+    boolean existSeason(String id);
+
+
 
 
 
