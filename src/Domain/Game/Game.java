@@ -21,6 +21,7 @@ public class Game extends Observable {
     private LeagueInSeason leagueInSeason;
     private HashSet<Referee> referees;
 
+
     public Game(String id , Calendar dateAndTime,Team hostTeam, Team visitorTeam, Field field, Referee mainReferee, Referee secondaryReferee, LeagueInSeason leagueInSeason) {
         this.id=id;
         this.dateAndTime = dateAndTime;
