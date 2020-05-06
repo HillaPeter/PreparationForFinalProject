@@ -581,4 +581,8 @@ public class SystemManager extends Member {
     public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
         return this.dbController.getGames(league,season);
     }
+    @Override
+    public String getType() {
+        return "SystemManager";
+    }
 }

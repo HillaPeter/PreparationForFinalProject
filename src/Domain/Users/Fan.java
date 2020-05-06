@@ -78,4 +78,9 @@ public class Fan extends Member implements Observer {
     public void update(Observable o, Object message) {
         updates.add("new update:" + message.toString());
     }
+
+    @Override
+    public String getType() {
+        return "Fan";
+    }
 }

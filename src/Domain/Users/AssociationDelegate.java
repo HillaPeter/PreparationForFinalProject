@@ -226,6 +226,10 @@ public class AssociationDelegate extends Member {
         LeagueInSeason leagueInSeason = dbController.getLeague( league).getLeagueInSeason(season1);
         return leagueInSeason.getSchedulePolicy();
     }
+    @Override
+    public String getType() {
+        return "AssociationDelegate";
+    }
 }
 
 

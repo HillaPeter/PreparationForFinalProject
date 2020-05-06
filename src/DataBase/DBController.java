@@ -31,7 +31,7 @@ public class DBController implements DAO{
     private DBController() {
         this.db = new DB();
     }
-    /***************************************Guest function******************************************/
+    /***************************************Presentation.Guest function******************************************/
 
 
     /***************************************Getters******************************************/
@@ -313,7 +313,7 @@ public class DBController implements DAO{
     }
 
     public void addFan(Role role, Fan fan) throws AlreadyExistException, DontHavePermissionException {
-        // if (!(role instanceof Guest || role instanceof Fan) {
+        // if (!(role instanceof Presentation.Guest || role instanceof Fan) {
         //      throw new DontHavePermissionException();
         //  }
         if (db.existMember(fan.getUserMail()))
@@ -323,6 +323,7 @@ public class DBController implements DAO{
 
     public void addSeason(Role role, Season season) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
+            // if (id in AssTable || id in SystemManager)
             if (db.existSeason(season.getYear()))
                 throw new AlreadyExistException();
             db.addSeason(season);

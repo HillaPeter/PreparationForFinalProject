@@ -84,16 +84,14 @@ public class Main {
                 case "2": {
                     String[] details = fillFormLogIn();
                     try {
-                        member = controller.logIn(details[0], details[1]);
-                        showMenu(member);
+                        Member member = controller.logIn(details[0], details[1]);
+                       // showMenu(member);
                         break;
                     } catch (MemberNotExist e) {
                         System.out.println("This member mail is doesnt exist in the system.\nlog in with different mail.");
                     } catch (PasswordDontMatchException e) {
                         System.out.println("You entered incorrect password.\nlog in with the correct password.");
-                    } catch (IncorrectInputException e) {
-                        break;
-                    } catch (DontHavePermissionException e) {
+                    }  catch (DontHavePermissionException e) {
                         break;
                     }
                     break;
@@ -104,9 +102,9 @@ public class Main {
             }
         }
     }
-
-    private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
-        if (member instanceof Guest) {
+/*
+    private static void showMenu(String member) throws IncorrectInputException, DontHavePermissionException {
+        if (member.equals()Guest) {
             startMenu();
         } else if (member instanceof SystemManager) {
             SystemManagerMenu();
@@ -126,7 +124,7 @@ public class Main {
 
         startMenu();
     }
-
+*/
     /*********************************************System Manager**********************************************/
     private static void SystemManagerMenu() throws DontHavePermissionException {
         String input = "";
@@ -1588,7 +1586,7 @@ public class Main {
                         System.out.println("The Object is not exist");
                     }
                 case "Exit":
-                    showMenu(controller.logOut());
+                  //  showMenu(controller.logOut());
                 default:
 
             }

@@ -45,5 +45,9 @@ public class SecondaryReferee extends Referee {
         }
         super.dbController.addReferee(this, this);
     }
+    @Override
+    public String getType() {
+        return "SecondaryReferee";
+    }
 
 }

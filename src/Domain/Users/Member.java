@@ -44,4 +44,6 @@ public abstract class Member extends Role {
     public void setMail (String mail){
         this.userMail = mail;
     }
+
+    public abstract String getType();
 }

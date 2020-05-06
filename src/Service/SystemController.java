@@ -73,9 +73,9 @@ public class SystemController {
 
     /*************************************** function for guest******************************************/
     /**
-     * this function makes a Guest into a member
+     * this function makes a Presentation.Guest into a member
      * if the member's mail doesnt exist -
-     * we will remove the Guest from the roles map and add create a Fan member by default and return true
+     * we will remove the Presentation.Guest from the roles map and add create a Fan member by default and return true
      * if the member's mail exist in the system - prints a error message and return false.
      *
      * @return true = success or false = failed to sign
@@ -110,6 +110,16 @@ public class SystemController {
         }
         this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
         return (Member) this.connectedUser;
+    }
+    public String login(String userMail, String userPassword) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
+        if(connectedUser==null)
+        {
+            Guest guest=new Guest(dbController,new Date(1995,2,1));
+            this.connectedUser=guest.logIn(userMail,userPassword);
+            return ((Member) this.connectedUser).getType();
+        }
+        this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
+        return ((Member) this.connectedUser).getType();
     }
     /*************************************** function for system manager******************************************/
 

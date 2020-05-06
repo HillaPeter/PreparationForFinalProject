@@ -29,6 +29,11 @@ public class Owner extends Member {
         teams = new HashMap<>();
     }
 
+    @Override
+    public String getType() {
+        return "Owner";
+    }
+
     public void setDb(DBController dbController) {
         if (dbController == null) {
             this.dbController = dbController;
