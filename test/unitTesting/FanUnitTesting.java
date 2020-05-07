@@ -9,6 +9,7 @@ import Domain.League.SchedulingPolicyAllTeamsPlayTwice;
 import Domain.League.ScorePolicy;
 import Domain.Users.Fan;
 import Domain.Users.Referee;
+import Domain.Users.SystemManager;
 import Exception.*;
 import Service.SystemController;
 import org.junit.Before;
@@ -26,8 +27,16 @@ import static org.junit.Assert.assertThat;
 
 public class FanUnitTesting {
 
-    DBController dbController = new DBController();
+//    SystemController controller;
+    DBController dbController= DBController.getInstance();
 
+    @Before
+    public void init()
+    {
+        dbController.deleteAll();
+      //  controller = new SystemController("");
+        //controller.deleteDBcontroller();
+    }
     @Test
 
     public void testTeamNotifications() {

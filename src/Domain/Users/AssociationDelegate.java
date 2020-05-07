@@ -20,7 +20,7 @@ public class AssociationDelegate extends Member {
     }
 
     public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException, DontHavePermissionException {
-        HashMap<String, League> leagues = dbController.getLeagues(this);
+        HashMap<String, League> leagues = dbController.getLeagues();
         League league;
         if (Pattern.matches("[a-zA-Z]+", leagueName)) { //checks that the name contains only letters(true=just letters)
             if (!leagues.containsKey(leagueName)) {
@@ -36,7 +36,7 @@ public class AssociationDelegate extends Member {
     }
 
     public void setLeagueByYear(String specificLeague, String year) throws ObjectNotExist, AlreadyExistException, DontHavePermissionException {
-        HashMap<String, League> leagues = dbController.getLeagues(this);
+        HashMap<String, League> leagues = dbController.getLeagues();
         League league = leagues.get(specificLeague);
         if (league == null) {
             throw new ObjectNotExist("There is no league called " + specificLeague);
@@ -60,8 +60,8 @@ public class AssociationDelegate extends Member {
 
     public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist, DontHavePermissionException {
         SchedulingPolicyAllTeamsPlayTwice policy = new SchedulingPolicyAllTeamsPlayTwice();
-        League leagueObj = dbController.getLeague(this, league);
-        Season seasonObj = dbController.getSeason(this, season);
+        League leagueObj = dbController.getLeague( league);
+        Season seasonObj = dbController.getSeason( season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
 
@@ -75,8 +75,8 @@ public class AssociationDelegate extends Member {
             double draw = Double.parseDouble(sDraw);
             double losing = Double.parseDouble(sLosing);
             ScorePolicy policy = new ScorePolicy(winning, draw, losing);
-            League leagueObj = dbController.getLeague(this, league);
-            Season seasonObj = dbController.getSeason(this, season);
+            League leagueObj = dbController.getLeague( league);
+            Season seasonObj = dbController.getSeason( season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
             leagueInSeason.setScorePolicy(policy);
         } catch (ObjectNotExist objectNotExist) {
@@ -98,8 +98,8 @@ public class AssociationDelegate extends Member {
      * @throws ObjectNotExist
      */
     public ScorePolicy getScorePolicy(String league, String season) throws DontHavePermissionException, ObjectNotExist {
-        League leagueObj = dbController.getLeague(this, league);
-        Season seasonObj = dbController.getSeason(this, season);
+        League leagueObj = dbController.getLeague( league);
+        Season seasonObj = dbController.getSeason( season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         return leagueInSeason.getScorePolicy();
     }
@@ -114,8 +114,8 @@ public class AssociationDelegate extends Member {
      * @throws ObjectNotExist
      */
     public HashMap<String, Referee> getRefereesInLeagueInSeason(String league, String season) throws DontHavePermissionException, ObjectNotExist {
-        League leagueObj = dbController.getLeague(this, league);
-        Season seasonObj = dbController.getSeason(this, season);
+        League leagueObj = dbController.getLeague( league);
+        Season seasonObj = dbController.getSeason( season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         HashMap<String, Referee> refereesInLeagueInSeason = leagueInSeason.getReferees();
         return refereesInLeagueInSeason;
@@ -134,8 +134,8 @@ public class AssociationDelegate extends Member {
         HashMap<String, Referee> referees = new HashMap<>();
         try {
             HashMap<String, Referee> allRefereesInTheSystem = dbController.getReferees();
-            League leagueObj = dbController.getLeague(this, league);
-            Season seasonObj = dbController.getSeason(this, season);
+            League leagueObj = dbController.getLeague( league);
+            Season seasonObj = dbController.getSeason( season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
             HashMap<String, Referee> refereesInLeagueInSeason = leagueInSeason.getReferees();
             for (String nameOfReferee : allRefereesInTheSystem.keySet()) {
@@ -161,8 +161,8 @@ public class AssociationDelegate extends Member {
 
         HashMap<String, Referee> referees = dbController.getReferees();
         Referee referee = referees.get(refereeName);
-        League leagueObj = dbController.getLeague(this, league);
-        Season seasonObj = dbController.getSeason(this, season);
+        League leagueObj = dbController.getLeague( league);
+        Season seasonObj = dbController.getSeason( season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         if (!leagueInSeason.getReferees().containsKey(refereeName))
             leagueInSeason.addReferee(refereeName, referee);
@@ -171,7 +171,7 @@ public class AssociationDelegate extends Member {
     }
 
     public HashMap<String, ASchedulingPolicy> getSchedulingPolicies() throws DontHavePermissionException {
-        return dbController.getSchedulingPolicies(this);
+        return dbController.getSchedulingPolicies();
     }
 
     //we dont let the user to creat a new scheduling policy
@@ -188,8 +188,8 @@ public class AssociationDelegate extends Member {
         } else {
             throw new IncorrectInputException();
         }
-        League leagueObj = dbController.getLeague(this, specificLeague);
-        Season seasonObj = dbController.getSeason(this, year);
+        League leagueObj = dbController.getLeague( specificLeague);
+        Season seasonObj = dbController.getSeason( year);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
     }
@@ -202,13 +202,13 @@ public class AssociationDelegate extends Member {
      * @param teamName
      */
     public void addTeamToLeagueInSeason(String league, String season, String teamName) throws DontHavePermissionException, ObjectNotExist, AlreadyExistException, IncorrectInputException {
-        Team team = dbController.getTeam(this, teamName);
+        Team team = dbController.getTeam( teamName);
         if (team.getPlayers().size() < 11 || team.getStatus() == false || team.getHomeField() == null) {
             throw new IncorrectInputException();
         }
 
-        Season season1 = dbController.getSeason(this, season);
-        LeagueInSeason leagueInSeason = dbController.getLeague(this, league).getLeagueInSeason(season1);
+        Season season1 = dbController.getSeason( season);
+        LeagueInSeason leagueInSeason = dbController.getLeague( league).getLeagueInSeason(season1);
         leagueInSeason.addTeam(team);
     }
 
@@ -222,9 +222,13 @@ public class AssociationDelegate extends Member {
      * @throws ObjectNotExist
      */
     public ASchedulingPolicy getSchedulingPolicyInLeagueInSeason(String league, String season) throws DontHavePermissionException, ObjectNotExist {
-        Season season1 = dbController.getSeason(this, season);
-        LeagueInSeason leagueInSeason = dbController.getLeague(this, league).getLeagueInSeason(season1);
+        Season season1 = dbController.getSeason( season);
+        LeagueInSeason leagueInSeason = dbController.getLeague( league).getLeagueInSeason(season1);
         return leagueInSeason.getSchedulePolicy();
+    }
+    @Override
+    public String getType() {
+        return "AssociationDelegate";
     }
 }
 

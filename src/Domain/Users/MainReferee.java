@@ -83,7 +83,10 @@ public class MainReferee extends Referee {
         }
         return editableGames;
     }
-
+    @Override
+    public String getType() {
+        return "MainReferee";
+    }
 
 
 }

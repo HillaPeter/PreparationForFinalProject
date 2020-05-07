@@ -18,6 +18,11 @@ public class TeamMember extends Member {
         super(name, userMail,  birthDate);
     }
 
+    @Override
+    public String getType() {
+        return "TeamMember";
+    }
+
     public void addTeam(Team teamToEnter) {
         if (team == null) {
             team = new HashMap<>();

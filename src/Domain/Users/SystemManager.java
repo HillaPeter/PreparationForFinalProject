@@ -38,9 +38,9 @@ public class SystemManager extends Member {
      * @throws IncorrectInputException - if the id is not a mail
      */
     public void removeAssociationDelegate(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException, IncorrectInputException {
-        if (dbController.existAssociationDelegate(this, id)) {
+        if (dbController.existAssociationDelegate( id)) {
             if (inputAreLegal(id)) {
-                AssociationDelegate temp = dbController.getAssociationDelegate(this, id);
+                AssociationDelegate temp = dbController.getAssociationDelegate( id);
                 Fan newFan = new Fan(temp.getName(), temp.getUserMail(), temp.getPassword(), temp.getBirthDate(), dbController);
                 dbController.deleteAssociationDelegate(this, id);
                 dbController.addFan(temp, newFan);
@@ -62,9 +62,9 @@ public class SystemManager extends Member {
      * @throws DontHavePermissionException- if the member is not system manager
      */
     public boolean removeOwner(String ownerId) throws IncorrectInputException, NotReadyToDelete, MemberNotExist, DontHavePermissionException {
-        if (dbController.existOwner(this, ownerId)) {
+        if (dbController.existOwner( ownerId)) {
             if (inputAreLegal(ownerId)) {
-                Owner owner = (Owner) dbController.getMember(this, ownerId);
+                Owner owner = (Owner) dbController.getMember( ownerId);
                 if (owner.notHaveTeams() == true) {
                     dbController.deleteOwner(this, ownerId);
                     return true;
@@ -90,10 +90,10 @@ public class SystemManager extends Member {
      * @throws AlreadyExistException- if a fan with this specific id already exist
      */
     public boolean removeSystemManager(String id) throws MemberNotExist, IncorrectInputException, NotReadyToDelete, DontHavePermissionException, AlreadyExistException {
-        if (dbController.existSystemManager(this, id)) {
+        if (dbController.existSystemManager( id)) {
             if (inputAreLegal(id)) {
-                if (dbController.getSystemManagers(this).size() > 1 && !(this.getUserMail().equals(id))) {
-                    SystemManager systemManager=dbController.getSystemManagers(this, id);
+                if (dbController.getSystemManagers().size() > 1 && !(this.getUserMail().equals(id))) {
+                    SystemManager systemManager=dbController.getSystemManagers( id);
                     Fan fan=new Fan(systemManager.getName(),systemManager.getUserMail(),systemManager.getPassword(),systemManager.getBirthDate(),dbController);
                     dbController.deleteSystemManager(this, id);
                     dbController.addFan(this,fan);
@@ -119,9 +119,9 @@ public class SystemManager extends Member {
      * @throws IncorrectInputException- if the id is not a mail
      */
     public boolean removeReferee(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException, IncorrectInputException {
-        if (dbController.existReferee(this, id)) {
+        if (dbController.existReferee( id)) {
             if (inputAreLegal(id)) {
-                Referee referee = (Referee) dbController.getMember(this, id);
+                Referee referee = (Referee) dbController.getMember( id);
                 if(referee.hadGames())
                 {
                     throw new IncorrectInputException("this referee has games to work in , you cant delete it");
@@ -152,8 +152,8 @@ public class SystemManager extends Member {
      */
     public boolean removeMember(String id) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException, NotReadyToDelete {
         if (inputAreLegal(id)) {
-            if (dbController.existMember(this, id)) {
-                Role role=dbController.getMember(this,id);
+            if (dbController.existMember( id)) {
+                Role role=dbController.getMember(id);
                 if(role instanceof Player)
                 {
                     ((Player)role).deleteAllTheData();
@@ -213,9 +213,9 @@ public class SystemManager extends Member {
      */
     public boolean addReferee(String id, boolean ifMainReferee) throws IncorrectInputException, MemberAlreadyExistException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
         if (inputAreLegal(id)) {
-            if (!dbController.existReferee(this, id)) {
-                if (dbController.existFan(this, id)) {
-                    Fan fan = (Fan) dbController.getMember(this, id);
+            if (!dbController.existReferee( id)) {
+                if (dbController.existFan( id)) {
+                    Fan fan = (Fan) dbController.getMember( id);
                     Referee referee = null;
                     if (ifMainReferee) {
                         referee = new MainReferee(fan, dbController);
@@ -244,8 +244,8 @@ public class SystemManager extends Member {
      * @throws AlreadyExistException - if a association deligate with this specific id already exist
      */
     public void addAssociationDelegate(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
-        if (this.dbController.getFans(this).containsKey(id)) {
-            Member member = (Member) this.dbController.getMember(this, id);
+        if (this.dbController.getFans().containsKey(id)) {
+            Member member = (Member) this.dbController.getMember( id);
             AssociationDelegate newA_D = new AssociationDelegate(member.getName(), member.getUserMail(), member.getPassword(), member.getBirthDate(), dbController);
             this.dbController.deleteRole(this, id);
             this.dbController.addAssociationDelegate(this, newA_D);
@@ -260,8 +260,8 @@ public class SystemManager extends Member {
      * @throws AlreadyExistException- if a owner with this specific id already exist
      */
     public void addOwner(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
-        if (this.dbController.getFans(this).containsKey(id)) {
-            Member member = (Member) this.dbController.getMember(this, id);
+        if (this.dbController.getFans().containsKey(id)) {
+            Member member = (Member) this.dbController.getMember( id);
             Owner newOwner = new Owner(member.getName(), member.getUserMail(), member.getPassword(), member.getBirthDate(), this.dbController);
             this.dbController.deleteRole(this, id);
             this.dbController.addOwner(this, newOwner);
@@ -276,8 +276,8 @@ public class SystemManager extends Member {
      * @throws AlreadyExistException- if a system manager with this specific id already exist
      */
     public void addSystemManager(String id) throws MemberNotExist, DontHavePermissionException, AlreadyExistException {
-        if (this.dbController.getFans(this).containsKey(id)) {
-            Member member = (Member) this.dbController.getMember(this, id);
+        if (this.dbController.getFans().containsKey(id)) {
+            Member member = (Member) this.dbController.getMember( id);
             SystemManager newSystemManager = new SystemManager(member.getName(), member.getUserMail(), member.getPassword(), this.dbController, member.getBirthDate());
             this.dbController.deleteRole(this, id);
             this.dbController.addSystemManager(this, newSystemManager);
@@ -301,8 +301,8 @@ public class SystemManager extends Member {
      * @throws IncorrectInputException- if the league id or the season id input enter in a wrong way
      */
     public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist, DontHavePermissionException, IncorrectInputException {
-        League league = dbController.getLeague(this, leagueId);
-        Season season = dbController.getSeason(this, seasonId);
+        League league = dbController.getLeague( leagueId);
+        Season season = dbController.getSeason( seasonId);
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
         LinkedList<Team> teams = leagueInSeason.getTeamsForScheduling();
         if(teams.size()%2!=0)
@@ -332,8 +332,8 @@ public class SystemManager extends Member {
      * @throws IncorrectInputException - if the team name enter in a wrong way
      */
     public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, IncorrectInputException {
-        if (dbController.existTeam(this, teamName)) {
-            Team team = dbController.getTeam(this, teamName);
+        if (dbController.existTeam( teamName)) {
+            Team team = dbController.getTeam( teamName);
             if(team.getGamesSize()==0) {
                 HashSet<Owner> allTheOwnerOfTheGroup = team.deleteTheData();
                 changeTheOwnerToFan(allTheOwnerOfTheGroup);
@@ -369,11 +369,11 @@ public class SystemManager extends Member {
         {
             throw new IncorrectInputException();
         }
-        else if (dbController.existOwner(this, idOwner) == false && dbController.existFan(this, idOwner) == false) {
+        else if (dbController.existOwner( idOwner) == false && dbController.existFan( idOwner) == false) {
             throw new ObjectNotExist("the is you enter is not exist as owner of a team");
         } else {
             Owner owner = null;
-            Role role = dbController.getMember(this, idOwner);
+            Role role = dbController.getMember( idOwner);
             if (role instanceof Fan) {//if its the first team for this owner
                 owner = new Owner(role.getName(), ((Fan) role).getUserMail(), ((Fan) role).getPassword(), role.getBirthDate(), dbController);
                 dbController.deleteFan(this, ((Fan) role).getUserMail());
@@ -565,20 +565,24 @@ public class SystemManager extends Member {
      */
     private boolean alreadyIncludeThisTeamName(String teamName) throws DontHavePermissionException {
 
-        return dbController.existTeam(this, teamName);
+        return dbController.existTeam( teamName);
     }
 
 
     /************* help function for testing *************/
     public HashMap<String, Role> getRoles() throws DontHavePermissionException {
-        return this.dbController.getRoles(this);
+        return this.dbController.getRoles();
     }
 
     public HashMap<String, Team> getTeams() throws DontHavePermissionException {
-        return this.dbController.getTeams(this);
+        return this.dbController.getTeams();
     }
 
     public HashSet<Game> getGames(String league, String season) throws ObjectNotExist {
         return this.dbController.getGames(league,season);
+    }
+    @Override
+    public String getType() {
+        return "SystemManager";
     }
 }
