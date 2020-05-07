@@ -90,7 +90,6 @@ public class SystemController {
 
     }
     public Role logOut(){
-        //todo
         this.connectedUser = new Guest(this.dbController , null);
         return this.connectedUser;
     }
@@ -112,13 +111,7 @@ public class SystemController {
         return (Member) this.connectedUser;
     }
     public String login(String userMail, String userPassword) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
-        if(connectedUser==null)
-        {
-            Guest guest=new Guest(dbController,new Date(1995,2,1));
-            this.connectedUser=guest.logIn(userMail,userPassword);
-            return ((Member) this.connectedUser).getType();
-        }
-        this.connectedUser =((Guest)this.connectedUser).logIn(userMail, userPassword);
+        logIn(userMail, userPassword);
         return ((Member) this.connectedUser).getType();
     }
     /*************************************** function for system manager******************************************/

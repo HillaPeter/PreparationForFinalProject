@@ -1,61 +1,60 @@
 package Presentation.Guest;
 
 import Presentation.Menu;
-import com.sun.crypto.provider.JceKeyStore;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 
-public class GuestMenu extends JFrame implements Menu {
-    private JButton button1;
-    private JComboBox comboBox1;
-    private JSplitPane splitpane;
-
+public class GuestMenu implements Menu {
+    JFrame frame = new JFrame("GuestMenu");
+    /********** GUEST MENU **********/
+    private JButton signinButton;
+    private JPanel menuPanel;
+    private JButton loginButton;
+    private JLabel GuestMenu;
+    private JSeparator JSeperator;
+    private JSeparator Jseparator;
 
     public GuestMenu() {
-        JPanel panel = new JPanel();
-        splitpane = new JSplitPane();
-        button1 = new JButton();
-        panel.add(button1);
 
-
-        setTitle("My Gui");
-        setSize(400, 400);
-
-        // Create JButton and JPanel
-        JButton button = new JButton("Click here!");
-
-        // Add button to JPanel
-        panel.add(button);
-        // And JPanel needs to be added to the JFrame itself!
-        this.getContentPane().add(panel);
-
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        button1.addActionListener(new ActionListener() {
+        signinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                showSignInMenu();
             }
         });
 
-        comboBox1.addActionListener(new ActionListener() {
+        loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                showLoginMenu();
             }
         });
+
     }
 
     @Override
     public void showMenu() {
-
+        frame.setContentPane(this.menuPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
-
+    public void showLoginMenu() {
+        Login login = new Login();
+        login.showMenu();
+        this.frame.dispose();
+    }
+    public void showSignInMenu() {
+        SignIn signIn = new SignIn();
+        signIn.showMenu();
+        this.frame.dispose();
+    }
     @Override
     public void exitMenu() {
 
     }
+
 }

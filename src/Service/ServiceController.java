@@ -14,22 +14,16 @@ public class ServiceController {
     SystemController systemController = new SystemController("DomainController");
 
 
-    public Menu login(String id, String pass) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
-        ///  Member member = systemController.logIn(id,pass);
-
-        // String type = systemController.logIn(id,pass);
-
-        /*if(type.equals ( "Owner" ) )
-               return newOwnerPre
-        */
-        return null;
+    public String login(String id, String pass) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
+        String type = systemController.login(id,pass);
+        return type;
     }
-
-    // public RoleMenu login(){
-    //   switch member to RoleMenu
-    //}
-
-
+    public void signIn(String userName, String userMail, String password , Date birthDate) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
+        systemController.signIn(userName, userMail,  password , birthDate);
+    }
+    public void logOut(){
+        systemController.logOut();
+    }
     public LinkedList<String> removeSystemManagerComboBox() throws DontHavePermissionException {
         HashMap<String, SystemManager> systemmanagers = systemController.getSystemManager();
         LinkedList<String> linkedList = new LinkedList<>(systemmanagers.keySet());
@@ -83,5 +77,16 @@ public class ServiceController {
         HashMap<String, Role> owners = systemController.getOwnersAndFans();
         LinkedList<String> linkedList = new LinkedList<>(owners.keySet());
         return linkedList;
+    }
+
+    public boolean matchPass(char[] pass1, char[] pass2) {
+        if(pass1.length == pass2.length){
+            for(int i=0; i< pass1.length ; i++){
+                if(pass1[i] != pass2[i])
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 }
