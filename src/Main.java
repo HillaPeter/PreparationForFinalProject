@@ -459,7 +459,7 @@ public class Main {
      * @throws DontHavePermissionException - if the member is not system manager
      */
     private static String getOwnerId() throws DontHavePermissionException {
-        HashMap<String, Role> owners = controller.getOwnersAndFans(member);
+        HashMap<String, Role> owners = controller.getOwnersAndFans();
         System.out.println("Choose id to add owner");
         for (String owner : owners.keySet()) {
             System.out.println(owner);
@@ -491,7 +491,7 @@ public class Main {
      * @throws DontHavePermissionException - if the member is not system manager
      */
     private static String removeAssociationDelegate() throws DontHavePermissionException {
-        HashMap<String, AssociationDelegate> associationDelegates = controller.getAssociationDelegates(member);
+        HashMap<String, AssociationDelegate> associationDelegates = controller.getAssociationDelegates();
         System.out.println("Choose id to remove associationDelegate");
         for (String associationDelegate : associationDelegates.keySet()) {
             System.out.println(associationDelegate);
@@ -630,7 +630,7 @@ public class Main {
      * @throws DontHavePermissionException - if the member is not system manager
      */
     private static String removeMember() throws DontHavePermissionException {
-        HashMap<String, Member> members = controller.getMembers(member);
+        HashMap<String, Member> members = controller.getMembers();
         System.out.println("Choose id to remove member");
         for (String member : members.keySet()) {
             System.out.println(member);
