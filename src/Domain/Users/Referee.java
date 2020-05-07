@@ -5,13 +5,16 @@ import DataBase.DBController;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 
 
-public abstract class Referee extends Member{
+public abstract class Referee extends Member implements Observer {
     protected String training;
     protected HashSet<Game> games;
 
     protected DBController dbController;
+    //todo: list of notifies to referee
 
     public Referee(String name, String userMail, String password, String training , Date birthDate, DBController dbController) {
         super(name, userMail, password , birthDate);
@@ -47,4 +50,10 @@ public abstract class Referee extends Member{
     {
         return games.size()>0;
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
+
 }
