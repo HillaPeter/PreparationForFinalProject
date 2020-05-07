@@ -1030,7 +1030,7 @@ public class SystemController {
         return dbController.getCoaches();
     }
 
-    public HashMap<String,Member> getMembers(Role role) throws DontHavePermissionException {
+    public HashMap<String,Member> getMembers() throws DontHavePermissionException {
         return dbController.getMembers();
     }
 
@@ -1062,12 +1062,12 @@ public class SystemController {
         return dbController.getSystemManagers();
     }
 
-    public HashMap<String, AssociationDelegate> getAssociationDelegates(Role role) throws DontHavePermissionException {
+    public HashMap<String, AssociationDelegate> getAssociationDelegates() throws DontHavePermissionException {
         return dbController.getAssociationDelegate();
     }
 
 
-    public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
+    public HashMap<String, Role> getOwnersAndFans() throws DontHavePermissionException {
         return dbController.getOwnersAndFans();
     }
 
