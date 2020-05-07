@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 
 public class Login extends JFrame implements Menu {
     JFrame frame = new JFrame("Login");
-    private ServiceController serviceController=new ServiceController();
+    private ServiceController serviceController = ServiceController.getInstance();
     /*********** LOGIN ************/
     private JPanel loginPanel;
     private JLabel loginMenu;

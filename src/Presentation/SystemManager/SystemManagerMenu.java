@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 public class SystemManagerMenu extends JFrame implements Menu {
     //private JPanel panel;
-    private ServiceController serviceController=new ServiceController();
+    private ServiceController serviceController=ServiceController.getInstance();
     private boolean check=false;
 
 

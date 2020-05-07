@@ -1,5 +1,6 @@
 package Service;
 
+import DataBase.DBController;
 import Domain.Game.Team;
 import Domain.Users.*;
 import Exception.*;
@@ -9,10 +10,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**
+ * singleton
+ */
 public class ServiceController {
-
-    SystemController systemController = new SystemController("DomainController");
-
+    private static final ServiceController instance = new ServiceController();
+    SystemController systemController ;
+    public static ServiceController getInstance() {
+        return instance;
+    }
+    private ServiceController(){
+        this.systemController = new SystemController("DomainController");
+    }
 
     public String login(String id, String pass) throws PasswordDontMatchException, MemberNotExist, DontHavePermissionException {
         String type = systemController.login(id,pass);
@@ -88,5 +97,9 @@ public class ServiceController {
             return true;
         }
         return false;
+    }
+
+    public String getUserName() {
+        return this.systemController.getConnectedUser().getName();
     }
 }

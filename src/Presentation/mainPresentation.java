@@ -13,6 +13,7 @@ public class mainPresentation {
 
 //        SystemManagerMenu systemManagerMenu=new SystemManagerMenu();
 //        systemManagerMenu.showMenu();
+
         GuestMenu guestMenu = new GuestMenu();
         guestMenu.showMenu();
 
@@ -20,14 +21,5 @@ public class mainPresentation {
       //  systemManagerMenu.addAssociationDeligate();
        // systemManagerMenu.removeAssociationDeligate();
 
-        /*
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                GuestMenu frame = new GuestMenu();
-                frame.setVisible(true);
-            }
-        });
-    */
     }
 }

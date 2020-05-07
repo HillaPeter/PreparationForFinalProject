@@ -1,7 +1,6 @@
 package Presentation.Guest;
 
 
-import Domain.Users.Fan;
 import Presentation.Fan.FanMenu;
 import Presentation.Menu;
 import Service.ServiceController;
@@ -16,7 +15,7 @@ import java.util.Date;
 
 public class SignIn implements Menu {
     JFrame frame = new JFrame("SignIn");
-    private ServiceController serviceController=new ServiceController();
+    private ServiceController serviceController=ServiceController.getInstance();
 
     /*********** SIGNIN ************/
     private JPanel signPanel;
@@ -64,9 +63,7 @@ public class SignIn implements Menu {
         else {
             try {
                 serviceController.signIn(nameField.getText(),mailField.getText(),new String(pass1),new Date());
-                FanMenu fanMenu= new FanMenu();
-                fanMenu.showMenu();
-                this.frame.dispose();
+                exitMenu();
             } catch (IncorrectInputException e) {
                 errorPass.setText("Incorrect input - password or mail not valid");
             } catch (DontHavePermissionException e) {
