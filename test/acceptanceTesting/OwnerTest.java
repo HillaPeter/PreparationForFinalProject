@@ -32,7 +32,7 @@ public class OwnerTest {
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
 
         controller = new SystemController("");
-        controller.deleteDBcontroller();
+        controller.deleteDBController();
         /*add Team*/
         controller.signIn("palyer0","p0@gmail.com","1",birthdate);
         controller.signIn("palyer1","p1@gmail.com","1",birthdate);

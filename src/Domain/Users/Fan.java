@@ -1,5 +1,7 @@
 package Domain.Users;
 
+import Domain.Game.Game;
+import Domain.Game.Team;
 import Exception.IncorrectInputException;
 import Exception.MemberNotExist;
 import Exception.DontHavePermissionException;
@@ -16,32 +18,30 @@ public class Fan extends Member implements Observer {
     private DBController dbController;
     private ArrayList<String> updates;
 
-    public Fan(String name, String mail, String password, Date birthDate) {
+    public Fan(String name, String mail, String password, Date birthDate, DBController dbcontroller) {
         super(name, mail, password, birthDate);
-        dbController = new DBController();
+        dbController = dbcontroller;
         updates = new ArrayList<>();
     }
 
 
-    public void followPersonalPage(){
-        //todo
+    public void followTeam(Team team){
+        team.addNewFollower(this);
     }
 
+    public void followGame(Game game){
+        game.addNewFollower(this);
+    }
 
-    public void updatePersonalDetails(String newName, String newPassword, String newMail) throws IncorrectInputException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
-        if (newName == null || newPassword == null){
+    public void updatePersonalDetails(String newName,String newMail) throws IncorrectInputException, MemberNotExist, DontHavePermissionException, AlreadyExistException {
+        if (newName == null || newMail == null){
             throw new IncorrectInputException();
         }
-
         dbController.deleteFan(this, super.getUserMail());
-
         if(newName != ""){
             super.setName(newName);
         }
-        if(newPassword != ""){
-            super.setPassword(newPassword);
-        }
-        if(newPassword != ""){
+        if(newMail != ""){
             super.setMail(newMail);
         }
         dbController.addFan(this, this);
@@ -67,6 +67,10 @@ public class Fan extends Member implements Observer {
         } catch (Exception e) {
             System.out.print("the path is not legal");
         }
+    }
+
+    public ArrayList<String> getUpdates(){
+        return updates;
     }
 
     @Override

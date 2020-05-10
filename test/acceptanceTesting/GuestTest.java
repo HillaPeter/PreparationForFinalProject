@@ -25,7 +25,7 @@ public class GuestTest {
     public void init()
     {
         controller = new SystemController("");
-        controller.deleteDBcontroller();
+        controller.deleteDBController();
     }
     @Test
     public void signIn() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {

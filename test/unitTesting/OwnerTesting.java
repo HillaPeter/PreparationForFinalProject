@@ -23,7 +23,7 @@ public class OwnerTesting {
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException {
         controller = new SystemController("");
-        controller.deleteDBcontroller();
+        controller.deleteDBController();
         controller.signIn("player0", "p0@gmail.com", "1", birthdate);
         controller.signIn("manager", "manager@gmail.com", "1", birthdate);
         controller.signIn("owner", "owner@gmail.com", "1", birthdate);

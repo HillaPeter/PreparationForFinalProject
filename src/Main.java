@@ -13,6 +13,7 @@ import Exception.*;
 import javafx.util.Pair;
 import Service.SystemController;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -21,12 +22,15 @@ public class Main {
     static SystemController controller;//= new SystemController("System Controller");
     static Role member;
     static String path;
-    //static DBController dbController;//just for my test - you can delete
 
-    public static void main(String[] args) throws AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
+    public static void main(String[] args) throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, IOException {
 /****************************************************menu******************************************************/
         //  controller.initSystem();
         controller = new SystemController("System Controller");
+        controller.signIn("owner" , "owner@gmail.com" , "123" , new Date(1995,6,7));
+        controller.signIn("owner" , "player@gmail.com" , "123" , new Date(1995,6,7));
+        controller.signIn("owner" , "manager@gmail.com" , "123" , new Date(1995,6,7));
+
         startMenu();
         /****shachar tests******/
         //must write the path in the main
@@ -43,7 +47,7 @@ public class Main {
 
 
     /***********************************************private function**************************************************/
-    private static void startMenu() {
+    private static void startMenu() throws IOException {
         String input = "";
         while (!input.equals("Exit")) {
             System.out.println("choose one of the following options:\n");
@@ -102,7 +106,7 @@ public class Main {
         }
     }
 
-    private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException {
+    private static void showMenu(Role member) throws IncorrectInputException, DontHavePermissionException, IOException {
         if (member instanceof Guest) {
             startMenu();
         } else if (member instanceof SystemManager) {
@@ -125,7 +129,7 @@ public class Main {
     }
 
     /*********************************************System Manager**********************************************/
-    private static void SystemManagerMenu() throws DontHavePermissionException {
+    private static void SystemManagerMenu() throws DontHavePermissionException, IOException {
         String input = "";
         while (!input.equals("ExitAll")) {
             System.out.println("choose one of the following options:\n");
@@ -258,10 +262,9 @@ public class Main {
                     break;
                 }
                 case "3": {
-                    //  System.out.println("please enter the Id of the member you want to remove");
-                    String id = removeMember();// scanInput.nextLine();
+                    String id = removeMember();
                     try {
-                        boolean success = controller.removeMember(id);
+                       controller.removeMember(id);
                     } catch (IncorrectInputException e) {
                         e.printStackTrace();
                     } catch (DontHavePermissionException e) {
@@ -297,7 +300,7 @@ public class Main {
                             case "2": {
                                 try {
                                     LinkedList<Pair<String, String>> responseForComplaint = new LinkedList<>();
-                                    boolean success = controller.responseComplaint(path, responseForComplaint);
+                                    controller.responseComplaint(path, responseForComplaint);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to response on the complaint");
                                 }
@@ -359,20 +362,25 @@ public class Main {
                         }
                         switch (input) {
                             case "1": {
-                                System.out.println("please enter the Id of the referee");
-                                String id = removeAssociationDelegate();// scanInput.nextLine();
+                                System.out.println("please enter the Id of the association deligate");
+                                String id = removeAssociationDelegate();
                                 try {
-                                    boolean success = controller.removeAssociationDelegate(id);
+                                    controller.removeAssociationDelegate(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove association delegate");
                                     //    input="Exit";
+                                } catch (IncorrectInputException e) {
+                                    e.printStackTrace();
+                                } catch (AlreadyExistException e) {
+                                    e.printStackTrace();
+                                } catch (MemberNotExist memberNotExist) {
+                                    memberNotExist.printStackTrace();
                                 }
                                 break;
                             }
 
                             case "2": {
-                                //System.out.println("please enter the Id of the refree");
-                                String id = addAssociationDelegate();//scanInput.nextLine();
+                                String id = addAssociationDelegate();
                                 try {
                                     controller.addAssociationDelegate(id);
                                 } catch (DontHavePermissionException e) {
@@ -401,13 +409,12 @@ public class Main {
                         }
                         switch (input) {
                             case "1": {
-                                System.out.println("please enter the Id of the referee");
-                                String id = removeSystemManager();// scanInput.nextLine();
+                                System.out.println("please enter the Id of the system manager");
+                                String id = removeSystemManager();
                                 try {
                                     controller.removeSystemManager(id);
                                 } catch (DontHavePermissionException e) {
                                     System.out.println("you don't have the permission to remove System Manager");
-                                    //    input="Exit";
                                 } catch (IncorrectInputException e) {
                                     e.printStackTrace();
                                 } catch (NotReadyToDelete notReadyToDelete) {
@@ -421,8 +428,7 @@ public class Main {
                             }
 
                             case "2": {
-                                //System.out.println("please enter the Id of the refree");
-                                String id = addSystemManager();//scanInput.nextLine();
+                                String id = addSystemManager();
                                 try {
                                     controller.addSystemManager(id);
                                 } catch (DontHavePermissionException e) {
@@ -450,6 +456,11 @@ public class Main {
         }
     }
 
+    /**
+     * this function return the owner id the member want to remove
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String getOwnerId() throws DontHavePermissionException {
         HashMap<String, Role> owners = controller.getOwnersAndFans(member);
         System.out.println("Choose id to add owner");
@@ -461,6 +472,11 @@ public class Main {
         return ownerToAdd;
     }
 
+    /**
+     * this function return the owner id the member want to remove
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String removeOwner() throws DontHavePermissionException {
         HashMap<String, Owner> owners = controller.getOwners(member);
         System.out.println("Choose id to remove owner");
@@ -472,17 +488,11 @@ public class Main {
         return ownerToRemove;
     }
 
-    private static String addOwner() throws DontHavePermissionException {
-        HashMap<String, Fan> owners = controller.getFans(member);
-        System.out.println("Choose id to add owner");
-        for (String owner : owners.keySet()) {
-            System.out.println(owner);
-        }
-
-        String ownerToAdd = scanInput.nextLine();
-        return ownerToAdd;
-    }
-
+    /**
+     * this function return the association deligate id the member want to remove
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String removeAssociationDelegate() throws DontHavePermissionException {
         HashMap<String, AssociationDelegate> associationDelegates = controller.getAssociationDelegates(member);
         System.out.println("Choose id to remove associationDelegate");
@@ -494,6 +504,11 @@ public class Main {
         return associationDelegateToRemove;
     }
 
+    /**
+     * this function return the association deligate id the member want to add
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String addAssociationDelegate() throws DontHavePermissionException {
         HashMap<String, Fan> associationDelegate = controller.getFans(member);
         System.out.println("Choose id to add associationDelegate");
@@ -505,6 +520,11 @@ public class Main {
         return associationDelegateToAdd;
     }
 
+    /**
+     * this function return the system manager id the member want to remove
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String removeSystemManager() throws DontHavePermissionException {
         HashMap<String, SystemManager> systemmanagers = controller.getSystemManager();
         System.out.println("Choose id to remove system manager");
@@ -516,6 +536,11 @@ public class Main {
         return systemmanagerToRemove;
     }
 
+    /**
+     * this function return the system manager id the member want to add
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String addSystemManager() throws DontHavePermissionException {
         HashMap<String, Fan> systemmanagers = controller.getFans(member);
         System.out.println("Choose id to add system manager");
@@ -527,6 +552,10 @@ public class Main {
         return systemmanagerToAdd;
     }
 
+    /**
+     * this function return the season id the member want to scheduling game in
+     * @return
+     */
     private static String chooseSeason() {
         HashMap<String, Season> season = controller.getSeasons();
         System.out.println("Choose season id");
@@ -537,6 +566,11 @@ public class Main {
         return seasonToreturn;
     }
 
+    /**
+     * this function return the league id the member want to scheduling game in
+     * @return
+     * @throws DontHavePermissionException
+     */
     private static String chooseLeague() throws DontHavePermissionException {
         HashMap<String, League> leagues = controller.getLeagues();
         System.out.println("Choose league id");
@@ -547,6 +581,11 @@ public class Main {
         return leagueToReturn;
     }
 
+    /**
+     * this function return the referee id the member want to remove
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String removeRefree() throws DontHavePermissionException {
         HashMap<String, Referee> refrees = controller.getReferees();
         System.out.println("Choose id to remove referee");
@@ -558,6 +597,11 @@ public class Main {
         return refereeToRemove;
     }
 
+    /**
+     * this function return the referee id the member want to add
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String addRefree() throws DontHavePermissionException {
         HashMap<String, Fan> fans = controller.getFans(member);
         System.out.println("Choose id to add referee");
@@ -568,6 +612,10 @@ public class Main {
         return refreeToAdd;
     }
 
+    /**
+     * this function return the team name that the member want to close
+     * @return
+     */
     private static String removeTeam() {
         HashMap<String, Team> team = controller.getTeams();
         System.out.println("Choose team name to remove team");
@@ -579,74 +627,11 @@ public class Main {
         return teamToRemove;
     }
 
-    private static LinkedList<String> addTeamPlayers() throws DontHavePermissionException {
-        LinkedList<String> players = new LinkedList<>();
-        HashMap<String, Player> team = controller.getPlayers(member);
-        System.out.println("Choose id players to add the team");
-        for (String teamName : team.keySet()) {
-            System.out.println(teamName);
-        }
-        String id = "";
-        while (!id.equals("0")) {
-            System.out.println("please enter the id of the players in the team \n when you finish press 0");
-            id = scanInput.nextLine();
-            if (!id.equals(0))
-                players.add(id);
-        }
-        return players;
-    }
-
-    private static LinkedList<String> addTeamOwners() throws DontHavePermissionException {
-        LinkedList<String> owners = new LinkedList<>();
-        HashMap<String, Owner> team = controller.getOwners(member);
-        System.out.println("Choose id owners to add the team");
-        for (String teamName : team.keySet()) {
-            System.out.println(teamName);
-        }
-        String id = "";
-        while (!id.equals("0")) {
-            System.out.println("please enter the id of the owners in the team \n when you finish press 0");
-            id = scanInput.nextLine();
-            if (!id.equals(0))
-                owners.add(id);
-        }
-        return owners;
-    }
-
-    private static LinkedList<String> addTeamManagers() throws DontHavePermissionException {
-        LinkedList<String> managers = new LinkedList<>();
-        HashMap<String, Manager> team = controller.getManagers(member);
-        System.out.println("Choose id manager to add the team");
-        for (String teamName : team.keySet()) {
-            System.out.println(teamName);
-        }
-        String id = "";
-        while (!id.equals("0")) {
-            System.out.println("please enter the id of the managers in the team \n when you finish press 0");
-            id = scanInput.nextLine();
-            if (!id.equals(0))
-                managers.add(id);
-        }
-        return managers;
-    }
-
-    private static LinkedList<String> addTeamCoachs() throws DontHavePermissionException {
-        LinkedList<String> coachs = new LinkedList<>();
-        HashMap<String, Coach> team = controller.getCoach(member);
-        System.out.println("Choose id coach to add the team");
-        for (String teamName : team.keySet()) {
-            System.out.println(teamName);
-        }
-        String id = "";
-        while (!id.equals("0")) {
-            System.out.println("please enter the id of the coachs in the team \n when you finish press 0");
-            id = scanInput.nextLine();
-            if (!id.equals(0))
-                coachs.add(id);
-        }
-        return coachs;
-    }
-
+    /**
+     * this function return the id the member want to remove
+     * @return
+     * @throws DontHavePermissionException - if the member is not system manager
+     */
     private static String removeMember() throws DontHavePermissionException {
         HashMap<String, Member> members = controller.getMembers(member);
         System.out.println("Choose id to remove member");
@@ -663,7 +648,7 @@ public class Main {
         try {
             Team team;
             String input = "";
-            while (!input.equals("Exit")) {
+            while (!input.equals("ExitAll")) {
                 System.out.println("choose one of the following options:\n");
                 System.out.println("write \"1\" Add Asset");
                 System.out.println("write \"2\" Remove Asset");
@@ -682,58 +667,76 @@ public class Main {
                 }
                 switch (input) {
                     case "1": {
+                        while (!input.equals("Exit"))
+                        {
                         System.out.println("What asset do you want to add? choose by index");
                         System.out.println("Press \"1.\" for Team manager");
                         System.out.println("Press \"2.\" for Coach");
                         System.out.println("Press \"3.\" for Player");
                         System.out.println("Press \"4.\" for Field");
                         System.out.println("\nwrite \"Exit\" if you want to finish. \n");
-                        input = scanInput.nextLine();
-                        while (!input.equals("Exit")) {
+                        input = "";
+                            while (input.equals("")) {
+                                input = scanInput.nextLine();
+                            }
                             switch (input) {
                                 case "1": {
                                     addTeamManager();
+                                    break;
                                 }
                                 case "2": {
                                     addTeamCoach();
+                                    break;
                                 }
                                 case "3": {
                                     addTeamPlayer();
+                                    break;
                                 }
                                 case "4": {
                                     addTeamField();
+                                    break;
                                 }
                                 case "Exit": {
+                                    break;
                                 }
                             }
                         }
+                        break;
                     }//case 1- add asset
                     case "2": {
-                        System.out.println("What asset do you want to remove? choose by index");
+                        while (!input.equals("Exit")) {
+                            System.out.println("What asset do you want to remove? choose by index");
                         System.out.println("Press \"1.\" for Team manager");
                         System.out.println("Press \"2.\" for Coach");
                         System.out.println("Press \"3.\" for Player");
                         System.out.println("Press \"4.\" for Field");
                         System.out.println("\nwrite \"Exit\" if you want to finish. \n");
-                        input = scanInput.nextLine();
-                        while (!input.equals("Exit")) {
-                            switch (input) {
+                        input = "";
+                            while (input.equals("")) {
+                                input = scanInput.nextLine();
+                            }                            switch (input) {
                                 case "1": {
                                     removeTeamManager();
+                                    break;
                                 }
                                 case "2": {
                                     removeTeamCoach();
+                                    break;
                                 }
                                 case "3": {
                                     removeTeamPlayer();
+                                    break;
                                 }
                                 case "4": {
                                     removeTeamField();
+                                    break;
                                 }
                                 case "Exit": {
+                                    break;
                                 }
                             }
                         }
+                        break;
                     }//removeAsset
                     case "3": {
                         addTeamManager();
@@ -849,7 +852,9 @@ public class Main {
                         }
                     }
                     case "logOut": {
-                        // member = (Member) controller.logOut();
+                        controller.logOut();
+                        member = null;//(Role) controller.logOut();
+                        input = "ExitAll";
                         break;
                     }
                 }
@@ -917,7 +922,7 @@ public class Main {
     }
 
     private static void addTeamPlayer() throws IncorrectInputException, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException, NoEnoughMoney {
-        System.out.println("Choose role by mail to make him coach");
+        System.out.println("Choose role by mail to make him player");
         HashMap<String, Role> allRoles = controller.getRoles();
         //moving on all the roles in system
         for (String mailId : allRoles.keySet()) {
@@ -1010,7 +1015,7 @@ public class Main {
 
     private static void removeTeamPlayer() throws DontHavePermissionException {
         HashMap<String, Team> teams = controller.getTeams();
-        System.out.println("Choose team name to remove coach");
+        System.out.println("Choose team name to remove player");
         for (String teamName : teams.keySet()) {
             System.out.println(teamName);
         }
@@ -1018,7 +1023,7 @@ public class Main {
         String teamName = scanInput.nextLine();
         Team team = teams.get(teamName);
 
-        System.out.println("Choose role to delete him from being coach");
+        System.out.println("Choose role to delete him from being player");
         HashSet<Player> players = team.getPlayers();
         for (Player p : players) {
             System.out.println(p.getUserMail());
@@ -1384,7 +1389,7 @@ public class Main {
 
     /***********************************************AssociationDelegate**************************************************/
 
-    private static void AssociationDelegateMenu(Member member) throws IncorrectInputException, DontHavePermissionException {
+    private static void AssociationDelegateMenu(Member member) throws IncorrectInputException, DontHavePermissionException, IOException {
         String input = "";
         while (!input.equals("Exit")) {
             System.out.println("choose one of the following options:\n");
@@ -1614,11 +1619,9 @@ public class Main {
                         String newName = scanInput.nextLine();
                         System.out.println("Insert your new mail: \n");
                         String newMail = scanInput.nextLine();
-                        System.out.println("Insert your new password: \n");
-                        String newPassword = scanInput.nextLine();
                         System.out.println("Insert your new training: \n");
                         String newTraining = scanInput.nextLine();
-                        controller.updateDetails(newName, newMail, newPassword, newTraining);
+                        controller.updateDetails(newName, newMail,newTraining);
                     } catch (Exception e) {
                         System.out.println("One or more of the details are illegal.");
                     }
@@ -1733,6 +1736,9 @@ public class Main {
                 }
                 case "LogOut": {
                     controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input = "ExitAll";
+                    break;
                 }
 
             }
@@ -1760,11 +1766,9 @@ public class Main {
                         String newName = scanInput.nextLine();
                         System.out.println("Insert your new mail: \n");
                         String newMail = scanInput.nextLine();
-                        System.out.println("Insert your new password: \n");
-                        String newPassword = scanInput.nextLine();
                         System.out.println("Insert your new training: \n");
                         String newTraining = scanInput.nextLine();
-                        controller.updateDetails(newName, newMail, newPassword, newTraining);
+                        controller.updateDetails(newName, newMail,newTraining);
                     } catch (IncorrectInputException e) {
                         System.out.println("One or more of the details are illegal.");
                     } catch (Exception e) {
@@ -1791,13 +1795,16 @@ public class Main {
                 }
                 case "LogOut": {
                     controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input = "ExitAll";
+                    break;
                 }
             }
         }
     }
 
     /***********************************************Fan**************************************************/
-    private static void fanMenu() throws DontHavePermissionException {
+    private static void fanMenu(){
         String input = "";
         while (!input.equals("ExitAll")) {
             System.out.println("choose one of the following options:\n");
@@ -1819,9 +1826,7 @@ public class Main {
                         String newName = scanInput.nextLine();
                         System.out.println("Insert your new mail: \n");
                         String newMail = scanInput.nextLine();
-                        System.out.println("Insert your new password: \n");
-                        String newPassword = scanInput.nextLine();
-                        controller.updatePersonalDetails(newName, newPassword, newMail);
+                        controller.updatePersonalDetails(newName,newMail);
                     } catch (IncorrectInputException e) {
                         System.out.println("One or more of the details are illegal.");
                     } catch (Exception e) {
@@ -1889,26 +1894,14 @@ public class Main {
                 }
                 case "LogOut": {
                     controller.logOut();
+                    member = null;//(Role) controller.logOut();
+                    input = "ExitAll";
+                    break;
                 }
-
             }
         }
     }
 
-
-    /**
-     * Tests for fan- Hilla
-     **/
-    public static void fanTest() {
-        ArrayList<Transaction> trans = new ArrayList<>();
-        Field field = new Field("Blumfield");
-        Team maccabi = new Team("Maccabi tel aviv", new Account(trans, 100), field);
-        Fan fan = new Fan("Hilla", "hilla@gmail.com", "1234", new Date());
-        maccabi.addNewFollower(fan);
-        Field field2 = new Field("Teddy");
-        maccabi.addField(field2);
-        System.out.println("finished successfully!!!");
-    }
 
 
 }

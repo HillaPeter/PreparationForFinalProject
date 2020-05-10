@@ -29,7 +29,7 @@ public class SystemManagerTesting {
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException{
         controller = new SystemController("");
-        controller.deleteDBcontroller();
+        controller.deleteDBController();
         controller.signIn("owner", "owner@gmail.com", "1", birthdate);
         controller.signIn("systemManager", "systemManager@gmail.com", "1", birthdate);
         controller.signIn("referee", "referee@gmail.com", "123", birthdate);

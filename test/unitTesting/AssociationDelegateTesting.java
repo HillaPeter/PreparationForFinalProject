@@ -22,7 +22,7 @@ public class AssociationDelegateTesting {
     @Before
     public void init() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException {
         controller = new SystemController("");
-        controller.deleteDBcontroller();
+        controller.deleteDBController();
         controller.signIn("dani","associationDelegate@gmail.com","abc", birthDate);
         controller.logIn("admin@gmail.com","123");
         controller.addAssociationDelegate("associationDelegate@gmail.com");

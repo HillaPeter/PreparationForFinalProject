@@ -15,12 +15,14 @@ import Exception.*;
 import javafx.util.Pair;
 import DataBase.DBController;
 
+import java.io.IOException;
 import java.util.*;
 
 public class SystemController {
     private String name;
     private Role connectedUser;
-    private DBController dbController;
+    private DBController dbController =  DBController.getInstance();
+    private ExceptionLogger exceptionLogger;
     //  private HashMap<Member,String> passwordValidation;
 
 
@@ -29,7 +31,7 @@ public class SystemController {
      *
      * @param name
      */
-    public SystemController(String name) {
+    public SystemController(String name) throws IOException {
         this.name = name;
         //this.initSystem("", "", ""); // change it
         try {
@@ -37,6 +39,8 @@ public class SystemController {
         }catch (IncorrectInputException e) {
 
         } catch (DontHavePermissionException e) {
+        } catch (IOException e) {
+            exceptionLogger.writeException(e);
         }
 //        password verifications
 //        passwordValidation=new HashMap<>();
@@ -48,10 +52,12 @@ public class SystemController {
         //member = user; (argument in the constructor-Member user- Fan, Owner, AD, Referee...)
     }
 
-    public void initSystem() throws IncorrectInputException, DontHavePermissionException {
+    public void initSystem() throws IncorrectInputException, DontHavePermissionException, IOException {
         //check if the user name and the password are connect
-        dbController = new DBController();
+
+      //  dbController =  DBController.getInstance();
         try{
+            exceptionLogger = ExceptionLogger.getInstance();
             Fan f = (Fan)signIn("admin", "admin@gmail.com" , "123",new Date(1995,2,15));
             SystemManager systemManager = new SystemManager("admin", "admin@gmail.com", f.getPassword(), this.dbController ,new Date(1995,2,15) );
             Role role=connectedUser;
@@ -60,9 +66,13 @@ public class SystemController {
             connectedUser=role;
 
         }catch (AlreadyExistException e){
+            exceptionLogger.writeException(e);
 
         } catch (MemberNotExist memberNotExist) {
             memberNotExist.printStackTrace();
+            exceptionLogger.writeException(memberNotExist);
+        } catch (IOException e) {
+            exceptionLogger.writeException(e);
         }
         connectedUser = new Guest(dbController ,null);
         System.out.println("Init System:");
@@ -112,49 +122,67 @@ public class SystemController {
     }
     /*************************************** function for system manager******************************************/
 
-    public boolean removeAssociationDelegate(String id) throws DontHavePermissionException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.removeAssociationDelegate(id);
-        } else {
-            throw new DontHavePermissionException();
-        }
+    public void removeAssociationDelegate(String id) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException, IOException {
+       try{
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               systemManager.removeAssociationDelegate(id);
+           } else {
+               exceptionLogger.writeException(new DontHavePermissionException());
+
+           }
+       }catch(Exception e) {
+           exceptionLogger.writeException(e);
+       }
+
     }
 
-    public boolean removeOwner(String ownerId) throws DontHavePermissionException, IncorrectInputException, NotReadyToDelete, MemberNotExist {
+    public boolean removeOwner(String ownerId) throws DontHavePermissionException, IncorrectInputException, NotReadyToDelete, MemberNotExist, IOException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeOwner(ownerId);
-        } else {
-            throw new DontHavePermissionException();
         }
+        exceptionLogger.writeException(new DontHavePermissionException());
+        return false;
     }
 
-    public boolean removeSystemManager(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, NotReadyToDelete, AlreadyExistException {
+    public boolean removeSystemManager(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, NotReadyToDelete, AlreadyExistException, IOException {
         if (connectedUser instanceof SystemManager) {
             SystemManager systemManager = (SystemManager) connectedUser;
             return systemManager.removeSystemManager(id);
-        } else {
-            throw new DontHavePermissionException();
         }
+        exceptionLogger.writeException(new DontHavePermissionException());
+        return false;
     }
 
-    public Referee getReferee(String s) throws DontHavePermissionException, ObjectNotExist {
+    public Referee getReferee(String s) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, IOException {
 //        if (connectedUser instanceof SystemManager) {
-//            SystemManager systemManager = (SystemManager) connectedUser;
-           return dbController.getReferee(connectedUser,s);
+            try{
+                return dbController.getReferee(s);
+            }
+            catch(Exception e){
+                exceptionLogger.writeException(e);
+                return null;
+            }
+//         SystemManager systemManager = (SystemManager) connectedUser;
+
 //        } else {
 //            throw new DontHavePermissionException();
 //        }
     }
 
-    public void addSystemManager(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            systemManager.addSystemManager(id);
-        } else {
-            throw new DontHavePermissionException();
-        }
+    public void addSystemManager(String id) throws DontHavePermissionException, MemberNotExist, AlreadyExistException, IOException {
+       try{
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               systemManager.addSystemManager(id);
+           } else {
+               exceptionLogger.writeException(new DontHavePermissionException());
+           }
+       }catch(Exception e){
+           exceptionLogger.writeException(e);
+       }
+
     }
 
     /***
@@ -162,26 +190,37 @@ public class SystemController {
      * if the referee didnt exist - return false
      * if the referee exist - delete it and return true
      */
-    public boolean removeReferee(String refereeId) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
-            if (connectedUser instanceof SystemManager) {
-                SystemManager systemManager = (SystemManager) connectedUser;
-                return systemManager.removeReferee(refereeId);
-            } else {
-                throw new DontHavePermissionException();
-            }
+    public boolean removeReferee(String refereeId) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException, IOException {
+           try{
+               if (connectedUser instanceof SystemManager) {
+                   SystemManager systemManager = (SystemManager) connectedUser;
+                   return systemManager.removeReferee(refereeId);
+               } else {
+                   exceptionLogger.writeException(new DontHavePermissionException());
+               }
+           }catch(Exception e){
+               exceptionLogger.writeException(e);
+           }
+           return false;
         }
     /***
      * this function get id of the member to make referee and the id of the system manager that take care of this function
      * if the referee already exist - return false
      * if the referee not exist and success of adding it - add it and return true
      */
-    public boolean addReferee(String refereeId, boolean ifMainReferee) throws DontHavePermissionException, MemberAlreadyExistException, AlreadyExistException, MemberNotExist, IncorrectInputException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.addReferee(refereeId, ifMainReferee);
-        } else {
-            throw new DontHavePermissionException();
+    public boolean addReferee(String refereeId, boolean ifMainReferee) throws DontHavePermissionException, MemberAlreadyExistException, AlreadyExistException, MemberNotExist, IncorrectInputException, IOException {
+        try{
+            if (connectedUser instanceof SystemManager) {
+                SystemManager systemManager = (SystemManager) connectedUser;
+                return systemManager.addReferee(refereeId, ifMainReferee);
+            } else {
+                exceptionLogger.writeException(new DontHavePermissionException());
+
+            }
+        }catch(Exception e){
+            exceptionLogger.writeException(e);
         }
+        return false;
     }
     /**
      * this function get the team name and the id of the system manager that take care of this function
@@ -192,13 +231,18 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, IncorrectInputException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.closeTeam(teamName);
-        } else {
-            throw new DontHavePermissionException();
-        }
+    public boolean closeTeam(String teamName) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException, IncorrectInputException, IOException {
+       try{
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               return systemManager.closeTeam(teamName);
+           } else {
+               exceptionLogger.writeException(new DontHavePermissionException());
+           }
+       }catch(Exception e){
+           exceptionLogger.writeException(e);
+       }
+        return false;
     }
 
     /**
@@ -208,13 +252,18 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean removeMember(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException, NotReadyToDelete {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.removeMember(id);
-        } else {
-            throw new DontHavePermissionException();
-        }
+    public boolean removeMember(String id) throws DontHavePermissionException, MemberNotExist, IncorrectInputException, AlreadyExistException, NotReadyToDelete, IOException {
+       try{
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               return systemManager.removeMember(id);
+           } else {
+               exceptionLogger.writeException(new DontHavePermissionException());
+           }
+       }catch(Exception e){
+           exceptionLogger.writeException(e);
+       }
+       return false;
     }
 
     /**
@@ -223,13 +272,18 @@ public class SystemController {
      * @param path
      * @throws DontHavePermissionException
      */
-    public void watchComplaint(String path) throws DontHavePermissionException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            LinkedList<String> complaint = systemManager.watchComplaint(path);
-        } else {
-            throw new DontHavePermissionException();
-        }
+    public void watchComplaint(String path) throws DontHavePermissionException, IOException {
+       try{
+           if (connectedUser instanceof SystemManager) {
+               SystemManager systemManager = (SystemManager) connectedUser;
+               LinkedList<String> complaint = systemManager.watchComplaint(path);
+           } else {
+               exceptionLogger.writeException(new DontHavePermissionException());
+           }
+       }catch(Exception e){
+           exceptionLogger.writeException(e);
+       }
+
     }
 
     /**
@@ -240,33 +294,47 @@ public class SystemController {
      * @return
      * @throws DontHavePermissionException
      */
-    public boolean responseComplaint(String path, LinkedList<Pair<String, String>> responseForComplaint) throws DontHavePermissionException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.ResponseComplaint(path, responseForComplaint);
-        } else {
-            throw new DontHavePermissionException();
+    public boolean responseComplaint(String path, LinkedList<Pair<String, String>> responseForComplaint) throws DontHavePermissionException, IOException {
+
+        try{
+            if (connectedUser instanceof SystemManager) {
+                SystemManager systemManager = (SystemManager) connectedUser;
+                return systemManager.ResponseComplaint(path, responseForComplaint);
+            } else {
+                exceptionLogger.writeException(new DontHavePermissionException());
+            }
+        }catch(Exception e){
+            exceptionLogger.writeException(e);
         }
-    }
-
-    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist, IncorrectInputException {
-
-           if (connectedUser instanceof SystemManager) {
-               SystemManager systemManager = (SystemManager) connectedUser;
-               systemManager.schedulingGames(seasonId, leagueId);
-           } else {
-               throw new DontHavePermissionException();
-           }
-
+        return false;
 
     }
 
-    public void viewSystemInformation(String path) throws DontHavePermissionException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            systemManager.viewSystemInformation(path);
-        } else {
-            throw new DontHavePermissionException();
+    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist, IncorrectInputException, IOException {
+            try{
+                if (connectedUser instanceof SystemManager) {
+                    SystemManager systemManager = (SystemManager) connectedUser;
+                    systemManager.schedulingGames(seasonId, leagueId);
+                } else {
+                   exceptionLogger.writeException(new DontHavePermissionException());
+                }
+            }catch(Exception e){
+                exceptionLogger.writeException(e);
+            }
+
+
+    }
+
+    public void viewSystemInformation(String path) throws DontHavePermissionException, IOException {
+        try{
+            if (connectedUser instanceof SystemManager) {
+                SystemManager systemManager = (SystemManager) connectedUser;
+                systemManager.viewSystemInformation(path);
+            } else {
+                exceptionLogger.writeException(new DontHavePermissionException());
+            }
+        }catch(Exception e){
+            exceptionLogger.writeException(e);
         }
     }
 
@@ -293,23 +361,35 @@ public class SystemController {
         }
     }
 */
-    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException {
-        if (connectedUser instanceof SystemManager) {
-            SystemManager systemManager = (SystemManager) connectedUser;
-            return systemManager.addNewTeam(teamName , ownerId);
-        } else {
-            throw new DontHavePermissionException();
+    public boolean addTeam(String teamName , String ownerId) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, ObjectAlreadyExist, AlreadyExistException, IncorrectInputException, IOException {
+        try{
+            if (connectedUser instanceof SystemManager) {
+                SystemManager systemManager = (SystemManager) connectedUser;
+                return systemManager.addNewTeam(teamName , ownerId);
+            } else {
+                exceptionLogger.writeException(new DontHavePermissionException());
+            }
+        }catch (Exception e){
+            exceptionLogger.writeException(e);
         }
+        return false;
     }
 
-    public void addAssociationDelegate(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist {
-        if(connectedUser instanceof SystemManager){
-            ((SystemManager)connectedUser).addAssociationDelegate(id);
-            return;
+    public void addAssociationDelegate(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist, IOException {
+        try{
+            if(connectedUser instanceof SystemManager){
+                ((SystemManager)connectedUser).addAssociationDelegate(id);
+                return;
+            }
+            else{
+                exceptionLogger.writeException(new DontHavePermissionException());
+            }
+        }catch(Exception e){
+            exceptionLogger.writeException(e);
         }
-        throw new DontHavePermissionException();
-    }
 
+    }
+    //no one uses this function
     public void addOwner(String id) throws DontHavePermissionException, AlreadyExistException, MemberNotExist {
         if(connectedUser instanceof SystemManager){
             ((SystemManager)connectedUser).addOwner(id);
@@ -329,19 +409,32 @@ public class SystemController {
      * @throws NoEnoughMoney
      */
 
-    public void addCoach(String teamName, String mailId) throws ObjectNotExist, NoEnoughMoney, MemberNotExist, AlreadyExistException, DontHavePermissionException {
-        if(!dbController.getTeams(this.connectedUser).containsKey(teamName))
-            throw new ObjectNotExist("team not exist");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-50 < 0)
-            throw new NoEnoughMoney();
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailId))
-            throw new MemberNotExist();
-        if (dbController.getRoles(this.connectedUser).containsKey(mailId))
-            if(dbController.getCoaches(this.connectedUser).containsKey(mailId))
-               throw new AlreadyExistException();
+    public void addCoach(String teamName, String mailId) throws ObjectNotExist, NoEnoughMoney, MemberNotExist, AlreadyExistException, DontHavePermissionException, IOException {
+        if(!dbController.getTeams().containsKey(teamName)) {
+            exceptionLogger.writeException(new ObjectNotExist("Team doesn't "));
+            return;
+        }
+            //throw new ObjectNotExist("team not exist");
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam()-50 < 0){
+            exceptionLogger.writeException(new NoEnoughMoney());
+            return;
+        }
+
+            //throw new NoEnoughMoney();
+        if (!dbController.getRoles().containsKey(mailId))
+            exceptionLogger.writeException(new MemberNotExist());
+            //throw new MemberNotExist();
+        if (dbController.getRoles().containsKey(mailId))
+            if(dbController.getCoaches().containsKey(mailId))
+                exceptionLogger.writeException(new AlreadyExistException());
+        //throw new AlreadyExistException();
 
 
+            if(connectedUser instanceof  Owner)
         ((Owner) connectedUser).addCoach(teamName, mailId);
+            else
+                exceptionLogger.writeException(new DontHavePermissionException());
+                //throw new DontHavePermissionException();
     }
 
     /**
@@ -355,23 +448,26 @@ public class SystemController {
      * @param day
      * @param rolePlayer
      */
-    public void addPlayer(String mailId, String teamName, int year, int month, int day, String rolePlayer) throws ObjectNotExist, IncorrectInputException, MemberNotExist, AlreadyExistException, DontHavePermissionException, NoEnoughMoney {
-        if(!dbController.getTeams(this.connectedUser).containsKey(teamName))
+    public void addPlayer(String mailId, String teamName, int year, int month, int day, String rolePlayer) throws ObjectNotExist, IncorrectInputException, MemberNotExist, AlreadyExistException, NoEnoughMoney, DontHavePermissionException {
+        if(!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-50 < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam()-50 < 0)
             throw new NoEnoughMoney();
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailId))
+        if (!dbController.getRoles().containsKey(mailId))
             throw new MemberNotExist();
-        if (dbController.getRoles(this.connectedUser).containsKey(mailId))
-            if(dbController.getPlayers(this.connectedUser).containsKey(mailId))
+        if (dbController.getRoles().containsKey(mailId))
+            if(dbController.getPlayers().containsKey(mailId))
                  throw new AlreadyExistException();
-        if(dbController.getTeams(this.connectedUser).get(teamName).getPlayers().contains(mailId))
+        if(dbController.getTeams().get(teamName).getPlayers().contains(mailId))
             throw new AlreadyExistException();
 
         if (year < 0 || year > 2020 || month > 12 || month < 1 || day < 1 || day > 32 || rolePlayer == null || rolePlayer=="")
             throw new IncorrectInputException();
 
+        if(connectedUser instanceof Owner)
         ((Owner) connectedUser).addPlayer(teamName, mailId, year, month, day, rolePlayer);
+        else
+            throw new DontHavePermissionException();
     }
 
     /**
@@ -382,13 +478,17 @@ public class SystemController {
      * @param fieldName
      */
     public void addField(String teamName, String fieldName) throws DontHavePermissionException, IncorrectInputException, AlreadyExistException, ObjectAlreadyExist, NoEnoughMoney, ObjectNotExist {
-        if(!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if(!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-50 < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam()-50 < 0)
             throw new NoEnoughMoney();
-        if (dbController.getTeams(this.connectedUser).get(teamName).getFieldFromTrainingFields(fieldName)!=null)
+        if (dbController.getTeams().get(teamName).getFieldFromTrainingFields(fieldName)!=null)
             throw new ObjectAlreadyExist();
-        ((Owner) connectedUser).addField(teamName, fieldName);
+        if(connectedUser instanceof Owner) {
+            ((Owner) connectedUser).addField(teamName, fieldName);
+        }
+        else
+            throw new DontHavePermissionException();
     }
 
     /**
@@ -401,17 +501,20 @@ public class SystemController {
      * @throws ObjectNotExist
      */
     public void addManager(String teamName, String mailId) throws NoEnoughMoney, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException {
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailId))
+        if (!dbController.getRoles().containsKey(mailId))
             throw new MemberNotExist();
-        if (dbController.getRoles(this.connectedUser).containsKey(mailId))
-            if(dbController.getManagers(this.connectedUser).containsKey(mailId))
+        if (dbController.getRoles().containsKey(mailId))
+            if(dbController.getManagers().containsKey(mailId))
                      throw new AlreadyExistException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-50 < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam()-50 < 0)
             throw new NoEnoughMoney();
 
+        if(connectedUser instanceof Owner)
         ((Owner) connectedUser).addManager(teamName, mailId);
+        else
+            throw new DontHavePermissionException();
     }
 
     /**
@@ -424,11 +527,11 @@ public class SystemController {
     public void removeManager(String teamName, String mailToRemove) throws ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException {
         if(! (this.connectedUser instanceof Owner))
             throw new DontHavePermissionException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist ");
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailToRemove))
+        if (!dbController.getRoles().containsKey(mailToRemove))
             throw new MemberNotExist();
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailToRemove))
+        if (!dbController.getRoles().containsKey(mailToRemove))
             throw new ObjectNotExist("member not exist");
 
         ((Owner) connectedUser).removeManager(teamName, mailToRemove);
@@ -446,12 +549,12 @@ public class SystemController {
     public void removeCoach(String teamName, String mailToRemove) throws ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException {
         if(! (this.connectedUser instanceof Owner))
             throw new DontHavePermissionException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
-        if (dbController.getRoles(this.connectedUser).containsKey(connectedUser.getName()))
-            if(dbController.getCoaches(this.connectedUser).containsKey(mailToRemove))
+        if (dbController.getRoles().containsKey(connectedUser.getName()))
+            if(dbController.getCoaches().containsKey(mailToRemove))
                  throw new DontHavePermissionException();
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailToRemove))
+        if (!dbController.getRoles().containsKey(mailToRemove))
             throw new MemberNotExist();
 
         ((Owner) connectedUser).removeCoach(teamName, mailToRemove);
@@ -467,12 +570,12 @@ public class SystemController {
     public void removePlayer(String teamName, String mailToRemove) throws DontHavePermissionException, ObjectNotExist, MemberNotExist, AlreadyExistException {
         if(! (this.connectedUser instanceof Owner))
             throw new DontHavePermissionException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
-        if ((dbController.getRoles(this.connectedUser).containsKey(mailToRemove)))
-            if(!dbController.getPlayers(this.connectedUser).containsKey(mailToRemove))
+        if ((dbController.getRoles().containsKey(mailToRemove)))
+            if(!dbController.getPlayers().containsKey(mailToRemove))
                   throw new MemberNotExist();
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailToRemove))
+        if (!dbController.getRoles().containsKey(mailToRemove))
             throw new MemberNotExist();
 
         ((Owner) connectedUser).removePlayer(teamName, mailToRemove);
@@ -488,11 +591,11 @@ public class SystemController {
     public void removeField(String teamName, String fieldName) throws ObjectNotExist, DontHavePermissionException, MemberNotExist, IncorrectInputException {
         if(! (this.connectedUser instanceof Owner))
             throw new DontHavePermissionException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
-        if(dbController.getTeams(this.connectedUser).get(teamName).getField(fieldName)==null)
+        if(dbController.getTeams().get(teamName).getField(fieldName)==null)
            throw new ObjectNotExist("field not exist");
         ((Owner) connectedUser).removeField(teamName, fieldName);
     }
@@ -508,17 +611,20 @@ public class SystemController {
      * @throws MemberNotExist
      */
     public void addNewOwner(String teamName, String mailId) throws NoEnoughMoney, ObjectNotExist, MemberNotExist, AlreadyExistException, DontHavePermissionException {
-        if (!dbController.getRoles(this.connectedUser).containsKey(mailId))
+        if (!dbController.getRoles().containsKey(mailId))
             throw new MemberNotExist();
-        if (dbController.getRoles(this.connectedUser).containsKey(mailId))
-            if (dbController.getOwners(this.connectedUser).containsKey(mailId))
+        if (dbController.getRoles().containsKey(mailId))
+            if (dbController.getOwners().containsKey(mailId))
                  throw new AlreadyExistException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-50 < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam()-50 < 0)
             throw new NoEnoughMoney();
 
+        if(connectedUser instanceof Owner)
         ((Owner) connectedUser).addNewOwner(teamName, mailId);
+        else
+            throw new DontHavePermissionException();
     }
 
     /**
@@ -531,7 +637,7 @@ public class SystemController {
     public void temporaryTeamClosing(String teamName) throws ObjectNotExist, DontHavePermissionException {
         if(! (this.connectedUser instanceof Owner))
             throw new DontHavePermissionException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
         if (!((Owner) connectedUser).getTeams().containsKey(teamName))
             throw new ObjectNotExist("team not exist");
@@ -548,7 +654,7 @@ public class SystemController {
     public void reopenClosedTeam(String teamName) throws ObjectNotExist, DontHavePermissionException {
         if(! (this.connectedUser instanceof Owner))
             throw new DontHavePermissionException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
         if (!((Owner) connectedUser).getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
@@ -564,18 +670,21 @@ public class SystemController {
      * @throws ObjectNotExist
      */
     public void addOutCome(String teamName, String description, double amount) throws NoEnoughMoney, ObjectNotExist, AccountNotExist, IncorrectInputException, DontHavePermissionException {
-       if(!dbController.getTeams(this.connectedUser).containsKey(teamName))
+       if(!dbController.getTeams().containsKey(teamName))
            throw new ObjectNotExist("team not exist");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam() - amount < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() - amount < 0)
             throw new NoEnoughMoney();
         if (description == null || description.equals("") || amount < 0)
             throw new IncorrectInputException();
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam() < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam() < 0)
             throw new NoEnoughMoney();
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount() == null)
+        if (dbController.getTeams().get(teamName).getAccount() == null)
             throw new AccountNotExist();
 
+        if(connectedUser instanceof Owner)
         ((Owner) connectedUser).addOutCome(teamName, description, amount);
+        else
+            throw new DontHavePermissionException();
     }
 
     /**
@@ -589,14 +698,17 @@ public class SystemController {
     public void addInCome(String teamName, String description, double amount) throws NoEnoughMoney, ObjectNotExist, AccountNotExist, IncorrectInputException, DontHavePermissionException {
         if (description == null || description.equals("") || amount < 0)
             throw new IncorrectInputException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount().getAmountOfTeam()-amount < 0)
+        if (dbController.getTeams().get(teamName).getAccount().getAmountOfTeam()-amount < 0)
             throw new NoEnoughMoney();
-        if (dbController.getTeams(this.connectedUser).get(teamName).getAccount() == null)
+        if (dbController.getTeams().get(teamName).getAccount() == null)
             throw new AccountNotExist();
 
+        if(connectedUser instanceof Owner)
         ((Owner) connectedUser).addInCome(teamName, description, amount);
+        else
+            throw new DontHavePermissionException();
     }
 
 
@@ -617,11 +729,11 @@ public class SystemController {
     public void updatePlayerRole(String teamName, String mailId,String role) throws NoEnoughMoney, ObjectNotExist, AccountNotExist, IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
        if(role==null || role.equals(""))
            throw new IncorrectInputException();
-        if (dbController.getRoles(this.connectedUser).containsKey(mailId))
-            if (dbController.getPlayers(this.connectedUser).containsKey(mailId))
-                if(dbController.getPlayers(this.connectedUser).get(mailId).getRole().equals(role))
+        if (dbController.getRoles().containsKey(mailId))
+            if (dbController.getPlayers().containsKey(mailId))
+                if(dbController.getPlayers().get(mailId).getRole().equals(role))
                   throw new AlreadyExistException();
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
 
         ((Owner) connectedUser).updatePlayerRole(teamName, mailId,role);
@@ -641,11 +753,11 @@ public class SystemController {
      * @throws AlreadyExistException
      */
     public void updateHomeField(String teamName,String makeHomeField) throws ObjectNotExist, DontHavePermissionException, AlreadyExistException {
-        if (!dbController.getTeams(this.connectedUser).containsKey(teamName))
+        if (!dbController.getTeams().containsKey(teamName))
             throw new ObjectNotExist("");
-        if(dbController.getTeams(this.connectedUser).get(teamName).getTrainingFields().contains(makeHomeField))
+        if(dbController.getTeams().get(teamName).getTrainingFields().contains(makeHomeField))
             throw new AlreadyExistException();
-        if(dbController.getTeams(this.connectedUser).get(teamName).getHomeField().getNameOfField().equals(makeHomeField))
+        if(dbController.getTeams().get(teamName).getHomeField().getNameOfField().equals(makeHomeField))
             throw new AlreadyExistException();
         ((Owner) connectedUser).updateHomeField(teamName, makeHomeField);
     }
@@ -728,7 +840,7 @@ public class SystemController {
     public HashMap<String, League> getLeagues() throws DontHavePermissionException {
 
         try{
-            HashMap<String, League> leagues = dbController.getLeagues(this.connectedUser);
+            HashMap<String, League> leagues = dbController.getLeagues();
             return leagues;
         }
         catch(Exception e){
@@ -738,7 +850,7 @@ public class SystemController {
     }
 
     public League getLeague(String league) throws DontHavePermissionException, ObjectNotExist {
-        return dbController.getLeague(this.connectedUser, league);
+        return dbController.getLeague(league);
     }
 
     public HashMap<String, Referee> getRefereesDoesntExistInTheLeagueAndSeason(String league, String season) throws DontHavePermissionException, ObjectNotExist {
@@ -776,7 +888,7 @@ public class SystemController {
     public HashMap<String, Season> getSeasons() {
         HashMap<String, Season> seasons=new HashMap<String, Season>();
         try{
-            seasons = dbController.getSeasons(this.connectedUser);
+            seasons = dbController.getSeasons();
             throw new DontHavePermissionException();
         }catch(Exception e){
 
@@ -830,19 +942,36 @@ public class SystemController {
 
     /** secondary and main referee **/
 
-    public void updateDetails(String newName, String newMail,String newPassword, String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
+    /**
+     * the function allows the referee to update his own details.
+     * @param newName
+     * @param newMail
+     * @param newTraining
+     * @throws IncorrectInputException
+     * @throws DontHavePermissionException
+     * @throws MemberNotExist
+     * @throws AlreadyExistException
+     */
+    public void updateDetails(String newName, String newMail,String newTraining) throws IncorrectInputException, DontHavePermissionException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof MainReferee) {
             MainReferee referee = (MainReferee) connectedUser;
-            referee.updateDetails(newName, newMail, newPassword, newTraining);
+            referee.updateDetails(newName, newMail,newTraining);
         }
         else if (connectedUser instanceof SecondaryReferee) {
             SecondaryReferee referee = (SecondaryReferee) connectedUser;
-            referee.updateDetails(newName, newMail, newPassword, newTraining);
+            referee.updateDetails(newName, newMail,newTraining);
         }
         else {
             throw new DontHavePermissionException();
         }
     }
+
+
+    /**
+     * the function allows the referee watch his own schedule
+     * @return hashSet of games on the referee's schedule
+     * @throws DontHavePermissionException
+     */
 
     public HashSet<Game> getGameSchedule() throws DontHavePermissionException {
         if (connectedUser instanceof Referee) {
@@ -855,6 +984,11 @@ public class SystemController {
 
     /** main referee only **/
 
+    /**
+     * the function allows the referee to watch all the games he can still edit
+     * @return all the referee's editable games.
+     * @throws DontHavePermissionException
+     */
     public LinkedList<Game> getEditableGames () throws DontHavePermissionException {
         if (connectedUser instanceof MainReferee) {
             MainReferee mainReferee = (MainReferee) connectedUser;
@@ -864,6 +998,11 @@ public class SystemController {
         }
     }
 
+    /**
+     * the function allows the referee to update a game event
+     * @return all the referee's editable games.
+     * @throws DontHavePermissionException
+     */
     public void updateGameEvent(Game game, int timeInGame, EventInGame event, Date date, String description, ArrayList<Player> players){
         if (connectedUser instanceof MainReferee) {
             MainReferee mainReferee = (MainReferee) connectedUser;
@@ -873,20 +1012,34 @@ public class SystemController {
         }
     }
 
-    public void getGameReport(){
-        //todo
-    }
 
     /*************************************** function for Fan ******************************************/
 
-    public void updatePersonalDetails(String newName, String newPassword, String newMail) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
+    /**
+     * the function allows the referee to update his own details.
+     * @param newName
+     * @param newMail
+     * @throws DontHavePermissionException
+     * @throws IncorrectInputException
+     * @throws MemberNotExist
+     * @throws AlreadyExistException
+     */
+
+    public void updatePersonalDetails(String newName,String newMail) throws DontHavePermissionException, IncorrectInputException, MemberNotExist, AlreadyExistException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
-            fan.updatePersonalDetails(newName, newPassword, newMail);
+            fan.updatePersonalDetails(newName, newMail);
         } else {
             throw new DontHavePermissionException();
         }
     }
+
+    /**
+     * the function allows the fan send a complaint to the system manager
+     * @param path
+     * @param complaint
+     * @throws DontHavePermissionException
+     */
 
     public void sendComplaint (String path, String complaint) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
@@ -897,24 +1050,30 @@ public class SystemController {
         }
     }
 
-    public Team getTeamByName (String teamName) throws DontHavePermissionException, ObjectNotExist {
-            Team team = dbController.getTeam(connectedUser, teamName);
-            return team;
-    }
+    /**
+     * the function sign the fan as a follower of te given team
+     * @param team
+     * @throws DontHavePermissionException
+     */
 
     public void addFollowerToTeam(Team team) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
-            team.addNewFollower(fan);
+            fan.followTeam(team);
         } else {
             throw new DontHavePermissionException();
         }
     }
 
+    /**
+     * the function sign the fan as a follower of te given game
+     * @param game
+     * @throws DontHavePermissionException
+     */
     public void addFollowerToGame(Game game) throws DontHavePermissionException {
         if (connectedUser instanceof Fan) {
             Fan fan = (Fan) connectedUser;
-            game.addFollower(fan);
+            fan.followGame(game);
         } else {
             throw new DontHavePermissionException();
         }
@@ -923,7 +1082,11 @@ public class SystemController {
     /*************************************************************************************************************/
 
     public HashMap<String, Fan> getFans(Role role) throws DontHavePermissionException {
-        return dbController.getFans(role);
+        return dbController.getFans();
+    }
+
+    public HashMap<String, Fan> getFans() throws DontHavePermissionException {
+        return dbController.getFans();
     }
 
     public HashMap<String, Referee> getReferees() {
@@ -931,23 +1094,23 @@ public class SystemController {
     }
 
     public HashMap<String, Player> getPlayers(Role role) throws DontHavePermissionException {
-        return dbController.getPlayers(role);
+        return dbController.getPlayers();
     }
 
     public HashMap<String, Owner> getOwners(Role role) throws DontHavePermissionException {
-        return dbController.getOwners(role);
+        return dbController.getOwners();
     }
 
     public HashMap<String, Manager> getManagers(Role role) throws DontHavePermissionException {
-        return dbController.getManagers(role);
+        return dbController.getManagers();
     }
 
     public HashMap<String, Coach> getCoach(Role role) throws DontHavePermissionException {
-        return dbController.getCoaches(role);
+        return dbController.getCoaches();
     }
 
     public HashMap<String,Member> getMembers(Role role) throws DontHavePermissionException {
-        return dbController.getMembers(role);
+        return dbController.getMembers();
     }
 
     public void setSchedulingPolicyToLeagueInSeason(String specificLeague, String year, String policy) throws IncorrectInputException, ObjectNotExist, DontHavePermissionException {
@@ -975,16 +1138,25 @@ public class SystemController {
     }
 
     public HashMap<String, SystemManager> getSystemManager() throws DontHavePermissionException {
-        return dbController.getSystemManagers(this.connectedUser);
+        return dbController.getSystemManagers();
     }
 
     public HashMap<String, AssociationDelegate> getAssociationDelegates(Role role) throws DontHavePermissionException {
-        return dbController.getAssociationDelegate(role);
+        return dbController.getAssociationDelegate();
     }
 
 
     public HashMap<String, Role> getOwnersAndFans(Role role) throws DontHavePermissionException {
-        return dbController.getOwnersAndFans(role);
+        return dbController.getOwnersAndFans();
+    }
+
+    public Team getTeamByName (String teamName) throws DontHavePermissionException, ObjectNotExist {
+        Team team = dbController.getTeam( teamName);
+        return team;
+    }
+
+    public Role getConnectedUser (){
+        return connectedUser;
     }
 
     /**
@@ -1007,32 +1179,7 @@ public class SystemController {
     }
 
 
-
-    /**********shachar test*************/
-    /*
-    public void addPlayer(Player player1) throws AlreadyExistException {
-        dbController.addPlayer(player1);
+    public void deleteDBController() {
+        dbController.deleteAll();
     }
-
-    public void addCoach(Coach coach1) throws AlreadyExistException {
-        dbController.addCoach(coach1);
-    }
-
-    public void addManager(Manager manager1) throws AlreadyExistException {
-        dbController.addManager(manager1);
-    }
-
-    public void addOwner(Owner owner1) throws AlreadyExistException, DontHavePermissionException {
-        dbController.addOwner(connectedUser,owner1);
-    }
-
-    public void addSystemManager(SystemManager systemManager) throws AlreadyExistException {
-        dbController.addSystemManager(systemManager);
-    }
-
-    public void addFan(Fan fan1) {
-        dbController.addFan(fan1);
-    }
-    */
-
 }

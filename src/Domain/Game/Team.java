@@ -245,26 +245,26 @@ return newHash;
     public void addManager(Manager someone) {
         if (someone != null && !this.managers.contains(someone))
             this.managers.add(someone);
-        //personalPage.notifyFollowers("The team " + name + " has new manager");
+        personalPage.notifyFollowers("The team " + name + " has new manager");
     }
 
     public void addOwner(Owner someone) {
         if (someone != null && !this.owners.contains(someone))
             this.owners.add(someone);
-        //personalPage.notifyFollowers("The team " + name + " has new owner");
+        personalPage.notifyFollowers("The team " + name + " has new owner");
     }
 
     public void addCoach(Coach someone) {
         if (someone != null && !this.coaches.contains(someone))
             this.coaches.add(someone);
-        //personalPage.notifyFollowers("The team " + name + " has new coach");
+        personalPage.notifyFollowers("The team " + name + " has new coach");
     }
 
     public void addPlayer(Player someone) {
         if (someone != null && !this.players.contains(someone)){
             this.players.add(someone);
         }
-        //personalPage.notifyFollowers("The team " + name + " has new player");
+        personalPage.notifyFollowers("The team " + name + " has new player");
     }
 
     public void addField(Field field) {
@@ -323,6 +323,10 @@ return newHash;
 
     public void addNewFollower (Fan newFollower){
         personalPage.addFollower(newFollower);
+    }
+
+    public int getFollowersNumber(){
+        return personalPage.countObservers();
     }
 }
 

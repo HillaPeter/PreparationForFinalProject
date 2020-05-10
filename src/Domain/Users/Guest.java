@@ -27,7 +27,7 @@ public class Guest extends Role{
             throw new IncorrectPasswordInputException();
         }
         String encryptPassword = securityMachine.encrypt(password);
-        Fan newMember = new Fan(userName, userMail, encryptPassword, birthDate );
+        Fan newMember = new Fan(userName, userMail, encryptPassword, birthDate, dbController );
         dbController.addFan(this,newMember);
         return newMember;
     }

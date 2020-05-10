@@ -25,7 +25,7 @@ public class AssociationDelegateTest {
     @Before
     public void init() throws IncorrectInputException, AlreadyExistException, DontHavePermissionException, MemberNotExist, PasswordDontMatchException {
         controller = new SystemController("");
-        controller.deleteDBcontroller();
+        controller.deleteDBController();
         controller.signIn("dani","dani@gmail.com","123", birthdate);
         controller.logIn("admin@gmail.com","123");
         controller.addAssociationDelegate("dani@gmail.com");
