@@ -2,6 +2,7 @@ package Domain.Users;
 
 import Domain.Game.Game;
 import Domain.Game.Team;
+import Domain.League.LeagueInSeason;
 import Exception.IncorrectInputException;
 import Exception.MemberNotExist;
 import Exception.DontHavePermissionException;
@@ -75,11 +76,15 @@ public class Fan extends Member implements ObserverFan {
     }
 
     @Override
-    // the arg is the message recieved from the observable
+    // the arg is the message received from the observable
     public void update(Observable o, Object message) {
-        if(o instanceof ObservableGame){
+        if(o instanceof ObservableGame || o instanceof ObservableLeagueInSeason || o instanceof OwnerHelper){
             updates.add("new update:" + message.toString());
         }
+    }
+
+    public void followGamesScheduling(LeagueInSeason leagueInSeason){
+        leagueInSeason.addNewFollower(this);
     }
 
     @Override

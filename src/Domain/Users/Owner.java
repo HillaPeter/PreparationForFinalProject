@@ -16,12 +16,13 @@ public class Owner extends Member implements ObserverOwner{
     private HashMap<String, Team> teams;
     private DBController dbController;
     private ArrayList<String> updates;
-
+    private OwnerHelper ownerHelper;
     public Owner(String name, String userMail, String password, Date birthDate, DBController dbController) throws DontHavePermissionException {
         super(name, userMail, password, birthDate);
         this.dbController = dbController;
         teams = new HashMap<>();
         updates=new ArrayList<>();
+        ownerHelper=new OwnerHelper();
     }
 
     public Owner(String name, String userMail, String password, Date birthDate) {
@@ -455,7 +456,7 @@ public class Owner extends Member implements ObserverOwner{
             //found the manager to remove
             if (player.getUserMail().equals(mailId)) {
                 player.setRole(role);
-
+                ownerHelper.notifyFollowers("The player " + player.getName()+"'s role change to: "+role);
                 HashMap<String, Team> teams = dbController.getTeams();
                 teams.replace(teamName, team);
                 break;
@@ -481,7 +482,7 @@ public class Owner extends Member implements ObserverOwner{
             fields.add(field);
         }
         team.setTrainingFields(fields);
-
+        ownerHelper.notifyFollowers("The homefield of the group " + teamName+" is now "+makeHomeField);
         HashMap<String, Team> teams = dbController.getTeams();
         teams.replace(teamName, team);
     }

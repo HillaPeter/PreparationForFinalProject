@@ -8,10 +8,10 @@ import Domain.Users.Referee;
 import Domain.Game.Team;
 import Domain.Users.SecondaryReferee;
 import Exception.AlreadyExistException;
-
+import Observer.*;
 import java.util.*;
 
-public class LeagueInSeason {
+public class LeagueInSeason extends ObservableLeagueInSeason{
     private HashSet<Game> games;
     private League league;
     private Season season;
@@ -111,9 +111,20 @@ public class LeagueInSeason {
             for(Referee r: game.getReferees()){
                 r.addGame(game);
             }
+            notifyFollowers("The game " + game.getId()+" is scheduled in the league "+league+" in the season "+season);
         }
     }
 
+    public void addNewFollower(Observer follower){
+        if(follower instanceof ObserverFan){
+            addObserver(follower);
+        }
+    }
+
+    public void notifyFollowers (String message){
+        setChanged();
+        notifyObservers(message);
+    }
     public List< Referee> getMainReferee() {
         List<Referee> toReturn=new LinkedList<>();
         for (String role:referees.keySet()
