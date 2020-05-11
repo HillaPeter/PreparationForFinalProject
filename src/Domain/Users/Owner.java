@@ -11,16 +11,17 @@ import DataBase.DBController;
 
 
 import java.util.*;
-
-public class Owner extends Member {
+import Observer.*;
+public class Owner extends Member implements ObserverOwner{
     private HashMap<String, Team> teams;
     private DBController dbController;
-
+    private ArrayList<String> updates;
 
     public Owner(String name, String userMail, String password, Date birthDate, DBController dbController) throws DontHavePermissionException {
         super(name, userMail, password, birthDate);
         this.dbController = dbController;
         teams = new HashMap<>();
+        updates=new ArrayList<>();
     }
 
     public Owner(String name, String userMail, String password, Date birthDate) {
@@ -512,5 +513,13 @@ public class Owner extends Member {
 
     public boolean notHaveTeams() {
         return teams.size()==0;
+    }
+
+
+    @Override
+    public void update(Observable o, Object message) {
+        if(o instanceof ObservableTeam){
+            updates.add("new update:" +  message.toString());
+        }
     }
 }

@@ -5,12 +5,14 @@ import Exception.AlreadyExistException;
 import Exception.DontHavePermissionException;
 import Domain.Users.Fan;
 import Domain.Users.Owner;
+import Observer.ObservableGame;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-
-public class Team {
+import java.util.Observer;
+import Observer.*;
+public class Team extends ObservableGame {
     private String name;
     private Account account;
     private HashSet<Coach> coaches;
@@ -221,6 +223,11 @@ return newHash;
 
     public void setStatus(boolean status) {
         this.status = status;
+        if(this.status){
+            notifyFollowers("The team " + name+" reopen");
+        }else{
+            notifyFollowers("The team " + name+" closed temporary");
+        }
     }
 
     public boolean isOwner(Owner owner) {
@@ -327,6 +334,18 @@ return newHash;
 
     public int getFollowersNumber(){
         return personalPage.countObservers();
+    }
+
+    /***************************Observer***********************/
+    public void addNewFollower(Observer follower){
+        if(follower instanceof ObserverOwner || follower instanceof ObserverTeamManager || follower instanceof ObserverSystemManager){
+            addObserver(follower);
+        }
+    }
+
+    public void notifyFollowers (String message){
+        setChanged();
+        notifyObservers(message);
     }
 }
 

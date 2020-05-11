@@ -7,8 +7,8 @@ import Domain.Game.Game;
 import Domain.Game.Event;
 import Exception.*;
 
-import java.time.Period;
 import java.util.*;
+import Observer.*;
 
 public class MainReferee extends Referee {
 
@@ -87,6 +87,5 @@ public class MainReferee extends Referee {
     public String getType() {
         return "MainReferee";
     }
-
 
 }

@@ -12,23 +12,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
+import Observer.*;
 
-public class Fan extends Member implements Observer {
+public class Fan extends Member implements ObserverFan {
 
     private DBController dbController;
     private ArrayList<String> updates;
-
-    private ArrayList<String> updatesOfGames;
-    //todo list players
-    //list teams
-    //todo list games: Games
-
 
     public Fan(String name, String mail, String password, Date birthDate, DBController dbcontroller) {
         super(name, mail, password, birthDate);
         dbController = dbcontroller;
         updates = new ArrayList<>();
-        updatesOfGames=new ArrayList<>();
     }
 
 
@@ -83,7 +77,9 @@ public class Fan extends Member implements Observer {
     @Override
     // the arg is the message recieved from the observable
     public void update(Observable o, Object message) {
-        updates.add("new update:" + message.toString());
+        if(o instanceof ObservableGame){
+            updates.add("new update:" + message.toString());
+        }
     }
 
     @Override

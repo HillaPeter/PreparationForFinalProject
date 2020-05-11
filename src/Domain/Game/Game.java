@@ -7,10 +7,11 @@ import Domain.Users.Referee;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Observable;
 import java.util.Observer;
 
-public class Game extends Observable {
+import Observer.*;
+
+public class Game extends ObservableGame {
     private String id;
     private Calendar dateAndTime; //
     private Team hostTeam;
@@ -80,8 +81,16 @@ public class Game extends Observable {
     }
     public HashSet<Referee> getReferees(){ return this.referees;}
 
+
+    public void setDateAndTime(Calendar dateAndTime) {
+        this.dateAndTime = dateAndTime;
+        notifyFollowers("The game changed to time: "+this.dateAndTime);
+    }
+
     public void addNewFollower(Observer follower){
-        addObserver(follower);
+        if(follower instanceof ObserverFan){
+            addObserver(follower);
+        }
     }
 
     public void notifyFollowers (String message){
@@ -92,5 +101,6 @@ public class Game extends Observable {
     public int getFollowersNumber(){
         return countObservers();
     }
+
 
 }

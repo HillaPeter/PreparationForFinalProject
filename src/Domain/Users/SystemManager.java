@@ -18,15 +18,16 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
+import Observer.*;
 
-
-public class SystemManager extends Member {
+public class SystemManager extends Member implements ObserverSystemManager {
 
     private DBController dbController;
-
+    ArrayList<String> updates;
     public SystemManager(String name, String userMail, String password, DBController dbController, Date birthDate) {
         super(name, userMail, password, birthDate);
         this.dbController = dbController;
+        updates=new ArrayList<>();
     }
 
     /**
@@ -584,5 +585,13 @@ public class SystemManager extends Member {
     @Override
     public String getType() {
         return "SystemManager";
+    }
+
+
+    @Override
+    public void update(Observable o, Object message) {
+        if(o instanceof ObservableTeam){
+            updates.add("new update:" + message.toString());
+        }
     }
 }
