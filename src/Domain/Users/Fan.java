@@ -17,6 +17,8 @@ public class Fan extends Member implements Observer {
 
     private DBController dbController;
     private ArrayList<String> updates;
+
+    private ArrayList<String> updatesOfGames;
     //todo list players
     //list teams
     //todo list games: Games
@@ -26,6 +28,7 @@ public class Fan extends Member implements Observer {
         super(name, mail, password, birthDate);
         dbController = dbcontroller;
         updates = new ArrayList<>();
+        updatesOfGames=new ArrayList<>();
     }
 
 

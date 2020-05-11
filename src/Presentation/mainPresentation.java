@@ -1,6 +1,7 @@
 package Presentation;
 
 import Presentation.Guest.GuestMenu;
+import Presentation.Owner.OwnerMenu;
 import Presentation.SystemManager.SystemManagerMenu;
 import Exception.*;
 
@@ -14,12 +15,15 @@ public class mainPresentation {
 //        SystemManagerMenu systemManagerMenu=new SystemManagerMenu();
 //        systemManagerMenu.showMenu();
 
-        GuestMenu guestMenu = new GuestMenu();
-        guestMenu.showMenu();
+//        GuestMenu guestMenu = new GuestMenu();
+//        guestMenu.showMenu();
 
       // systemManagerMenu.addSystemManager();
       //  systemManagerMenu.addAssociationDeligate();
        // systemManagerMenu.removeAssociationDeligate();
 
+
+        OwnerMenu ownerMenu = new OwnerMenu();
+        ownerMenu.showMenu();
     }
 }

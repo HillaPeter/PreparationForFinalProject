@@ -102,4 +102,13 @@ public class ServiceController {
     public String getUserName() {
         return this.systemController.getConnectedUser().getName();
     }
+
+
+
+    /*******************************Owner************************************/
+    public LinkedList<String> addTeamManagerComboBox() throws DontHavePermissionException {
+        HashMap<String, Fan> fans = systemController.getFans();
+        LinkedList<String> linkedList = new LinkedList<>(fans.keySet());
+        return linkedList;
+    }
 }
