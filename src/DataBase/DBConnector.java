@@ -26,8 +26,8 @@ public class DBConnector {
      */
     public static Connection getConnection() {
         try {
-          //  DriverManager.registerDriver(new Driver());
-           // return  DriverManager.getConnection(URL, USER, PASS);
+            //  DriverManager.registerDriver(new Driver());
+            // return  DriverManager.getConnection(URL, USER, PASS);
             Connection conn =
                     DriverManager.getConnection(URL,USER,PASS);
             return conn;
@@ -38,8 +38,8 @@ public class DBConnector {
 
 
     /**
-         * Test Connection
-         */
+     * Test Connection
+     */
 
 
 }

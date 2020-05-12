@@ -54,7 +54,7 @@ public class Team {
     }
 
     public Team(Account account, LinkedList<Player> players, LinkedList<Coach> coaches, LinkedList<Manager> managers, LinkedList<Owner> owners, String teamName) throws AlreadyExistException, DontHavePermissionException {
-       this.status=true;
+        this.status=true;
         this.name = teamName;
         this.account = account;
         this.coaches = new HashSet<>();
@@ -70,6 +70,16 @@ public class Team {
         updateTheTeamListPlayer(players);
         updateTheTeamListManager(managers);
         updateTheTeamListForOwner(owners);
+
+    }
+
+    public Team(String[] teamDetails) {
+        if (teamDetails[0].equals("true"))
+            this.status = true;
+        else{
+            this.status = false;
+        }
+        //todo
 
     }
 
@@ -328,5 +338,6 @@ return newHash;
     public int getFollowersNumber(){
         return personalPage.countObservers();
     }
+
 }
 

@@ -23,6 +23,7 @@ public class LeagueInSeason {
     public LeagueInSeason(League league,Season season) {
         this.league = league;
         this.season = season;
+
 //        this.schedulingPolicies = schedulingPolicies;
 //        this.scorePolicies = scorePolicies;
 //        , ASchedulingPolicy schedulingPolicies,IScorePolicy scorePolicies
@@ -155,5 +156,9 @@ public class LeagueInSeason {
 
     public ASchedulingPolicy getSchedulePolicy() {
         return this.schedulingPolicy;
+    }
+
+    public void addDeatails(String[] lsDetails) {
+
     }
 }

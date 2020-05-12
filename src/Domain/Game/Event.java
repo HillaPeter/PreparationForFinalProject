@@ -19,4 +19,16 @@ public class Event {
         this.gameMinute = gameMinute;
         this.players = players;
     }
+    public Event(String[] eventDetails){
+        Date date = new Date(Integer.parseInt(eventDetails[0]),Integer.parseInt(eventDetails[1]),Integer.parseInt(eventDetails[2]));
+        this.time = date;
+        this.description = eventDetails[3];
+        this.eventInGame = EventInGame.valueOf(eventDetails[3]);
+        this.players = new ArrayList<>();
+        for(int i=5 ; i < eventDetails.length ;i++){
+            String[] playerToAdd = eventDetails[i].split("--");
+            Player player = new Player(playerToAdd);
+            this.players.add(player);
+        }
+    }
 }

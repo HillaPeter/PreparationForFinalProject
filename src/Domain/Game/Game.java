@@ -1,14 +1,12 @@
 package Domain.Game;
 
 import Domain.Asset.Field;
+import Domain.Asset.Player;
 import Domain.League.LeagueInSeason;
 import Domain.Users.Referee;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class Game extends Observable {
     private String id;
@@ -90,6 +88,20 @@ public class Game extends Observable {
 
     public int getFollowersNumber(){
         return countObservers();
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public void addEvents(String events) {
+        String[] eventsToAdd = events.split(",");
+        this.eventLog = new EventLog(this);
+        for( String eventString : eventsToAdd){
+            String[] eventToAdd = eventString.split(";");
+            Event event = new Event(eventToAdd);
+            this.eventLog.addEvent(event);
+        }
     }
 
 }
