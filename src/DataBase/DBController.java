@@ -503,22 +503,22 @@ public class DBController implements DAO{
 
     public boolean existAssociationDelegate(String id)  {
 
-            return db.existAssociationDelegate(id);
+            return AssociationDeligateDao.getInstance().exist(id);
         }
 
     public boolean existSystemManager( String id)  {
-        return db.existSystemManager(id);
+        return AssociationDeligateDao.getInstance().exist(id);
     }
 
     public boolean existOwner( String ownerId)  {
-
-            return db.existOwner(ownerId);
-        }
-
-    public boolean existSeason(String id) {
-        return db.existSeason(id);
+        return SeasonDao.getInstance().exist(ownerId);
     }
 
+    public boolean existSeason(String id) {
+        return SeasonDao.getInstance().exist(id);
+    }
+
+    /********************************************private function***********************************/
 
     private LeagueInSeason parseLeagueInSeason(String leagueInSeasonString, League league ,Season season) {
         String[] splited = leagueInSeasonString.split(":");
