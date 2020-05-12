@@ -2,11 +2,14 @@ package DataBase;
 
 import Domain.Game.Game;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class GameDao implements DAOTEMP<Game> {
     private static final GameDao instance = new GameDao();
+    DBConnector dbc = DBConnector.getInstance();
 
     //private constructor to avoid client applications to use constructor
     public static GameDao getInstance(){
@@ -15,20 +18,28 @@ public class GameDao implements DAOTEMP<Game> {
 
     @Override
     public String getTableName() {
-        return null;
+     return "Game";
     }
 
     private GameDao() {
 
     }
-    DBConnector dbc = DBConnector.getInstance();
-
-
 
 
     @Override
     public Game get(String id) {
-        return null;
+        try {
+            Connection connection = DBConnector.getConnection();
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT FROM "+getTableName()+
+                    "VALUES ('" + id+ "');";
+            System.out.println(sql);
+            stmt.executeUpdate(sql);
+        } catch (java.sql.SQLException e) {
+            System.out.println(e.toString());
+        }
+
     }
 
     @Override
