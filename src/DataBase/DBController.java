@@ -17,10 +17,12 @@ import Domain.League.Season;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 public class DBController implements DAO{
 
     private DB db;
+    private DAOTEMP dao;
 
     private static final DBController instance = new DBController();
 
@@ -35,19 +37,48 @@ public class DBController implements DAO{
 
 
     /***************************************Getters******************************************/
-    public HashMap<String, Role> getRoles()  {
-            return db.getRoles(); }
+
 
     public HashMap<String, Team> getTeams()  {
-            return db.getTeams();
+        dao=TeamDao.getInstance();
+        List<Team> list=dao.getAll();
+        HashMap<String , Team> ans=new HashMap<>();
+        for (int i=0; i<list.size(); i++)
+        {
+            ans.put(list.get(i).getName() , list.get(i));
+        }
+           return ans;
     }
 
-    public HashMap<String, League> getLeagues()  {
-            return db.getLeagues();
+    public HashMap<String, League> getLeagues()
+    {
+        dao=LeagueDao.getInstance();
+        List<League> list=dao.getAll();
+        HashMap<String , League> ans=new HashMap<>();
+        for (int i=0; i<list.size(); i++)
+        {
+            ans.put(list.get(i).getName() , list.get(i));
+        }
+        return ans;
     }
 
     public HashMap<String, Referee> getReferees() {
-            return db.getReferees();
+        dao=UserDao.getInstance();
+        List<Member> list=dao.getAll();
+        HashMap<String , Referee> ans=new HashMap<>();
+        for (int i=0; i<list.size(); i++)
+        {
+            if(list.get(i) instanceof  Referee)
+            ans.put(list.get(i).getName() , (Referee)list.get(i));
+        }
+        return ans;
+    }
+
+    public HashMap<String, Role> getRoles()  {
+        return db.getRoles(); }
+
+    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies()   {
+        return db.getSchedulingPolicies();
     }
 
     public HashMap<String, Fan> getFans()   {
@@ -74,9 +105,6 @@ public class DBController implements DAO{
             return db.getMembers();
     }
 
-    public HashMap<String, ASchedulingPolicy> getSchedulingPolicies()   {
-            return db.getSchedulingPolicies();
-    }
 
     public HashMap<String, Season> getSeasons()   {
             return db.getSeasons();
@@ -86,12 +114,15 @@ public class DBController implements DAO{
             return db.getSystemManagers();
     }
 
-    public SystemManager getSystemManagers(String id)   {
-            return db.getSystemManagers(id);
+    public HashMap<String, AssociationDelegate> getAssociationDelegate()   {
+        return db.getAssociationDelegate();
     }
 
-    public HashMap<String, AssociationDelegate> getAssociationDelegate()   {
-            return db.getAssociationDelegate();
+    /****************************get with id*****************************************/
+
+    public SystemManager getSystemManagers(String id)   {
+
+            return db.getSystemManagers(id);
     }
 
     public AssociationDelegate getAssociationDelegate( String id)   {
@@ -109,8 +140,9 @@ public class DBController implements DAO{
         }
 
     public Team getTeam(String teamName) throws ObjectNotExist {
-            if (db.existTeam(teamName)) {
-                return db.getTeam(teamName);
+            if (dao.exist(teamName)) {
+                dao=TeamDao.getInstance();
+               return (Team) dao.get(teamName);
             } else {
                 throw new ObjectNotExist("the team id is not exist");
             }

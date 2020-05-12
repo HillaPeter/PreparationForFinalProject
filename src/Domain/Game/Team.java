@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Observer;
 import Observer.*;
-public class Team extends ObservableGame {
+public class Team extends ObservableTeam {
     private String name;
     private Account account;
     private HashSet<Coach> coaches;
