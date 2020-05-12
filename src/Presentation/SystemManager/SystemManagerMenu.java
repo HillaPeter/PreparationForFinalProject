@@ -14,6 +14,10 @@ public class SystemManagerMenu extends JFrame implements Menu {
     //private JPanel panel;
     private ServiceController serviceController=ServiceController.getInstance();
     private boolean check=false;
+    private JPanel kkk;
+    private JButton button1;
+    private JButton button2;
+    private JButton button3;
 
 
     @Override

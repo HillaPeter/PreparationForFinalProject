@@ -6,6 +6,12 @@ import Exception.*;
 
 import javax.swing.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import static DataBase.DBConnector.getConnection;
 import static com.sun.glass.ui.Cursor.setVisible;
 
 public class mainPresentation {
@@ -17,7 +23,25 @@ public class mainPresentation {
         GuestMenu guestMenu = new GuestMenu();
         guestMenu.showMenu();
 
-      // systemManagerMenu.addSystemManager();
+
+
+        /*
+        try{
+
+            Connection myConn = getConnection();
+            Statement myStatement = myConn.createStatement();
+            ResultSet rs = myStatement.executeQuery("select * from league");
+
+            while (rs.next()){
+                System.out.println(rs.getString("seasonsId"));
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+          */
+
+        // systemManagerMenu.addSystemManager();
       //  systemManagerMenu.addAssociationDeligate();
        // systemManagerMenu.removeAssociationDeligate();
 
