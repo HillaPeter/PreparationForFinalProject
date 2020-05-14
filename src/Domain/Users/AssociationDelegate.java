@@ -19,6 +19,14 @@ public class AssociationDelegate extends Member {
         this.dbController = dbController;
     }
 
+    public AssociationDelegate(String[] associationDelegateDetails, DBController dbController) {
+        super(associationDelegateDetails[1],associationDelegateDetails[0],associationDelegateDetails[2],
+                new Date(Integer.parseInt(associationDelegateDetails[3]),
+                        Integer.parseInt(associationDelegateDetails[4]),
+                        Integer.parseInt(associationDelegateDetails[5])));
+        this.dbController = dbController;
+    }
+
     public void setLeague(String leagueName) throws AlreadyExistException, IncorrectInputException, DontHavePermissionException {
         HashMap<String, League> leagues = dbController.getLeagues();
         League league;
@@ -56,7 +64,6 @@ public class AssociationDelegate extends Member {
 
         //todo
     }
-
 
     public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist, DontHavePermissionException {
         SchedulingPolicyAllTeamsPlayTwice policy = new SchedulingPolicyAllTeamsPlayTwice();

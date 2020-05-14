@@ -29,6 +29,13 @@ public class SystemManager extends Member {
         this.dbController = dbController;
     }
 
+    public SystemManager(String[] systemManagerDetails,DBController dbController) {
+        super(systemManagerDetails[1],systemManagerDetails[0],systemManagerDetails[2],
+                new Date(Integer.parseInt(systemManagerDetails[3]),Integer.parseInt(systemManagerDetails[4]),Integer.parseInt(systemManagerDetails[5]))
+        );
+        this.dbController = dbController;
+    }
+
     /**
      * this function get id of a association deligate and make it fan
      * @param id

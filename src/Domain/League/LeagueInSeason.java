@@ -1,4 +1,5 @@
 package Domain.League;
+import DataBase.DBController;
 import Domain.Asset.Coach;
 import Domain.Asset.Manager;
 import Domain.Asset.Player;
@@ -20,20 +21,19 @@ public class LeagueInSeason {
     private HashMap<String, Referee> referees;
     private LinkedList<Team> teams;
 
-    public LeagueInSeason(League league,Season season) {
+    public LeagueInSeason(League league, Season season) {
         this.league = league;
         this.season = season;
 
 //        this.schedulingPolicies = schedulingPolicies;
 //        this.scorePolicies = scorePolicies;
 //        , ASchedulingPolicy schedulingPolicies,IScorePolicy scorePolicies
-        games=new HashSet<>();
-        referees=new HashMap<>();
-        teams=new LinkedList<Team>();
+        games = new HashSet<>();
+        referees = new HashMap<>();
+        teams = new LinkedList<Team>();
     }
 
-    public ASchedulingPolicy getPolicy()
-    {
+    public ASchedulingPolicy getPolicy() {
         return schedulingPolicy;
     }
     /*
@@ -45,14 +45,15 @@ public class LeagueInSeason {
 
      */
 
-    public LinkedList<Team> getTeams()
-    {
+    public LinkedList<Team> getTeams() {
         return teams;
     }
-    public Season getSeason(){
+
+    public Season getSeason() {
         return season;
     }
-    public League getLeague(){
+
+    public League getLeague() {
         return league;
     }
 
@@ -61,7 +62,7 @@ public class LeagueInSeason {
     }
 
     public void addReferee(String refereeName, Referee referee) {
-        if(!referees.containsKey(refereeName)){
+        if (!referees.containsKey(refereeName)) {
             referees.put(refereeName, referee);
         }
     }
@@ -75,11 +76,9 @@ public class LeagueInSeason {
     }
 
     public LinkedList<Team> getTeamsForScheduling() {
-        LinkedList<Team> teamToReturn=new LinkedList<>();
-        for (int i=0; i<teams.size(); i++)
-        {
-            if(isFullTeam(teams.get(i)))
-            {
+        LinkedList<Team> teamToReturn = new LinkedList<>();
+        for (int i = 0; i < teams.size(); i++) {
+            if (isFullTeam(teams.get(i))) {
                 teamToReturn.add(teams.get(i));
             }
         }
@@ -87,19 +86,16 @@ public class LeagueInSeason {
     }
 
     private boolean isFullTeam(Team team) {
-        HashSet<Player> players=team.getPlayers();
-        HashSet<Coach> coaches=team.getCoaches();
-        HashSet<Manager> managers=team.getManagers();
-        if(players.size()<11)
-        {
+        HashSet<Player> players = team.getPlayers();
+        HashSet<Coach> coaches = team.getCoaches();
+        HashSet<Manager> managers = team.getManagers();
+        if (players.size() < 11) {
             return false;
         }
-        if(coaches.size()<1)
-        {
+        if (coaches.size() < 1) {
             return false;
         }
-        if(managers.size()<1)
-        {
+        if (managers.size() < 1) {
             return false;
         }
 
@@ -107,49 +103,48 @@ public class LeagueInSeason {
     }
 
     public void addGames(Set<Game> games) {
-        for (Game game:games) {
+        for (Game game : games) {
             this.games.add(game);
-            for(Referee r: game.getReferees()){
+            for (Referee r : game.getReferees()) {
                 r.addGame(game);
             }
         }
     }
-    public List< Referee> getMainReferee() {
-        List<Referee> toReturn=new LinkedList<>();
-        for (String role:referees.keySet()
+
+    public List<Referee> getMainReferee() {
+        List<Referee> toReturn = new LinkedList<>();
+        for (String role : referees.keySet()
         ) {
-            if(referees.get(role) instanceof MainReferee)
-                toReturn.add((MainReferee)referees.get(role));
+            if (referees.get(role) instanceof MainReferee)
+                toReturn.add((MainReferee) referees.get(role));
         }
         return toReturn;
     }
 
     public List<Referee> getSecondaryReferee() {
-        List<Referee> toReturn=new LinkedList<>();
-        for (String role:referees.keySet()
+        List<Referee> toReturn = new LinkedList<>();
+        for (String role : referees.keySet()
         ) {
-            if(referees.get(role) instanceof SecondaryReferee)
-                toReturn.add( (SecondaryReferee)referees.get(role));
+            if (referees.get(role) instanceof SecondaryReferee)
+                toReturn.add((SecondaryReferee) referees.get(role));
         }
         return toReturn;
     }
 
     public ScorePolicy getScorePolicy() {
-        return (ScorePolicy)this.scorePolicy;
+        return (ScorePolicy) this.scorePolicy;
     }
 
-    public HashSet<Game>getGames(){
+    public HashSet<Game> getGames() {
         return this.games;
     }
 
     public void addTeam(Team team) throws AlreadyExistException {
-        if (this.teams == null ){
+        if (this.teams == null) {
             this.teams = new LinkedList<Team>();
-        }
-        else if(this.teams.contains(team)){
+        } else if (this.teams.contains(team)) {
             throw new AlreadyExistException();
-        }
-        else{
+        } else {
             this.teams.add(team);
         }
     }
@@ -158,7 +153,31 @@ public class LeagueInSeason {
         return this.schedulingPolicy;
     }
 
-    public void addDeatails(String[] lsDetails) {
+    public String getDetails() {
+        String details = this.league.getName() + ":" + this.season.getYear();
 
+        details += ":";
+
+        /*add teams*/
+        for (Team team : teams) {
+            details += team.getName() + "---";
+        }
+
+        details += ":";
+
+        /*add referees*/
+        for (String refereeId : referees.keySet()) {
+            details += refereeId + "---";
+        }
+
+        details += ":";
+
+        /*add games*/
+        for (Game game : games) {
+            details += game.getId() + "---";
+        }
+
+        details += ":" + this.scorePolicy.getDetails() + ":" + schedulingPolicy.getNameOfPolicy();
+        return details;
     }
 }

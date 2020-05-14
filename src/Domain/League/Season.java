@@ -10,14 +10,19 @@ public class Season {
         this.year = name;
         this.leagueInSeasons = new HashMap<>();
     }
-
     public void addLeagueInSeason(LeagueInSeason leagueInSeason){
         if(leagueInSeason != null && !leagueInSeasons.containsKey(leagueInSeason.getLeague())){
             leagueInSeasons.put(leagueInSeason.getLeague(), leagueInSeason);
         }
       //todo
     }
-
+    public String getDetails(){
+        String details = this.year;
+        for(League lS : leagueInSeasons.keySet()){
+            details += ":" + lS.getName();
+        }
+        return details;
+    }
     public String getYear() {
         return year;
     }

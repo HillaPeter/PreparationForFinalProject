@@ -14,6 +14,7 @@ import Exception.ObjectNotExist;
 import Domain.Game.Game;
 import Domain.Game.Team;
 
+import java.sql.SQLException;
 import java.util.*;
 
 public class DBController implements DAO{
@@ -32,8 +33,7 @@ public class DBController implements DAO{
     }
     /***************************************Presentation.Guest function******************************************/
 
-
-    /***************************************Getters******************************************/
+    /*************************************** Getters ******************************************/
 
 
     public HashMap<String, Team> getTeams()  {
@@ -115,22 +115,50 @@ public class DBController implements DAO{
     }
 
     public HashMap<String, SystemManager> getSystemManagers()   {
-            return db.getSystemManagers();
+        this.dao = SystemManagerDao.getInstance();
+        List<String> sMList = dao.getAll();
+        HashMap<String,SystemManager> systemManagerHashMap= new HashMap<>();
+        for(String sMString : sMList ){
+            String[] splited = sMString.split(":");
+            SystemManager systemManager = new SystemManager(splited,this);
+            systemManagerHashMap.put(splited[0],systemManager);
+        }
+        return systemManagerHashMap;
     }
 
     public HashMap<String, AssociationDelegate> getAssociationDelegate()   {
-        return db.getAssociationDelegate();
+
+        this.dao = AssociationDeligateDao.getInstance();
+        List<String> aDList = dao.getAll();
+        HashMap<String,AssociationDelegate> associationDelegateHashMap= new HashMap<>();
+        for(String aDString : aDList ){
+            String[] splited = aDString.split(":");
+            AssociationDelegate associationDelegate = new AssociationDelegate(splited,this);
+            associationDelegateHashMap.put(splited[0],associationDelegate);
+        }
+        return associationDelegateHashMap;
     }
 
     /****************************get with id*****************************************/
 
-    public SystemManager getSystemManagers(String id)   {
-
-            return db.getSystemManagers(id);
+    public SystemManager getSystemManagers(String id) throws MemberNotExist {
+        this.dao = SystemManagerDao.getInstance();
+        if(dao.exist(id)){
+            String splited = dao.get(id);
+            SystemManager systemManager = new SystemManager(splited.split(":"),this);
+            return systemManager;
+        }
+        throw new MemberNotExist();
     }
 
-    public AssociationDelegate getAssociationDelegate( String id)   {
-            return db.getAssociationDelegate(id);
+    public AssociationDelegate getAssociationDelegate( String id) throws MemberNotExist {
+        this.dao = SystemManagerDao.getInstance();
+        if(dao.exist(id)){
+            String splited = dao.get(id);
+            AssociationDelegate systemManager = new AssociationDelegate(splited.split(":"),this);
+            return systemManager;
+        }
+        throw new MemberNotExist();
     }
 
     public Role getMember( String id) throws MemberNotExist {
@@ -327,8 +355,9 @@ public class DBController implements DAO{
 
     public void deleteAssociationDelegate(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
-            if (db.existAssociationDelegate(id)) {
-                db.removeAssociationDelegate(id);
+            dao = AssociationDeligateDao.getInstance();
+            if (dao.exist(id)) {
+                dao.delete(id);
             } else {
                 throw new MemberNotExist();
             }
@@ -339,10 +368,10 @@ public class DBController implements DAO{
 
     public void deleteSystemManager(Role role, String id) throws MemberNotExist, DontHavePermissionException {
         if (role instanceof SystemManager) {
-            if (db.existSystemManager(id)) {
-                db.removeSystemManager(id);
+            dao = SystemManagerDao.getInstance();
+            if (dao.exist(id)) {
+                dao.delete(id);
             } else {
-
                 throw new MemberNotExist();
             }
         } else {
@@ -358,9 +387,14 @@ public class DBController implements DAO{
     public void addAssociationDelegate(Role role, AssociationDelegate associationDelegate) throws
             DontHavePermissionException, AlreadyExistException {
         if (role instanceof SystemManager) {
-            if (db.existMember(associationDelegate.getUserMail()))
+            dao = AssociationDeligateDao.getInstance();
+            if (dao.exist(associationDelegate.getUserMail()))
                 throw new AlreadyExistException();
-            db.addAssociationDelegate(associationDelegate);
+            try {
+                dao.save(associationDelegate);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
             return;
         } else {
             throw new DontHavePermissionException();
@@ -377,23 +411,69 @@ public class DBController implements DAO{
     }
 
     public void addSeason(Role role, Season season) throws AlreadyExistException, DontHavePermissionException {
+        this.dao = SeasonDao.getInstance();
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
-            // if (id in AssTable || id in SystemManager)
-            if (db.existSeason(season.getYear()))
+            if(dao.exist(season.getYear()))
                 throw new AlreadyExistException();
-            db.addSeason(season);
-
+            try {
+                dao.save(season);
+                HashMap<League, LeagueInSeason> lsList = season.getLeagues();
+                if(season.getLeagues().size()>0){
+                    for(League league : lsList.keySet()){
+                        this.dao = LeagueDao.getInstance();
+                        if(dao.exist(league.getName())) {
+                            dao.update(league.getName(), league);
+                        }
+                        else{
+                            dao.save(league);
+                        }
+                        this.dao = LeagueInSeasonDao.getInstance();
+                        if(dao.exist(league.getName()+":"+season.getYear())){
+                            dao.update(league.getName()+":"+season.getYear(),lsList.get(league));
+                        }
+                        else{
+                            dao.save(lsList.get(league));
+                        }
+                    }
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         } else {
             throw new DontHavePermissionException();
         }
     }
 
     public void addLeague(Role role, League league) throws AlreadyExistException, DontHavePermissionException {
-
+        this.dao = LeagueDao.getInstance();
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
-            if (db.existLeague(league.getName()))
+            if(dao.exist(league.getName()))
                 throw new AlreadyExistException();
-            db.addLeague(league);
+            try {
+
+                dao.save(league);
+                HashMap<Season, LeagueInSeason> lsList = league.getSeasons();
+                if(league.getSeasons().size()>0){
+                    for(Season season : lsList.keySet()){
+                        this.dao = SeasonDao.getInstance();
+                        if(dao.exist(season.getYear())) {
+                            dao.update(season.getYear(), season);
+                        }
+                        else {
+                            dao.save(season);
+                        }
+                        this.dao = LeagueInSeasonDao.getInstance();
+                        if(dao.exist(league.getName()+":"+season.getYear())){
+                            dao.update(league.getName()+":"+season.getYear(),lsList.get(season));
+                        }
+                        else{
+                            dao.save(lsList.get(season));
+                        }
+                    }
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         } else {
             throw new DontHavePermissionException();
         }
@@ -411,6 +491,7 @@ public class DBController implements DAO{
     }
 
     public void addPlayer(Role role, Player player) throws AlreadyExistException, DontHavePermissionException {
+
         if (role instanceof SystemManager || role instanceof Owner) {
 
             if (db.existMember(player.getUserMail()))
@@ -444,10 +525,15 @@ public class DBController implements DAO{
 
     public void addSystemManager(Role role, SystemManager systemManager) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager) {
-
-            if (db.existMember(systemManager.getUserMail()))
+            dao = SystemManagerDao.getInstance();
+            if (dao.exist(systemManager.getUserMail()))
                 throw new AlreadyExistException();
-            db.addSystemManager(systemManager);
+            try {
+                dao.save(systemManager);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            return;
         } else {
             throw new DontHavePermissionException();
         }
@@ -486,31 +572,31 @@ public class DBController implements DAO{
 
     /********************************************exist function***********************************/
     public boolean existReferee( String refereeId) {
-            return db.existRefree(refereeId);
-        }
+        return db.existRefree(refereeId);
+    }
 
     public boolean existFan(String fanId) {
-            return db.existFan(fanId);
-        }
+        return db.existFan(fanId);
+    }
 
     public boolean existTeam( String teamName) {
-            return db.existTeam(teamName);
+        return db.existTeam(teamName);
     }
 
     public boolean existMember(String id)  {
-            return db.existMember(id);
+        return db.existMember(id);
     }
 
     public boolean existAssociationDelegate(String id)  {
-
-            return AssociationDeligateDao.getInstance().exist(id);
-        }
+        return AssociationDeligateDao.getInstance().exist(id);
+    }
 
     public boolean existSystemManager( String id)  {
         return AssociationDeligateDao.getInstance().exist(id);
     }
 
     public boolean existOwner( String ownerId)  {
+        //todo
         return SeasonDao.getInstance().exist(ownerId);
     }
 
@@ -530,9 +616,7 @@ public class DBController implements DAO{
             try {
                 leagueInSeason.addTeam(getTeam(teamS));
             } catch (ObjectNotExist objectNotExist) {
-                objectNotExist.printStackTrace();
             } catch (AlreadyExistException e) {
-                e.printStackTrace();
             }
         }
 
@@ -541,9 +625,7 @@ public class DBController implements DAO{
         for(String refereeS : refereeString){
             try {
                 leagueInSeason.addReferee(refereeS , getReferee(refereeS));
-            } catch (MemberNotExist memberNotExist) {
-                memberNotExist.printStackTrace();
-            }
+            } catch (MemberNotExist memberNotExist) { }
         }
 
         /*add games*/

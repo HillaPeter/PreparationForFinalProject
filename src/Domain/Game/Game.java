@@ -39,7 +39,9 @@ public class Game extends Observable {
         referees.remove(referee);
         //put new referee after the delete
     }
+    public Game(String details){
 
+    }
     public boolean isRefereeInTheGame(Referee referee){
         return referees.contains(referee);
     }
@@ -102,6 +104,13 @@ public class Game extends Observable {
             Event event = new Event(eventToAdd);
             this.eventLog.addEvent(event);
         }
+    }
+
+    public String getDetails(){
+        String details = "";
+        details = this.id+ "";
+        //todo
+        return details;
     }
 
 }

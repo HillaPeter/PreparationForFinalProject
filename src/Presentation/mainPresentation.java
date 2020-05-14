@@ -6,17 +6,14 @@ import Exception.*;
 import javax.swing.*;
 
 import java.sql.Connection;
-<<<<<<< HEAD
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-=======
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 import static DataBase.DBConnector.getConnection;
->>>>>>> origin/master
 import static com.sun.glass.ui.Cursor.setVisible;
 
 

@@ -31,6 +31,14 @@ public class League {
         }
     }
 
+    public String getDetails(){
+        String details = this.name;
+        for(Season lS : leagueInSeasons.keySet()){
+            details += ":" + lS.getYear() ;
+        }
+        return details;
+    }
+
     public HashMap<Season,LeagueInSeason> getSeasons(){
         return leagueInSeasons;
     }
