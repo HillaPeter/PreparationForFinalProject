@@ -31,4 +31,5 @@ public class Account {
     public double getAmountOfTeam() {
         return amountOfTeam;
     }
+
 }

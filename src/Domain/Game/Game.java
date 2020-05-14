@@ -39,9 +39,7 @@ public class Game extends Observable {
         referees.remove(referee);
         //put new referee after the delete
     }
-    public Game(String details){
 
-    }
     public boolean isRefereeInTheGame(Referee referee){
         return referees.contains(referee);
     }
@@ -106,10 +104,18 @@ public class Game extends Observable {
         }
     }
 
-    public String getDetails(){
-        String details = "";
-        details = this.id+ "";
-        //todo
+    @Override
+    public String toString(){
+        String details =
+                    id + ":" + dateAndTime.toString()+ ":" +
+                    hostTeam.getName() + ":" +
+                    visitorTeam.getName() + ":" +
+                    field.getName() + ":" + result + ":" + eventLog.toString() + ":" +
+                    leagueInSeason.getLeague().getName() + ":" +
+                    leagueInSeason.getSeason().getYear() + ":" ;
+        for ( Referee referee : referees){
+            details = details + referee.getUserMail();
+        }
         return details;
     }
 

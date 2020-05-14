@@ -31,4 +31,15 @@ public class Event {
             this.players.add(player);
         }
     }
+    @Override
+    public String toString(){
+        String details = time.getYear() + ";" + time.getMonth() + ";" + time.getDay() ;
+        details += ";" + description + ";" + eventInGame + ";" + gameMinute + ";" ;
+        for (int i=0 ; i<players.size()-1 ; i++){
+            details += players.get(i).getUserMail() + ";" ;
+        }
+        details+=players.get(players.size()-1);
+
+        return details;
+    }
 }

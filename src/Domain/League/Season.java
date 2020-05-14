@@ -16,7 +16,8 @@ public class Season {
         }
       //todo
     }
-    public String getDetails(){
+    @Override
+    public String toString(){
         String details = this.year;
         for(League lS : leagueInSeasons.keySet()){
             details += ":" + lS.getName();
@@ -26,7 +27,6 @@ public class Season {
     public String getYear() {
         return year;
     }
-
     public HashMap<League,LeagueInSeason> getLeagues (){
         return leagueInSeasons;
     }

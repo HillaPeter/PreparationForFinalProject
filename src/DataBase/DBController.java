@@ -31,10 +31,9 @@ public class DBController implements DAO{
     private DBController() {
         this.db = new DB();
     }
-    /***************************************Presentation.Guest function******************************************/
+    /*************************************** Presentation.Guest function ******************************************/
 
     /*************************************** Getters ******************************************/
-
 
     public HashMap<String, Team> getTeams()  {
         //dao=TeamDao.getInstance();
@@ -479,6 +478,19 @@ public class DBController implements DAO{
         }
     }
 
+    public void addLeagueInSeason(Role role , LeagueInSeason leagueInSeason) throws AlreadyExistException, DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof AssociationDelegate) {
+            if(!LeagueInSeasonDao.getInstance().exist(leagueInSeason.getLeague().getName()+":"+leagueInSeason.getSeason().getYear()))
+                LeagueInSeasonDao.getInstance().save(leagueInSeason);
+            else{
+                throw new AlreadyExistException();
+            }
+        }
+        else{
+            throw new DontHavePermissionException();
+        }
+    }
+
     public void addManager(Role role, Manager manager) throws AlreadyExistException, DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof Owner) {
 
@@ -570,6 +582,25 @@ public class DBController implements DAO{
         }
     }
 
+    public void addGames(Role role, Set<Game> games) throws DontHavePermissionException, AlreadyExistException {
+        if (role instanceof SystemManager ) {
+            dao = GameDao.getInstance();
+            for( Game game : games){
+                if (!dao.exist(game.getId())) {
+                    try {
+                        dao.save(game);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                } else {
+                    throw new AlreadyExistException();
+                }
+            }
+        } else {
+            throw new DontHavePermissionException();
+        }
+    }
+
     /********************************************exist function***********************************/
     public boolean existReferee( String refereeId) {
         return db.existRefree(refereeId);
@@ -602,6 +633,30 @@ public class DBController implements DAO{
 
     public boolean existSeason(String id) {
         return SeasonDao.getInstance().exist(id);
+    }
+
+    /******************************************** update function ***********************************/
+    public void updateTeam(String name) {
+        //todo
+    }
+
+    public void updateLeague(Role role,League league) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof AssociationDelegate) {
+            LeagueDao.getInstance().update(league.getName(), league);
+        }
+        else{
+            throw new DontHavePermissionException();
+        }
+    }
+
+    public void updateLeagueInSeason(Role role, LeagueInSeason leagueInSeason) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof AssociationDelegate) {
+            String id = leagueInSeason.getLeague().getName() + ":" + leagueInSeason.getSeason().getYear();
+            if (LeagueInSeasonDao.getInstance().exist(id))
+                LeagueInSeasonDao.getInstance().update(id,leagueInSeason);
+        } else {
+            throw new DontHavePermissionException();
+        }
     }
 
     /********************************************private function***********************************/
@@ -707,4 +762,6 @@ public class DBController implements DAO{
         int second = Integer.parseInt(dateTime[5]);
         return new GregorianCalendar(year, mounth, dayOfMonth, hourOfDay, minute, second);
     }
+
+
 }

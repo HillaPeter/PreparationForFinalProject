@@ -54,4 +54,8 @@ public class Player extends TeamMember{
         Event event = new Event(eventsString);
         this.events.add(event);
     }
+    @Override
+    public String toString(){
+        return "";
+    }
 }

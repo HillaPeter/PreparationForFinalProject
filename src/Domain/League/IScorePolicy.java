@@ -3,6 +3,6 @@ package Domain.League;
 public interface IScorePolicy {
 
 
-    String getDetails();
+    String toString();
     void setPolicy(String details);
 }

@@ -318,6 +318,8 @@ public class Main {
                         System.out.println("the season or the league you choose doesnt exist");
                     } catch (IncorrectInputException e) {
                         e.printStackTrace();
+                    } catch (AlreadyExistException e) {
+                        e.printStackTrace();
                     }
                     break;
                 }

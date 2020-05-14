@@ -46,6 +46,7 @@ public class Owner extends Member {
 
     public void removeTheTeamFromMyList(String name) {
         teams.remove(name);
+        dbController.updateTeam(name);
     }
 
     /******************************Add Asset- Manage, Coach, Player, Field************************************/

@@ -307,7 +307,7 @@ public class SystemManager extends Member {
      * @throws DontHavePermissionException- if the member is not system manager
      * @throws IncorrectInputException- if the league id or the season id input enter in a wrong way
      */
-    public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist, DontHavePermissionException, IncorrectInputException {
+    public void schedulingGames(String seasonId, String leagueId) throws ObjectNotExist, DontHavePermissionException, IncorrectInputException, AlreadyExistException {
         League league = dbController.getLeague( leagueId);
         Season season = dbController.getSeason( seasonId);
         LeagueInSeason leagueInSeason = league.getLeagueInSeason(season);
@@ -324,7 +324,8 @@ public class SystemManager extends Member {
             ASchedulingPolicy schedulingPolicy = leagueInSeason.getPolicy();
             Set <Game> games=schedulingPolicy.setGamesOfTeams(teams, leagueInSeason);
             leagueInSeason.addGames(games);
-            //dbController.addGames(this,games);
+            dbController.addGames(this,games);
+            dbController.updateLeagueInSeason(this,leagueInSeason);
         }
     }
 

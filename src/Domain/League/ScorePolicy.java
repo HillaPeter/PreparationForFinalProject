@@ -53,7 +53,7 @@ public class ScorePolicy implements IScorePolicy{
     }
 
     @Override
-    public String getDetails() {
+    public String toString() {
         return ""+this.scoreToWinningTeam+"--"+this.scoreToDrawGame+"--"+this.scoreToLosingTeam;
     }
 

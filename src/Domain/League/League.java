@@ -30,8 +30,8 @@ public class League {
             leagueInSeasons.put(leagueInSeason.getSeason(), leagueInSeason);
         }
     }
-
-    public String getDetails(){
+    @Override
+    public String toString(){
         String details = this.name;
         for(Season lS : leagueInSeasons.keySet()){
             details += ":" + lS.getYear() ;
@@ -42,4 +42,5 @@ public class League {
     public HashMap<Season,LeagueInSeason> getSeasons(){
         return leagueInSeasons;
     }
+
 }

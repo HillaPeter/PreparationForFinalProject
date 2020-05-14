@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class AssociationDelegate extends Member {
 
-    private DBController dbController;
+    private DBController dbController = DBController.getInstance();
 
     public AssociationDelegate(String name, String userMail, String password, Date birthDate, DBController dbController) {
         super(name, userMail, password, birthDate);
@@ -61,8 +61,9 @@ public class AssociationDelegate extends Member {
 //        dbController.addLeague(this ,league);
 //      dbController.removeSeason(this ,season.getYear());
         dbController.addSeason(this, season);
+        dbController.updateLeague(this, league);
+        dbController.addLeagueInSeason(this, leagueInSeason);
 
-        //todo
     }
 
     public void insertSchedulingPolicy(String league, String season, String sPolicy) throws ObjectNotExist, DontHavePermissionException {
@@ -86,6 +87,7 @@ public class AssociationDelegate extends Member {
             Season seasonObj = dbController.getSeason( season);
             LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
             leagueInSeason.setScorePolicy(policy);
+            dbController.updateLeagueInSeason(this,leagueInSeason);
         } catch (ObjectNotExist objectNotExist) {
             throw new ObjectNotExist("");
         } catch (
@@ -171,8 +173,10 @@ public class AssociationDelegate extends Member {
         League leagueObj = dbController.getLeague( league);
         Season seasonObj = dbController.getSeason( season);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
-        if (!leagueInSeason.getReferees().containsKey(refereeName))
+        if (!leagueInSeason.getReferees().containsKey(refereeName)){
             leagueInSeason.addReferee(refereeName, referee);
+            dbController.updateLeagueInSeason(this, leagueInSeason);
+        }
         else
             throw new ObjectAlreadyExist();
     }
@@ -199,6 +203,7 @@ public class AssociationDelegate extends Member {
         Season seasonObj = dbController.getSeason( year);
         LeagueInSeason leagueInSeason = leagueObj.getLeagueInSeason(seasonObj);
         leagueInSeason.setSchedulingPolicy(policy);
+        dbController.updateLeagueInSeason(this,leagueInSeason);
     }
 
     /**
@@ -217,6 +222,7 @@ public class AssociationDelegate extends Member {
         Season season1 = dbController.getSeason( season);
         LeagueInSeason leagueInSeason = dbController.getLeague( league).getLeagueInSeason(season1);
         leagueInSeason.addTeam(team);
+        dbController.updateLeagueInSeason(this,leagueInSeason);
     }
 
     /**

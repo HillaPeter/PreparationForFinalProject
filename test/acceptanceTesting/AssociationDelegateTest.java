@@ -116,14 +116,8 @@ public class AssociationDelegateTest {
     @Test
     public void addRefereeToLeagueInSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectNotExist, MemberAlreadyExistException {
         /* init - add referee , add league, add season */
-        controller.signIn("referee","referee@gmail.com","123", birthdate);
-        controller.logIn("admin@gmail.com","123");
-        controller.addReferee("referee@gmail.com",false);
-        controller.logOut();
-        controller.logIn("dani@gmail.com","123");
-        //assertTrue(controller.getRefereesDoesntExistInTheLeagueAndSeason("league","season").containsKey("referee@gmail.com"));
-        controller.setLeague("league");
-        controller.setLeagueByYear("league","2020");
+        addRefereeLeagueSeason();
+
         int sizeBefore = controller.getRefereesDoesntExistInTheLeagueAndSeason("league","2020").size();
         int sizeBeforeIn = controller.getRefereesInLeagueInSeason("league","2020").size();
 
@@ -136,6 +130,18 @@ public class AssociationDelegateTest {
         assertEquals(sizeBeforeIn+1 , controller.getRefereesInLeagueInSeason("league","2020").size());
 
     }
+
+    private void addRefereeLeagueSeason() throws IncorrectInputException, DontHavePermissionException, AlreadyExistException, MemberAlreadyExistException, MemberNotExist, PasswordDontMatchException, ObjectNotExist {
+        controller.signIn("referee","referee@gmail.com","123", birthdate);
+        controller.logIn("admin@gmail.com","123");
+        controller.addReferee("referee@gmail.com",false);
+        controller.logOut();
+        controller.logIn("dani@gmail.com","123");
+        //assertTrue(controller.getRefereesDoesntExistInTheLeagueAndSeason("league","season").containsKey("referee@gmail.com"));
+        controller.setLeague("league");
+        controller.setLeagueByYear("league","2020");
+    }
+
     @Test
     public void addRefereeToLeagueInSeasonPermission() throws DontHavePermissionException, ObjectNotExist {
         thrown.expect(DontHavePermissionException.class);

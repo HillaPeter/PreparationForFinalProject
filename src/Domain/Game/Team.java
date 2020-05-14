@@ -73,15 +73,6 @@ public class Team {
 
     }
 
-    public Team(String[] teamDetails) {
-        if (teamDetails[0].equals("true"))
-            this.status = true;
-        else{
-            this.status = false;
-        }
-        //todo
-
-    }
 
     private void updateTheTeamListCoach(LinkedList<Coach> list) {
         for (int i = 0; i < list.size(); i++) {

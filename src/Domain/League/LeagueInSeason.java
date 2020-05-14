@@ -153,7 +153,8 @@ public class LeagueInSeason {
         return this.schedulingPolicy;
     }
 
-    public String getDetails() {
+    @Override
+    public String toString() {
         String details = this.league.getName() + ":" + this.season.getYear();
 
         details += ":";
@@ -177,7 +178,7 @@ public class LeagueInSeason {
             details += game.getId() + "---";
         }
 
-        details += ":" + this.scorePolicy.getDetails() + ":" + schedulingPolicy.getNameOfPolicy();
+        details += ":" + this.scorePolicy.toString() + ":" + schedulingPolicy.getNameOfPolicy();
         return details;
     }
 }

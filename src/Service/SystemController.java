@@ -253,7 +253,7 @@ public class SystemController {
         }
     }
 
-    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist, IncorrectInputException {
+    public void schedulingGames(String seasonId, String leagueId) throws DontHavePermissionException, ObjectNotExist, IncorrectInputException, AlreadyExistException {
 
            if (connectedUser instanceof SystemManager) {
                SystemManager systemManager = (SystemManager) connectedUser;
