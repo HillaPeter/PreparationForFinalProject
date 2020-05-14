@@ -1,7 +1,10 @@
 package Presentation.Owner;
+import Domain.Users.Guest;
 import Exception.*;
+import Presentation.Guest.GuestMenu;
 import Presentation.Menu;
 import Service.ServiceController;
+import com.sun.javafx.scene.control.behavior.TwoLevelFocusBehavior;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +27,6 @@ public class OwnerMenu extends JFrame implements Menu {
     private JButton addOutcomeButton;
     private JButton addNewOwnerButton;
     private JButton reopenClosedTeamButton;
-
     @Override
     public void showMenu() {
         frame.setContentPane(this.panelOwner);
@@ -46,46 +48,192 @@ public class OwnerMenu extends JFrame implements Menu {
             }
         });
 
+        removeAssetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    removeAsset();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        updateAssetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    updateAsset();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        addNewManagerButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    addTeamManager();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        removeManagerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    removeTeamManager();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        addIncomeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    addIncome();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        addOutcomeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    addOutcome();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        temporaryCloseTeamButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    temporaryCloseTeam();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        reopenClosedTeamButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    reopenClosedTeam();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        addNewOwnerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    addNewOwner();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    remove(panelOwner);
+                    exitMenu();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
 
-    public void addAsset() throws DontHavePermissionException {
-//        JPanel panelAddSystem = new JPanel();
-//        setVisible(true);
-//        setDefaultCloseOperation(EXIT_ON_CLOSE);
-//        setTitle("add Team manager");
-//
-//        JLabel label=new JLabel("which user you want to make a team manager:");
-//        panelAddSystem.add(label , BorderLayout.NORTH);
-//        add(panelAddSystem , BorderLayout.NORTH);
-//
-//        JComboBox comboBox=new JComboBox();
-//        LinkedList<String> allThePosibolleTeamManagers=serviceController.addTeamManagerComboBox();
-//        for (int i = 0; i < allThePosibolleTeamManagers.size(); i++) {
-//            comboBox.addItem(allThePosibolleTeamManagers.get(i));
-//        }
-//
-//        panelAddSystem.add(comboBox,  BorderLayout.CENTER); // comboBox added to transparent frame
-//        this.add(panelAddSystem, BorderLayout.CENTER);
-//
-//        JButton button =new JButton("ok");
-//        button.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                remove(panelAddSystem);
-//                showMenu();
-//            }
-//        });
-//        panelAddSystem.add(button);
-//        add(panelAddSystem,BorderLayout.SOUTH);
-//
-//        this.pack();
-//        setSize(400, 200);
+    private void addAsset(){
+        AddAsset addAsset = new AddAsset();
+        addAsset.showMenu();
+        this.frame.dispose();
+    }
+
+    private void addTeamManager() {
+      AddManager addManager=new AddManager();
+      addManager.showMenu();
+      frame.dispose();
+    }
+
+    private void removeTeamManager() {
+        RemoveManager removeManager=new RemoveManager();
+        removeManager.showMenu();
+        frame.dispose();
+    }
+
+    private void removeAsset() {
+        RemoveAsset removeAsset = new RemoveAsset();
+        removeAsset.showMenu();
+        this.frame.dispose();
+    }
+
+    private void updateAsset(){
+        UpdateAsset updateAsset=new UpdateAsset();
+        updateAsset.showMenu();
+        frame.dispose();
+    }
+
+    private void addIncome() {
+        AddIncome addIncome=new AddIncome();
+        addIncome.showMenu();
+        frame.dispose();
+    }
+    private void addOutcome() {
+        AddOutcome addOutcome=new AddOutcome();
+        addOutcome.showMenu();
+        frame.dispose();
+    }
+
+    private void temporaryCloseTeam() {
+        TemporaryClosingTeam temporaryClosingTeam=new TemporaryClosingTeam();
+        temporaryClosingTeam.showMenu();
+        frame.dispose();
+    }
+
+    private void reopenClosedTeam() {
+        ReopenClosedTeam reopenClosedTeam=new ReopenClosedTeam();
+        reopenClosedTeam.showMenu();
+        frame.dispose();
+    }
+
+    private void addNewOwner() {
+        AddNewOwner addNewOwner=new AddNewOwner();
+        addNewOwner.showMenu();
+        frame.dispose();
     }
 
 
     @Override
     public void exitMenu() {
-
+        GuestMenu guestMenu = new GuestMenu();
+        guestMenu.showMenu();
+        this.frame.dispose();
     }
 }

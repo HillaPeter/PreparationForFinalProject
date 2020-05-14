@@ -105,7 +105,6 @@ public class DBController implements DAO{
             return db.getMembers();
     }
 
-
     public HashMap<String, Season> getSeasons()   {
             return db.getSeasons();
     }

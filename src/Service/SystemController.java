@@ -1059,7 +1059,6 @@ public class SystemController {
         return dbController.getAssociationDelegate();
     }
 
-
     public HashMap<String, Role> getOwnersAndFans() throws DontHavePermissionException {
         return dbController.getOwnersAndFans();
     }
@@ -1096,4 +1095,9 @@ public class SystemController {
     public void deleteDBcontroller() {
         dbController.deleteAll();
     }
+
+    public void getFields(){
+
+    }
+
 }
