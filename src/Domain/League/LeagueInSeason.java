@@ -155,30 +155,47 @@ public class LeagueInSeason {
 
     @Override
     public String toString() {
-        String details = this.league.getName() + ":" + this.season.getYear();
+        String details = "\'"+this.league.getName() + "\',\'" +this.season.getYear()+ "\'" ;
 
-        details += ":";
+        details += ",";
 
         /*add teams*/
         for (Team team : teams) {
             details += team.getName() + "---";
         }
+        if (details != null && details.length() > 3 && details.charAt(details.length() - 1) == '-') {
+            details = details.substring(0, details.length() - 3);
+        }
 
-        details += ":";
+
+        details += "\',\'";
 
         /*add referees*/
         for (String refereeId : referees.keySet()) {
             details += refereeId + "---";
         }
+        if (details != null && details.length() > 3 && details.charAt(details.length() - 1) == '-') {
+            details = details.substring(0, details.length() - 3);
+        }
 
-        details += ":";
+
+        details += "\',\'";
 
         /*add games*/
         for (Game game : games) {
             details += game.getId() + "---";
         }
+        if (details != null && details.length() > 3 && details.charAt(details.length() - 1) == '-') {
+            details = details.substring(0, details.length() - 3);
+        }
 
-        details += ":" + this.scorePolicy.toString() + ":" + schedulingPolicy.getNameOfPolicy();
+
+        details += "\',\'";
+
+        details += this.scorePolicy.toString() + "\',\'"
+
+                + schedulingPolicy.getNameOfPolicy() + "\'";
+
         return details;
     }
 }

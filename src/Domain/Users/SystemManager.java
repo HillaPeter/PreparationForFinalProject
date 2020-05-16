@@ -593,4 +593,10 @@ public class SystemManager extends Member {
     public String getType() {
         return "SystemManager";
     }
+    @Override
+    public String toString() {
+        String str="";
+        str="\'"+this.getUserMail()+"\',\'"+this.getPassword()+"\',\'"+this.getName()+"\',\'"+this.getBirthDateString()+"\'";
+        return str;
+    }
 }

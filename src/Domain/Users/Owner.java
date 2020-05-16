@@ -45,8 +45,10 @@ public class Owner extends Member {
     }
 
     public void removeTheTeamFromMyList(String name) {
-        teams.remove(name);
-        dbController.updateTeam(name);
+//        Team team= teams.get(name);
+//        teams.remove(name);
+//        dbController.updateTeam(this,team);
+        //todo
     }
 
     /******************************Add Asset- Manage, Coach, Player, Field************************************/
@@ -513,5 +515,24 @@ public class Owner extends Member {
 
     public boolean notHaveTeams() {
         return teams.size()==0;
+    }
+    @Override
+    public String toString() {
+        String str="";
+        str="\'"+this.getUserMail()+"\',\'"+this.getPassword()+"\',\'"+this.getName()+"\',\'"+this.getBirthDateString()+"\',\'"+this.getTeamString()+"\'";
+        return str;
+    }
+
+    private String getTeamString() {
+        String str="";
+        for (String team:teams.keySet()
+        ) {
+            str+=team+";";
+        }
+        if(str.length()>0)
+        {
+            str=str.substring(0,str.length()-1);
+        }
+        return str;
     }
 }

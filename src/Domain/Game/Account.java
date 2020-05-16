@@ -9,7 +9,17 @@ public class Account {
         this.transactions = transactions;
         this.amountOfTeam = amountOfTeam;
     }
-
+    public Account(String accountDetails){
+        String[] splitet = accountDetails.split("---");
+        String[] transactionsSplited = splitet[0].split("--");
+        transactions = new ArrayList<>();
+        for(int i=0 ; i< transactionsSplited.length ; i++){
+            String[] tDetails = transactionsSplited[i].split("_");
+            Transaction t = new Transaction(tDetails[0],Double.parseDouble(tDetails[1]));
+            transactions.add(t);
+        }
+        amountOfTeam = Double.parseDouble(splitet[1]);
+    }
     public void setAmountOfTeam(double amountOfTeam){
         this.amountOfTeam =amountOfTeam;
     }
@@ -32,4 +42,17 @@ public class Account {
         return amountOfTeam;
     }
 
+    @Override
+    public String toString(){
+        String details = "";
+        for(Transaction t : transactions){
+            details += t.toString() + "--" ;
+        }
+        if (details != null && details.length() > 3 && details.charAt(details.length() - 1) == '-') {
+            details = details.substring(0, details.length() - 3);
+        }
+
+        details += "---" + amountOfTeam;
+        return details;
+    }
 }

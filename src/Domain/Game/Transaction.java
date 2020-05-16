@@ -8,6 +8,9 @@ public class Transaction {
         this.description = description;
         this.amount = amount;
     }
-
+    @Override
+    public String toString(){
+        return description+"_"+amount;
+    }
 
 }

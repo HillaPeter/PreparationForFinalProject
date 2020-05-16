@@ -36,7 +36,7 @@ public class SystemManagerDao implements DAOTEMP<SystemManager> {
         String toReturn="";
         try {
             // Connection connection = dbc.getConnection();
-            String sqlQuery = "SELECT * From "+getTableName()+" WHERE userName="+id+";";
+            String sqlQuery = "SELECT * From "+getTableName()+" WHERE userName="+"\'"+id+"\'";
             System.out.println(sqlQuery);
 
             PreparedStatement ps = connection.prepareStatement(sqlQuery); //compiling query in the DB
@@ -89,7 +89,10 @@ public class SystemManagerDao implements DAOTEMP<SystemManager> {
             Statement stmt = connection.createStatement();
 
             String sql = "INSERT INTO"+getTableName()+
-                    " VALUES ("+"\'"+systemManager.getUserMail()+"\'"+","+"\'"+systemManager.getPassword()+"\'"+","+"\'"+systemManager.getName()+"\'"+","+"\'"+systemManager.getBirthDate().toString()+"\'"+");";
+                    " VALUES ("+"\'"+systemManager.getUserMail()+"\'"+","+"\'"+systemManager.getPassword()+"\'"+","+"\'"+
+                    systemManager.getName()+"\'"+","+"\'"+
+                    systemManager.getBirthDate().getYear()+"--"+systemManager.getBirthDate().getMonth()+"--"+systemManager.getBirthDate().getDay()+"/'"
+                   +");";
             //finish it
             // TODO: 12/05/2020
             System.out.println(sql);

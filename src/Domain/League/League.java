@@ -30,17 +30,21 @@ public class League {
             leagueInSeasons.put(leagueInSeason.getSeason(), leagueInSeason);
         }
     }
-    @Override
-    public String toString(){
-        String details = this.name;
-        for(Season lS : leagueInSeasons.keySet()){
-            details += ":" + lS.getYear() ;
-        }
-        return details;
-    }
 
     public HashMap<Season,LeagueInSeason> getSeasons(){
         return leagueInSeasons;
     }
 
+    @Override
+    public String toString(){
+        String details = "\'"+this.name+"\',\'";
+        for(Season lS : leagueInSeasons.keySet()){
+            details += lS.getYear() +":";
+        }
+        if (details != null && details.length() > 0 && details.charAt(details.length() - 1) == ':') {
+            details = details.substring(0, details.length() - 1);
+        }
+        details += "\'";
+        return details;
+    }
 }

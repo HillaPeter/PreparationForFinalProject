@@ -24,5 +24,11 @@ public class Coach extends TeamMember{
             team.get(strTeam).removeCoach(this);
         }
     }
-
+    @Override
+    public String toString()
+    {
+        String str="";
+        str="\'"+this.getUserMail()+"\',\'"+this.getPassword()+"\',\'"+this.getName()+"\',\'"+this.getBirthDateString()+"\',\'"+this.getTeamString()+"\'";
+        return str;
+    }
 }

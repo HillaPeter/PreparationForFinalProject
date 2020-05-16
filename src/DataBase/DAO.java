@@ -7,6 +7,7 @@ import Domain.Game.Game;
 import Domain.Game.Team;
 import Domain.League.ASchedulingPolicy;
 import Domain.League.League;
+import Domain.League.LeagueInSeason;
 import Domain.League.Season;
 import Domain.Users.*;
 import Exception.AlreadyExistException;
@@ -126,7 +127,19 @@ public interface DAO {
     boolean existOwner(String ownerId);
 
     boolean existSeason(String id);
+    /***************************************update function******************************************/
 
+    void updateTeam(Role role,Team team)throws ObjectNotExist, DontHavePermissionException;
+    void updateOwner(Role role,Owner owner)throws MemberNotExist, DontHavePermissionException;
+    void updateManager(Role role,Manager manager) throws MemberNotExist, DontHavePermissionException;
+    void updateReferee(Role role,Referee referee) throws MemberNotExist, DontHavePermissionException;
+    void updateGame(Role role,Game game) throws MemberNotExist, DontHavePermissionException;
+    void updateCoach(Role role,Coach coach) throws MemberNotExist, DontHavePermissionException ;
+    void updateFan(Role role,Fan fan) throws MemberNotExist, DontHavePermissionException;
+    void updatePlayer(Role role,Player player) throws MemberNotExist, DontHavePermissionException;
+    void updateLeague(Role role,League league) throws ObjectNotExist, DontHavePermissionException ;
+    void updateSeason(Role role, Season season) throws ObjectNotExist, DontHavePermissionException;
+    void updateLeagueInSeason(Role role, LeagueInSeason leagueInSeason) throws ObjectNotExist, DontHavePermissionException ;
 
 
 
