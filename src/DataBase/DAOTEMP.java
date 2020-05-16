@@ -7,15 +7,10 @@ import java.util.Optional;
 public interface DAOTEMP<T> {
         /**
          * this interface only for 1 table
-         *
          * @return
          */
 
-////        static DAOTEMP<T> getInstance(){
-////
-////        }
-//
-//        DAOTEMP<T> getInstance();
+        //DAOTEMP<T> getInstance();
 
         String getTableName();
 
@@ -23,11 +18,14 @@ public interface DAOTEMP<T> {
 
         List<String> getAll();
 
-        void save(T t) throws SQLException;
+        void save(T t);
 
-        void update(String id, T t); // the id of the one you want to update and a new object
+        void update(String id , T t); // the id of the one you want to update and a new object
 
         void delete(String id);
 
         boolean exist(String id);
+
+
+
 }

@@ -21,10 +21,22 @@ public class DBController implements DAO{
 
     private DB db;
     private DAOTEMP dao;
-    private DAOTEMP systemManagerDao = SystemManagerDao.getInstance();
     private DAOTEMP associationDeligateDao = AssociationDeligateDao.getInstance();
-    private DAOTEMP leagueDao = LeagueDao.getInstance();
+    private DAOTEMP coachDao = CoachDao.getInstance();
+    private DAOTEMP fanDao = FanDao.getInstance();
+    private DAOTEMP fieldDao = FieldDao.getInstance();
     private DAOTEMP gameDao = GameDao.getInstance();
+    private DAOTEMP leagueDao = LeagueDao.getInstance();
+    private DAOTEMP leagueInSesonDao = LeagueInSeasonDao.getInstance();
+    private DAOTEMP mainRefereeDao = MainRefereeDao.getInstance();
+    private DAOTEMP managerDao = ManagerDao.getInstance();
+    private DAOTEMP ownerDao = OwnerDao.getInstance();
+    private DAOTEMP playerDao = PlayerDao.getInstance();
+    private DAOTEMP seasonDao = SeasonDao.getInstance();
+    private DAOTEMP seconaryRefereeDao = SecondaryRefereeDao.getInstance();
+    private DAOTEMP systemManagerDao = SystemManagerDao.getInstance();
+    private DAOTEMP teamDao = TeamDao.getInstance();
+
 
     private static final DBController instance = new DBController();
 

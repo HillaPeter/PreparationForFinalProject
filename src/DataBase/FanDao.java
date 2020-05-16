@@ -1,19 +1,23 @@
 package DataBase;
 
-import Domain.Game.Team;
-import Domain.League.Season;
+import Domain.Users.Fan;
+import Domain.Users.SystemManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
-public class SeasonDao  implements DAOTEMP<Season> {
+public class FanDao implements DAOTEMP<Fan> {
 
-    private static final SeasonDao instance = new SeasonDao();
+
+
+    private static final FanDao instance = new FanDao();
 
     //private constructor to avoid client applications to use constructor
-    public static SeasonDao getInstance(){
+    public static FanDao getInstance(){
         return instance;
     }
     DBConnector dbc ;
@@ -21,99 +25,83 @@ public class SeasonDao  implements DAOTEMP<Season> {
 
     @Override
     public String getTableName() {
-        return " Season ";
+        return " fan ";
     }
 
-    private SeasonDao() {
+    private FanDao() {
         dbc= DBConnector.getInstance();
         connection=dbc.getConnection();
     }
 
+
     @Override
     public String get(String id) {
-
         String toReturn="";
         try {
             Connection connection = dbc.getConnection();
-            String sqlQuery = "SELECT * From "+getTableName()+" WHERE idSeason="+"\'"+id+"\'"+";";
-            //   System.out.println(sqlQuery);
+            String sqlQuery = "SELECT * From "+getTableName()+" WHERE userName="+"\'"+id+"\'"+";";
+            //  System.out.println(sqlQuery);
 
             PreparedStatement ps = connection.prepareStatement(sqlQuery); //compiling query in the DB
             ResultSet rs=ps.executeQuery();
-            if (rs.next()){
-                String idSeason=rs.getString("idSeason");
-                String leagusID=rs.getString("leagusID");
-                toReturn=idSeason+":"+leagusID;
-            }
 
+            if(rs.next()) {
+                String userName = rs.getString("userName");
+                String EncryptPassword = rs.getString("EncryptPassword");
+                String name = rs.getString("name");
+                String birthDate = rs.getString("birthDate");
+                String updates = rs.getString("updates");
+
+                toReturn = userName + ":" + EncryptPassword + ":" + name + ":" + birthDate + ":" + updates;
+            }
             rs.close();
         } catch (java.sql.SQLException e) {
             System.out.println(e.toString());
         }
-
         return toReturn;
-
-
     }
 
     @Override
     public List<String> getAll() {
-        LinkedList<String> allTheTable=new LinkedList<>();
+        LinkedList<String> allTheTable = new LinkedList<>();
         try {
             Connection connection = dbc.getConnection();
-            String sqlQuery = "SELECT * From "+getTableName()+";";
-            //     System.out.println(sqlQuery);
+            String sqlQuery = "SELECT * From " + getTableName()+ ";";
+            //    System.out.println(sqlQuery);
 
             PreparedStatement ps = connection.prepareStatement(sqlQuery); //compiling query in the DB
-            ResultSet rs=ps.executeQuery();
-            while(rs.next()){
-                String idSeason=rs.getString("idSeason");
-                String leagusID=rs.getString("leagusID");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String userName = rs.getString("userName");
+                String EncryptPassword = rs.getString("EncryptPassword");
+                String name = rs.getString("name");
+                String birthDate = rs.getString("birthDate");
+                String updates=rs.getString("updates");
 
-                String toReturn=idSeason+":"+leagusID;
+                String toReturn=userName+":"+EncryptPassword+":"+name+":"+birthDate+":"+updates;
                 allTheTable.add(toReturn);
             }
-
             rs.close();
         } catch (java.sql.SQLException e) {
             System.out.println(e.toString());
         }
-
         return allTheTable;
     }
 
+
+
+
+
     @Override
-    public void save(Season season){
+    public void save(Fan fan){
         try {
             Connection connection = dbc.getConnection();
             Statement stmt = connection.createStatement();
 
             String sql = "INSERT INTO"+getTableName()+
-                    "VALUES ("+season.toString()+");";//"\'"+season.getYear()+"\'"+","+"\'"+" "+"\'"+");";
+                    "VALUES ("+fan.toString()+");";//"\'"+fan.getUserMail()+"\'"+","+"\'"+fan.getPassword()+"\'"+","+"\'"+fan.getName()+"\'"+","+"\'"+fan.getBirthDate().toString()+"\'"+","+"\'"+fan.getUpdates().toString()+"\'"+");";
             //finish it
             // TODO: 12/05/2020
-            //     System.out.println(sql);
-            stmt.executeUpdate(sql);
-        } catch (java.sql.SQLException e) {
-            System.out.println(e.toString());
-        }
-    }
-
-    @Override
-    public void update(String year , Season season) {
-        //delete and than add new one
-        delete(year);
-        save(season);
-    }
-
-    @Override
-    public void delete(String seasonYear) {
-        try {
-            Connection connection = dbc.getConnection();
-            Statement stmt = connection.createStatement();
-
-            String sql = "DELETE FROM"+getTableName()+
-                    "WHERE idSeason ="+"\'"+seasonYear+"\'";
             //   System.out.println(sql);
             stmt.executeUpdate(sql);
         } catch (java.sql.SQLException e) {
@@ -121,15 +109,40 @@ public class SeasonDao  implements DAOTEMP<Season> {
         }
     }
 
+
     @Override
-    public boolean exist(String seasonYear) {
+    public void update(String userMail , Fan fan) {
+        //delete and than add new one
+        delete(userMail);
+        save(fan);
+    }
+
+    @Override
+    public void delete(String userMail) {
         try {
             Connection connection = dbc.getConnection();
             Statement stmt = connection.createStatement();
 
-            String sqlQuery = "SELECT * FROM" + getTableName() +
-                    "WHERE idSeason =" +"\'"+seasonYear+"\'";
-            //  System.out.println(sqlQuery);
+            String sql = "DELETE FROM"+getTableName()+
+                    "WHERE userName ="+"\'"+userMail+"\'";
+            // System.out.println(sql);
+            stmt.executeUpdate(sql);
+        } catch (java.sql.SQLException e) {
+            System.out.println(e.toString());
+        }
+    }
+
+
+    @Override
+    public boolean exist(String fanName) {
+
+        try {
+            Connection connection = dbc.getConnection();
+            Statement stmt = connection.createStatement();
+
+            String sqlQuery = "SELECT * FROM"+getTableName()+
+                    "WHERE userName ="+"\'"+fanName+"\'";
+            //   System.out.println(sqlQuery);
             ResultSet rs = stmt.executeQuery(sqlQuery);
             return rs.next();
 
@@ -138,5 +151,4 @@ public class SeasonDao  implements DAOTEMP<Season> {
         }
         return false;
     }
-
 }

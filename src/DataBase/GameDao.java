@@ -102,7 +102,7 @@ public class GameDao implements DAOTEMP<Game> {
             Statement stmt = connection.createStatement();
 
             String sql = "INSERT INTO"+getTableName()+
-                    "VALUES ("+game.getId()+","+game.getDateAndTimeString()+","+game.getHostTeam().getName()+","+game.getVisitorTeam().getName()+","+game.getField().getName()+");";
+                    "VALUES ("+game.toString()+");";//+game.getId()+","+game.getDateAndTimeString()+","+game.getHostTeam().getName()+","+game.getVisitorTeam().getName()+","+game.getField().getName()+");";
             //finish it
             // TODO: 12/05/2020
             System.out.println(sql);

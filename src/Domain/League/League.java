@@ -47,4 +47,13 @@ public class League {
         details += "\'";
         return details;
     }
+    public String getSeasonString()
+    {
+        String str="";
+        for (Season season:leagueInSeasons.keySet()
+        ) {
+            str=season.toString()+";"+leagueInSeasons.get(season).toString()+":";
+        }
+        return str;
+    }
 }
