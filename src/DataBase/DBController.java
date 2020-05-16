@@ -21,6 +21,7 @@ public class DBController implements DAO{
 
     private DB db;
     private DAOTEMP dao;
+    private DAOTEMP TeamDao;
 
     private static final DBController instance = new DBController();
 
@@ -649,6 +650,16 @@ public class DBController implements DAO{
         }
     }
 
+    public void updateSeason(Role role, Season season) throws DontHavePermissionException {
+        if (role instanceof SystemManager || role instanceof AssociationDelegate) {
+            SeasonDao.getInstance().update(season.getYear(), season);
+        }
+        else{
+            throw new DontHavePermissionException();
+        }
+    }
+
+
     public void updateLeagueInSeason(Role role, LeagueInSeason leagueInSeason) throws DontHavePermissionException {
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
             String id = leagueInSeason.getLeague().getName() + ":" + leagueInSeason.getSeason().getYear();
@@ -762,6 +773,7 @@ public class DBController implements DAO{
         int second = Integer.parseInt(dateTime[5]);
         return new GregorianCalendar(year, mounth, dayOfMonth, hourOfDay, minute, second);
     }
+
 
 
 }
