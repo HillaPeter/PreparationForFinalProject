@@ -35,7 +35,7 @@ public class DBController implements DAO{
     private DAOTEMP seasonDao = SeasonDao.getInstance();
     private DAOTEMP seconaryRefereeDao = SecondaryRefereeDao.getInstance();
     private DAOTEMP systemManagerDao = SystemManagerDao.getInstance();
-    private DAOTEMP teamDao = TeamDao.getInstance();
+    //private DAOTEMP teamDao = TeamDao.getInstance();
 
 
     private static final DBController instance = new DBController();
@@ -408,11 +408,9 @@ public class DBController implements DAO{
             dao = AssociationDeligateDao.getInstance();
             if (dao.exist(associationDelegate.getUserMail()))
                 throw new AlreadyExistException();
-            try {
-                dao.save(associationDelegate);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+
+            dao.save(associationDelegate);
+
             return;
         } else {
             throw new DontHavePermissionException();
@@ -433,7 +431,8 @@ public class DBController implements DAO{
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
             if(dao.exist(season.getYear()))
                 throw new AlreadyExistException();
-            try {
+
+
                 dao.save(season);
                 HashMap<League, LeagueInSeason> lsList = season.getLeagues();
                 if(season.getLeagues().size()>0){
@@ -454,9 +453,6 @@ public class DBController implements DAO{
                         }
                     }
                 }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
         } else {
             throw new DontHavePermissionException();
         }
@@ -467,7 +463,6 @@ public class DBController implements DAO{
         if (role instanceof SystemManager || role instanceof AssociationDelegate) {
             if(dao.exist(league.getName()))
                 throw new AlreadyExistException();
-            try {
 
                 dao.save(league);
                 HashMap<Season, LeagueInSeason> lsList = league.getSeasons();
@@ -489,9 +484,7 @@ public class DBController implements DAO{
                         }
                     }
                 }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+
         } else {
             throw new DontHavePermissionException();
         }
@@ -559,11 +552,9 @@ public class DBController implements DAO{
             dao = SystemManagerDao.getInstance();
             if (dao.exist(systemManager.getUserMail()))
                 throw new AlreadyExistException();
-            try {
+
                 dao.save(systemManager);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+
             return;
         } else {
             throw new DontHavePermissionException();
@@ -606,11 +597,9 @@ public class DBController implements DAO{
             dao = GameDao.getInstance();
             for( Game game : games){
                 if (!dao.exist(game.getId())) {
-                    try {
+
                         dao.save(game);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
+
                 } else {
                     throw new AlreadyExistException();
                 }
